@@ -15,7 +15,7 @@ import java.util.Optional;
 public abstract class Refset {
 
     protected void validateHeaderRow(Row row, String[] expectedHeaders) throws ValidationException {
-        ArrayList<String> headerValues = new ArrayList<String>();
+        ArrayList<String> headerValues = new ArrayList<>();
         for (Cell cell : row) {
             headerValues.add(cell.getStringCellValue());
         }

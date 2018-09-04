@@ -31,6 +31,10 @@ public class SpiaFhirBundle {
     private void buildBundle() throws IOException, ValidationException {
         List<ValueSet> valueSets = new ArrayList<>();
 
+        // Requesting
+        RequestingValueSet requestingValueSet =
+                new RequestingValueSet(spiaDistribution.getRefset(SpiaDistribution.DistributionEntry.REQUESTING));
+        valueSets.add(requestingValueSet.getValueSet());
         // Chemical pathology
         ChemicalPathologyValueSet chemicalPathologyValueSet =
                 new ChemicalPathologyValueSet(spiaDistribution.getRefset(SpiaDistribution.DistributionEntry.CHEMICAL));
@@ -47,10 +51,10 @@ public class SpiaFhirBundle {
         ImmunopathologyValueSet immunopathologyValueSet = new ImmunopathologyValueSet(spiaDistribution.getRefset(
                 SpiaDistribution.DistributionEntry.IMMUNOPATHOLOGY));
         valueSets.add(immunopathologyValueSet.getValueSet());
-        // Requesting
-        RequestingValueSet requestingValueSet =
-                new RequestingValueSet(spiaDistribution.getRefset(SpiaDistribution.DistributionEntry.REQUESTING));
-        valueSets.add(requestingValueSet.getValueSet());
+        // Preferred units
+        PreferredUnitsValueSet preferredUnitsValueSet = new PreferredUnitsValueSet(spiaDistribution.getRefset(
+                SpiaDistribution.DistributionEntry.PREFERRED_UNITS));
+        valueSets.add(preferredUnitsValueSet.getValueSet());
 
         for (ValueSet valueSet : valueSets) {
             Bundle.BundleEntryComponent bundleEntry = new Bundle.BundleEntryComponent();

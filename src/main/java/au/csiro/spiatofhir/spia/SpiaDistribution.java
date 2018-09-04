@@ -24,6 +24,8 @@ public class SpiaDistribution {
     private static final Map<DistributionEntry, String> expectedEntries =
             Collections.unmodifiableMap(new HashMap<DistributionEntry, String>() {
                 {
+                    put(DistributionEntry.REQUESTING,
+                        "RCPA - SPIA Requesting Pathology Terminology Reference Set v3.0.xlsx");
                     put(DistributionEntry.CHEMICAL,
                         "RCPA - SPIA Chemical Pathology Terminology Reference Set v3.0.xlsx");
                     put(DistributionEntry.HAEMATOLOGY, "RCPA - SPIA Haematology Terminology Reference Set v3.0.xlsx");
@@ -32,8 +34,6 @@ public class SpiaDistribution {
                     put(DistributionEntry.MICROBIOLOGY_SEROLOGY_MOLECULAR,
                         "RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0.xlsx");
                     put(DistributionEntry.PREFERRED_UNITS, "RCPA - SPIA Preferred units v1.0.xlsx");
-                    put(DistributionEntry.REQUESTING,
-                        "RCPA - SPIA Requesting Pathology Terminology Reference Set v3.0.xlsx");
                 }
             });
     private MicrobiologySerologyMolecularRefset microbiologySerologyMolecularRefset;
@@ -74,6 +74,8 @@ public class SpiaDistribution {
             throw new ValidationException("Invalid Excel workbook format - must be OOXML (2007-) format");
         }
         switch (distributionEntry) {
+            case REQUESTING:
+                return new RequestingRefset(workbook);
             case CHEMICAL:
                 return new ChemicalPathologyRefset(workbook);
             case MICROBIOLOGY_SEROLOGY_MOLECULAR:
@@ -82,20 +84,20 @@ public class SpiaDistribution {
                 return new HaematologyRefset(workbook);
             case IMMUNOPATHOLOGY:
                 return new ImmunopathologyRefset(workbook);
-            case REQUESTING:
-                return new RequestingRefset(workbook);
+            case PREFERRED_UNITS:
+                return new PreferredUnitsRefset(workbook);
             default:
                 throw new RuntimeException("Entry not supported yet: " + distributionEntry.toString());
         }
     }
 
     public enum DistributionEntry {
+        REQUESTING,
         CHEMICAL,
         HAEMATOLOGY,
         IMMUNOPATHOLOGY,
         MICROBIOLOGY_SEROLOGY_MOLECULAR,
-        PREFERRED_UNITS,
-        REQUESTING
+        PREFERRED_UNITS
     }
 
 }
