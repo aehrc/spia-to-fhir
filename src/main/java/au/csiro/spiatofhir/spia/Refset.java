@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * @author John Grimes
+ */
 public abstract class Refset {
 
     protected void validateHeaderRow(Row row, String[] expectedHeaders) throws ValidationException {

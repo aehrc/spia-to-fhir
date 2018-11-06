@@ -1,18 +1,24 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
 package au.csiro.spiatofhir.fhir;
 
+import au.csiro.spiatofhir.spia.HasRefsetEntries;
 import au.csiro.spiatofhir.spia.SpiaDistribution;
 import au.csiro.spiatofhir.spia.ValidationException;
 import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.ValueSet;
+import org.hl7.fhir.dstu3.model.Resource;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.*;
+
+/**
+ * @author John Grimes
+ */
 public class SpiaFhirBundle {
 
     private SpiaDistribution spiaDistribution;
@@ -29,36 +35,47 @@ public class SpiaFhirBundle {
     }
 
     private void buildBundle() throws IOException, ValidationException {
-        List<ValueSet> valueSets = new ArrayList<>();
+        List<Resource> resources = new ArrayList<>();
+        HasRefsetEntries requestingRefset = (HasRefsetEntries) spiaDistribution.getRefset(REQUESTING);
+        HasRefsetEntries chemicalRefset = (HasRefsetEntries) spiaDistribution.getRefset(CHEMICAL);
+        HasRefsetEntries microbiologyRefset = (HasRefsetEntries) spiaDistribution.getRefset(
+                MICROBIOLOGY_SEROLOGY_MOLECULAR);
+        HasRefsetEntries haematologyRefset = (HasRefsetEntries) spiaDistribution.getRefset(HAEMATOLOGY);
+        HasRefsetEntries immunopathologyRefset = (HasRefsetEntries) spiaDistribution.getRefset(IMMUNOPATHOLOGY);
+        HasRefsetEntries preferredUnitsRefset = (HasRefsetEntries) spiaDistribution.getRefset(PREFERRED_UNITS);
 
         // Requesting
-        RequestingValueSet requestingValueSet =
-                new RequestingValueSet(spiaDistribution.getRefset(SpiaDistribution.DistributionEntry.REQUESTING));
-        valueSets.add(requestingValueSet.getValueSet());
+        RequestingValueSet requestingValueSet = new RequestingValueSet(requestingRefset);
+        resources.add(requestingValueSet.getValueSet());
         // Chemical pathology
-        ChemicalPathologyValueSet chemicalPathologyValueSet =
-                new ChemicalPathologyValueSet(spiaDistribution.getRefset(SpiaDistribution.DistributionEntry.CHEMICAL));
-        valueSets.add(chemicalPathologyValueSet.getValueSet());
+        ChemicalPathologyValueSet chemicalPathologyValueSet = new ChemicalPathologyValueSet(chemicalRefset);
+        ChemicalPathologyUnitMap chemicalPathologyUnitMap = new ChemicalPathologyUnitMap(chemicalRefset);
+        resources.add(chemicalPathologyValueSet.getValueSet());
+        resources.add(chemicalPathologyUnitMap.getConceptMap());
         // Microbiology serology molecular
-        MicrobiologySerologyMolecularValueSet microbiologySerologyMolecularValueSet =
-                new MicrobiologySerologyMolecularValueSet(spiaDistribution.getRefset(SpiaDistribution.DistributionEntry.MICROBIOLOGY_SEROLOGY_MOLECULAR));
-        valueSets.add(microbiologySerologyMolecularValueSet.getValueSet());
+        MicrobiologySerologyMolecularValueSet microbiologyValueSet =
+                new MicrobiologySerologyMolecularValueSet(microbiologyRefset);
+        MicrobiologySerologyMolecularUnitMap microbiologyUnitMap = new MicrobiologySerologyMolecularUnitMap(
+                microbiologyRefset);
+        resources.add(microbiologyValueSet.getValueSet());
+        resources.add(microbiologyUnitMap.getConceptMap());
         // Haematology
-        HaematologyValueSet haematologyValueSet =
-                new HaematologyValueSet(spiaDistribution.getRefset(SpiaDistribution.DistributionEntry.HAEMATOLOGY));
-        valueSets.add(haematologyValueSet.getValueSet());
+        HaematologyValueSet haematologyValueSet = new HaematologyValueSet(haematologyRefset);
+        HaematologyUnitMap haematologyUnitMap = new HaematologyUnitMap(haematologyRefset);
+        resources.add(haematologyValueSet.getValueSet());
+        resources.add(haematologyUnitMap.getConceptMap());
         // Immunopathology
-        ImmunopathologyValueSet immunopathologyValueSet = new ImmunopathologyValueSet(spiaDistribution.getRefset(
-                SpiaDistribution.DistributionEntry.IMMUNOPATHOLOGY));
-        valueSets.add(immunopathologyValueSet.getValueSet());
+        ImmunopathologyValueSet immunopathologyValueSet = new ImmunopathologyValueSet(immunopathologyRefset);
+        ImmunopathologyUnitMap immunopathologyUnitMap = new ImmunopathologyUnitMap(immunopathologyRefset);
+        resources.add(immunopathologyValueSet.getValueSet());
+        resources.add(immunopathologyUnitMap.getConceptMap());
         // Preferred units
-        PreferredUnitsValueSet preferredUnitsValueSet = new PreferredUnitsValueSet(spiaDistribution.getRefset(
-                SpiaDistribution.DistributionEntry.PREFERRED_UNITS));
-        valueSets.add(preferredUnitsValueSet.getValueSet());
+        PreferredUnitsValueSet preferredUnitsValueSet = new PreferredUnitsValueSet(preferredUnitsRefset);
+        resources.add(preferredUnitsValueSet.getValueSet());
 
-        for (ValueSet valueSet : valueSets) {
+        for (Resource resource : resources) {
             Bundle.BundleEntryComponent bundleEntry = new Bundle.BundleEntryComponent();
-            bundleEntry.setResource(valueSet);
+            bundleEntry.setResource(resource);
             bundle.addEntry(bundleEntry);
         }
     }

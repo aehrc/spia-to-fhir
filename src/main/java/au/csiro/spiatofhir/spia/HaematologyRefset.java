@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
@@ -10,6 +10,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.*;
 
+/**
+ * @author John Grimes
+ */
 public class HaematologyRefset extends Refset implements HasRefsetEntries {
 
     protected static final String[] expectedHeaders =

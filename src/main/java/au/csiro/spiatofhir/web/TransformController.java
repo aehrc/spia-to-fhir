@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
@@ -22,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 
+/**
+ * @author John Grimes
+ */
 @RestController
 public class TransformController {
 

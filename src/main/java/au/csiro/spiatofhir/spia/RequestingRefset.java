@@ -8,6 +8,9 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.util.*;
 
+/**
+ * @author John Grimes
+ */
 public class RequestingRefset extends Refset implements HasRefsetEntries {
 
     protected static final String[] expectedHeaders =

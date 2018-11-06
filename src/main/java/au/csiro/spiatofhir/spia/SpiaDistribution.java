@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/**
+ * @author John Grimes
+ */
 public class SpiaDistribution {
 
     private static final Map<DistributionEntry, String> expectedEntries =
@@ -65,9 +68,9 @@ public class SpiaDistribution {
      * @throws ValidationException
      * @throws IOException
      */
-    public HasRefsetEntries getRefset(DistributionEntry distributionEntry) throws ValidationException, IOException {
+    public Refset getRefset(DistributionEntry distributionEntry) throws ValidationException, IOException {
         InputStream inputStream = getNamedEntryAsStream(distributionEntry);
-        Workbook workbook = null;
+        Workbook workbook;
         try {
             workbook = WorkbookFactory.create(inputStream);
         } catch (InvalidFormatException e) {

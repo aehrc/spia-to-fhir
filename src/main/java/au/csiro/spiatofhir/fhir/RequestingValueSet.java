@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
@@ -7,6 +7,9 @@ package au.csiro.spiatofhir.fhir;
 import au.csiro.spiatofhir.spia.HasRefsetEntries;
 import org.hl7.fhir.dstu3.model.ValueSet;
 
+/**
+ * @author John Grimes
+ */
 public class RequestingValueSet implements SpiaFhirValueSet {
 
     private HasRefsetEntries refset;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * @author John Grimes
+ */
 public class UcumRefsetEntry implements RefsetEntry {
 
     private Optional<String> rcpaPreferredTerm;

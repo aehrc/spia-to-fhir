@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author John Grimes
+ */
 public class PreferredUnitsRefset extends Refset implements HasRefsetEntries {
 
     protected static final String[] expectedHeaders = {"Description", "Preferred Display ", "UCUM Unit"};

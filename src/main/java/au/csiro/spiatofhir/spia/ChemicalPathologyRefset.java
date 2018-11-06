@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright CSIRO Australian e-Health Research Centre (http://aehrc.com). All rights reserved. Use is subject to
  * license terms and conditions.
  */
@@ -8,6 +8,9 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.util.*;
 
+/**
+ * @author John Grimes
+ */
 public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries {
 
     protected static final String[] expectedHeaders =
@@ -50,7 +53,7 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
 
     private void parse() throws ValidationException {
         sheet = workbook.getSheet(SHEET_NAME);
-        refsetEntries = new ArrayList<RefsetEntry>();
+        refsetEntries = new ArrayList<>();
         for (Row row : sheet) {
             // Check that header row matches expectations.
             if (row.getRowNum() == 0) {
