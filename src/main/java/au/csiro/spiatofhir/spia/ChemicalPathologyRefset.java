@@ -19,22 +19,14 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
              "Version", "History"};
     private static final String SHEET_NAME = "Terminology for Chem Pathology";
     private static final Map<String, ChemicalPathologyRefsetEntry.CombiningResultsFlag> combiningResultsFlagMap =
-            Collections.unmodifiableMap(new HashMap<String, ChemicalPathologyRefsetEntry.CombiningResultsFlag>() {
-                {
-                    put("Red", ChemicalPathologyRefsetEntry.CombiningResultsFlag.RED);
-                    put("Green", ChemicalPathologyRefsetEntry.CombiningResultsFlag.GREEN);
-                    put("Orange", ChemicalPathologyRefsetEntry.CombiningResultsFlag.ORANGE);
-                }
-            });
+            Map.of("Red", ChemicalPathologyRefsetEntry.CombiningResultsFlag.RED,
+                   "Green", ChemicalPathologyRefsetEntry.CombiningResultsFlag.GREEN,
+                   "Orange", ChemicalPathologyRefsetEntry.CombiningResultsFlag.ORANGE);
     private Workbook workbook;
-    private Sheet sheet;
     private List<RefsetEntry> refsetEntries;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
-     *
-     * @param workbook
-     * @throws ValidationException
      */
     public ChemicalPathologyRefset(Workbook workbook) throws ValidationException {
         this.workbook = workbook;
@@ -43,8 +35,6 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
 
     /**
      * Gets a list of all entries within this reference set.
-     *
-     * @return
      */
     @Override
     public List<RefsetEntry> getRefsetEntries() {
@@ -52,7 +42,7 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
     }
 
     private void parse() throws ValidationException {
-        sheet = workbook.getSheet(SHEET_NAME);
+        Sheet sheet = workbook.getSheet(SHEET_NAME);
         refsetEntries = new ArrayList<>();
         for (Row row : sheet) {
             // Check that header row matches expectations.
@@ -70,9 +60,8 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
             Optional<String> rcpaPreferredTerm = getStringValueFromCell(row, 0);
             Optional<String> rcpaSynonymsRaw = getStringValueFromCell(row, 1);
             Set<String> rcpaSynonyms = new HashSet<>();
-            if (rcpaSynonymsRaw.isPresent()) {
-                Arrays.asList(rcpaSynonymsRaw.get().split(";")).stream().forEach(s -> rcpaSynonyms.add(s.trim()));
-            }
+            rcpaSynonymsRaw.ifPresent(s1 -> Arrays.stream(s1.split(";"))
+                                                  .forEach(s -> rcpaSynonyms.add(s.trim())));
             Optional<String> usageGuidance = getStringValueFromCell(row, 2);
             // Length has been omitted, as formulas are being used within the spreadsheet.
             Optional<String> specimen = getStringValueFromCell(row, 4);

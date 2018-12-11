@@ -25,9 +25,6 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
-     *
-     * @param workbook
-     * @throws ValidationException
      */
     public MicrobiologySerologyMolecularRefset(Workbook workbook) throws ValidationException {
         this.workbook = workbook;
@@ -36,8 +33,6 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
 
     /**
      * Gets a list of all entries within this reference set.
-     *
-     * @return
      */
     @Override
     public List<RefsetEntry> getRefsetEntries() {

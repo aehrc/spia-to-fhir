@@ -12,33 +12,33 @@ import java.util.Set;
  */
 public class LoincRefsetEntry implements RefsetEntry {
 
-    private Optional<String> rcpaPreferredTerm;
+    private String rcpaPreferredTerm;
     private Set<String> rcpaSynonyms;
-    private Optional<String> usageGuidance;
-    private Optional<Double> length;
-    private Optional<String> specimen;
-    private Optional<String> unit;
-    private Optional<String> ucum;
-    private Optional<String> loincCode;
-    private Optional<String> loincComponent;
-    private Optional<String> loincProperty;
-    private Optional<String> loincTiming;
-    private Optional<String> loincSystem;
-    private Optional<String> loincScale;
-    private Optional<String> loincMethod;
-    private Optional<String> loincLongName;
-    private Optional<Double> version;
-    private Optional<String> history;
+    private String usageGuidance;
+    private Double length;
+    private String specimen;
+    private String unit;
+    private String ucum;
+    private String loincCode;
+    private String loincComponent;
+    private String loincProperty;
+    private String loincTiming;
+    private String loincSystem;
+    private String loincScale;
+    private String loincMethod;
+    private String loincLongName;
+    private Double version;
+    private String history;
 
     public LoincRefsetEntry() {
     }
 
     public Optional<String> getRcpaPreferredTerm() {
-        return rcpaPreferredTerm;
+        return Optional.ofNullable(rcpaPreferredTerm);
     }
 
     public void setRcpaPreferredTerm(Optional<String> rcpaPreferredTerm) {
-        this.rcpaPreferredTerm = rcpaPreferredTerm;
+        this.rcpaPreferredTerm = rcpaPreferredTerm.orElse(null);
     }
 
     public Set<String> getRcpaSynonyms() {
@@ -50,123 +50,123 @@ public class LoincRefsetEntry implements RefsetEntry {
     }
 
     public Optional<String> getUsageGuidance() {
-        return usageGuidance;
+        return Optional.ofNullable(usageGuidance);
     }
 
     public void setUsageGuidance(Optional<String> usageGuidance) {
-        this.usageGuidance = usageGuidance;
+        this.usageGuidance = usageGuidance.orElse(null);
     }
 
     public Optional<Double> getLength() {
-        return length;
+        return Optional.ofNullable(length);
     }
 
     public void setLength(Optional<Double> length) {
-        this.length = length;
+        this.length = length.orElse(null);
     }
 
     public Optional<String> getSpecimen() {
-        return specimen;
+        return Optional.ofNullable(specimen);
     }
 
     public void setSpecimen(Optional<String> specimen) {
-        this.specimen = specimen;
+        this.specimen = specimen.orElse(null);
     }
 
     public Optional<String> getUnit() {
-        return unit;
+        return Optional.ofNullable(unit);
     }
 
     public void setUnit(Optional<String> unit) {
-        this.unit = unit;
+        this.unit = unit.orElse(null);
     }
 
     public Optional<String> getUcum() {
-        return ucum;
+        return Optional.ofNullable(ucum);
     }
 
     public void setUcum(Optional<String> ucum) {
-        this.ucum = ucum;
+        this.ucum = ucum.orElse(null);
     }
 
     public Optional<String> getCode() {
-        return loincCode;
+        return Optional.ofNullable(loincCode);
     }
 
     public void setCode(Optional<String> code) {
-        this.loincCode = code;
+        this.loincCode = code.orElse(null);
     }
 
     public Optional<String> getLoincComponent() {
-        return loincComponent;
+        return Optional.ofNullable(loincComponent);
     }
 
     public void setLoincComponent(Optional<String> loincComponent) {
-        this.loincComponent = loincComponent;
+        this.loincComponent = loincComponent.orElse(null);
     }
 
     public Optional<String> getLoincProperty() {
-        return loincProperty;
+        return Optional.ofNullable(loincProperty);
     }
 
     public void setLoincProperty(Optional<String> loincProperty) {
-        this.loincProperty = loincProperty;
+        this.loincProperty = loincProperty.orElse(null);
     }
 
     public Optional<String> getLoincTiming() {
-        return loincTiming;
+        return Optional.ofNullable(loincTiming);
     }
 
     public void setLoincTiming(Optional<String> loincTiming) {
-        this.loincTiming = loincTiming;
+        this.loincTiming = loincTiming.orElse(null);
     }
 
     public Optional<String> getLoincSystem() {
-        return loincSystem;
+        return Optional.ofNullable(loincSystem);
     }
 
     public void setLoincSystem(Optional<String> loincSystem) {
-        this.loincSystem = loincSystem;
+        this.loincSystem = loincSystem.orElse(null);
     }
 
     public Optional<String> getLoincScale() {
-        return loincScale;
+        return Optional.ofNullable(loincScale);
     }
 
     public void setLoincScale(Optional<String> loincScale) {
-        this.loincScale = loincScale;
+        this.loincScale = loincScale.orElse(null);
     }
 
     public Optional<String> getLoincMethod() {
-        return loincMethod;
+        return Optional.ofNullable(loincMethod);
     }
 
     public void setLoincMethod(Optional<String> loincMethod) {
-        this.loincMethod = loincMethod;
+        this.loincMethod = loincMethod.orElse(null);
     }
 
     public Optional<String> getLoincLongName() {
-        return loincLongName;
+        return Optional.ofNullable(loincLongName);
     }
 
     public void setLoincLongName(Optional<String> loincLongName) {
-        this.loincLongName = loincLongName;
+        this.loincLongName = loincLongName.orElse(null);
     }
 
     public Optional<Double> getVersion() {
-        return version;
+        return Optional.ofNullable(version);
     }
 
     public void setVersion(Optional<Double> version) {
-        this.version = version;
+        this.version = version.orElse(null);
     }
 
     public Optional<String> getHistory() {
-        return history;
+        return Optional.ofNullable(history);
     }
 
     public void setHistory(Optional<String> history) {
-        this.history = history;
+        this.history = history.orElse(null);
     }
 
 }

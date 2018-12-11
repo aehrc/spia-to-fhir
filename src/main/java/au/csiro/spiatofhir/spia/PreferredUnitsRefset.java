@@ -30,8 +30,6 @@ public class PreferredUnitsRefset extends Refset implements HasRefsetEntries {
 
     /**
      * Gets a list of all entries within this reference set.
-     *
-     * @return
      */
     @Override
     public List<RefsetEntry> getRefsetEntries() {

@@ -12,24 +12,24 @@ import java.util.Set;
  */
 public class SnomedRefsetEntry implements RefsetEntry {
 
-    private Optional<String> rcpaPreferredTerm;
+    private String rcpaPreferredTerm;
     private Set<String> rcpaSynonyms;
-    private Optional<String> usageGuidance;
-    private Optional<Double> length;
-    private Optional<String> specimen;
-    private Optional<String> snomedCode;
-    private Optional<Double> version;
-    private Optional<String> history;
+    private String usageGuidance;
+    private Double length;
+    private String specimen;
+    private String snomedCode;
+    private Double version;
+    private String history;
 
     public SnomedRefsetEntry() {
     }
 
     public Optional<String> getRcpaPreferredTerm() {
-        return rcpaPreferredTerm;
+        return Optional.ofNullable(rcpaPreferredTerm);
     }
 
     public void setRcpaPreferredTerm(Optional<String> rcpaPreferredTerm) {
-        this.rcpaPreferredTerm = rcpaPreferredTerm;
+        this.rcpaPreferredTerm = rcpaPreferredTerm.orElse(null);
     }
 
     public Set<String> getRcpaSynonyms() {
@@ -41,51 +41,51 @@ public class SnomedRefsetEntry implements RefsetEntry {
     }
 
     public Optional<String> getUsageGuidance() {
-        return usageGuidance;
+        return Optional.ofNullable(usageGuidance);
     }
 
     public void setUsageGuidance(Optional<String> usageGuidance) {
-        this.usageGuidance = usageGuidance;
+        this.usageGuidance = usageGuidance.orElse(null);
     }
 
     public Optional<Double> getLength() {
-        return length;
+        return Optional.ofNullable(length);
     }
 
     public void setLength(Optional<Double> length) {
-        this.length = length;
+        this.length = length.orElse(null);
     }
 
     public Optional<String> getSpecimen() {
-        return specimen;
+        return Optional.ofNullable(specimen);
     }
 
     public void setSpecimen(Optional<String> specimen) {
-        this.specimen = specimen;
+        this.specimen = specimen.orElse(null);
     }
 
     public Optional<String> getCode() {
-        return snomedCode;
+        return Optional.ofNullable(snomedCode);
     }
 
     public void setCode(Optional<String> code) {
-        this.snomedCode = code;
+        this.snomedCode = code.orElse(null);
     }
 
     public Optional<Double> getVersion() {
-        return version;
+        return Optional.ofNullable(version);
     }
 
     public void setVersion(Optional<Double> version) {
-        this.version = version;
+        this.version = version.orElse(null);
     }
 
     public Optional<String> getHistory() {
-        return history;
+        return Optional.ofNullable(history);
     }
 
     public void setHistory(Optional<String> history) {
-        this.history = history;
+        this.history = history.orElse(null);
     }
 
 }

@@ -82,8 +82,6 @@ public class SpiaFhirBundle {
 
     /**
      * Returns the Bundle resource build using the supplied SPIA distribution.
-     *
-     * @return
      */
     public Bundle getBundle() {
         return bundle;

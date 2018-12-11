@@ -11,14 +11,13 @@ import java.util.Optional;
  */
 public class ChemicalPathologyRefsetEntry extends LoincRefsetEntry {
 
-    private Optional<CombiningResultsFlag> combiningResultsFlag;
+    private CombiningResultsFlag combiningResultsFlag;
 
     public Optional<CombiningResultsFlag> getCombiningResultsFlag() {
-        return combiningResultsFlag;
+        return Optional.of(combiningResultsFlag);
     }
 
-    public void setCombiningResultsFlag(
-            Optional<CombiningResultsFlag> combiningResultsFlag) {
+    public void setCombiningResultsFlag(CombiningResultsFlag combiningResultsFlag) {
         this.combiningResultsFlag = combiningResultsFlag;
     }
 

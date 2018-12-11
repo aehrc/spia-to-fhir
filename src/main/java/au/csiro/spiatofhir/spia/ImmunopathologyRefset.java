@@ -25,9 +25,6 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
-     *
-     * @param workbook
-     * @throws ValidationException
      */
     public ImmunopathologyRefset(Workbook workbook) throws ValidationException {
         this.workbook = workbook;
@@ -36,8 +33,6 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
 
     /**
      * Gets a list of all entries within this reference set.
-     *
-     * @return
      */
     @Override
     public List<RefsetEntry> getRefsetEntries() {
@@ -46,7 +41,7 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
 
     private void parse() throws ValidationException {
         sheet = workbook.getSheet(SHEET_NAME);
-        refsetEntries = new ArrayList<RefsetEntry>();
+        refsetEntries = new ArrayList<>();
         for (Row row : sheet) {
             // Check that header row matches expectations.
             if (row.getRowNum() == 0) {

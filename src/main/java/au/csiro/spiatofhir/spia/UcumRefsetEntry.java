@@ -13,20 +13,20 @@ import java.util.Set;
  */
 public class UcumRefsetEntry implements RefsetEntry {
 
-    private Optional<String> rcpaPreferredTerm;
-    private Optional<String> description;
-    private Optional<String> ucumCode;
+    private String rcpaPreferredTerm;
+    private String description;
+    private String ucumCode;
 
     public UcumRefsetEntry() {
     }
 
     @Override
     public Optional<String> getRcpaPreferredTerm() {
-        return rcpaPreferredTerm;
+        return Optional.ofNullable(rcpaPreferredTerm);
     }
 
     public void setRcpaPreferredTerm(Optional<String> rcpaPreferredTerm) {
-        this.rcpaPreferredTerm = rcpaPreferredTerm;
+        this.rcpaPreferredTerm = rcpaPreferredTerm.orElse(null);
     }
 
     @Override
@@ -35,19 +35,19 @@ public class UcumRefsetEntry implements RefsetEntry {
     }
 
     public Optional<String> getDescription() {
-        return description;
+        return Optional.ofNullable(description);
     }
 
     public void setDescription(Optional<String> description) {
-        this.description = description;
+        this.description = description.orElse(null);
     }
 
     public Optional<String> getCode() {
-        return ucumCode;
+        return Optional.ofNullable(ucumCode);
     }
 
     public void setCode(Optional<String> code) {
-        this.ucumCode = code;
+        this.ucumCode = code.orElse(null);
     }
 
 }
