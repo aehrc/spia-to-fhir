@@ -1,6 +1,7 @@
 # SPIA to FHIR
 
-A [Maven](https://maven.apache.org/) plugin for converting terminology from the
+A [Maven](https://maven.apache.org/) plugin for converting terminology from
+version 3 of the
 [Standards for Pathology Informatics in Australia (SPIA)](https://test.rcpa.edu.au/Library/Practising-Pathology/PTIS/APUTS-Downloads)
 into a set of [FHIR STU3](https://hl7.org/fhir/STU3/) terminology resources.
 
