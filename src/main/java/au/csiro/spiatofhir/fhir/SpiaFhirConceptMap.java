@@ -57,12 +57,13 @@ public interface SpiaFhirConceptMap {
         ConceptMap.ConceptMapGroupComponent group = new ConceptMap.ConceptMapGroupComponent();
         for (RefsetEntry entry : refsetEntries) {
             LoincRefsetEntry loincEntry = (LoincRefsetEntry) entry;
-            if (!loincEntry.getCode().isPresent() || !loincEntry.getUcum().isPresent()) continue;
+            if (loincEntry.getCode().isEmpty() || loincEntry.getUcum().isEmpty()) continue;
             ConceptMap.SourceElementComponent element = new ConceptMap.SourceElementComponent();
             element.setCode(loincEntry.getCode().get());
             if (loincEntry.getRcpaPreferredTerm().isPresent())
                 element.setDisplay(loincEntry.getRcpaPreferredTerm().get());
             ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
+            if (loincEntry.getUcum().isEmpty()) continue;
             target.setCode(loincEntry.getUcum().get());
             if (loincEntry.getUnit().isPresent())
                 target.setDisplay(loincEntry.getUnit().get());

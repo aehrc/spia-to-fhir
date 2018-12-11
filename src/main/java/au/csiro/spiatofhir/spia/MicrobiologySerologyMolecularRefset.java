@@ -32,7 +32,6 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
              "LOINC", "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version", "History"};
     private static final String SHEET_NAME = "Terminology Micro Sero Molecul";
     private Workbook workbook;
-    private Sheet sheet;
     private List<RefsetEntry> refsetEntries;
 
     /**
@@ -52,8 +51,8 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
     }
 
     private void parse() throws ValidationException {
-        sheet = workbook.getSheet(SHEET_NAME);
-        refsetEntries = new ArrayList<RefsetEntry>();
+        Sheet sheet = workbook.getSheet(SHEET_NAME);
+        refsetEntries = new ArrayList<>();
         for (Row row : sheet) {
             // Check that header row matches expectations.
             if (row.getRowNum() == 0) {
@@ -67,9 +66,8 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
             Optional<String> rcpaPreferredTerm = getStringValueFromCell(row, 0);
             Optional<String> rcpaSynonymsRaw = getStringValueFromCell(row, 1);
             Set<String> rcpaSynonyms = new HashSet<>();
-            if (rcpaSynonymsRaw.isPresent()) {
-                Arrays.asList(rcpaSynonymsRaw.get().split(";")).stream().forEach(s -> rcpaSynonyms.add(s.trim()));
-            }
+            rcpaSynonymsRaw.ifPresent(s1 -> Arrays.stream(s1.split(";"))
+                                                  .forEach(s -> rcpaSynonyms.add(s.trim())));
             Optional<String> usageGuidance = getStringValueFromCell(row, 2);
             // Length has been omitted, as formulas are being used within the spreadsheet.
             Optional<String> specimen = getStringValueFromCell(row, 4);

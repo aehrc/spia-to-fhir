@@ -30,7 +30,6 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
              "Terminology binding (SNOMED CT-AU)", "Version", "History"};
     private static final String SHEET_NAME = "Terminology for Requesting Path";
     private Workbook workbook;
-    private Sheet sheet;
     private List<RefsetEntry> refsetEntries;
 
     /**
@@ -50,7 +49,7 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
     }
 
     private void parse() throws ValidationException {
-        sheet = workbook.getSheet(SHEET_NAME);
+        Sheet sheet = workbook.getSheet(SHEET_NAME);
         refsetEntries = new ArrayList<RefsetEntry>();
         for (Row row : sheet) {
             // Check that header row matches expectations.

@@ -55,7 +55,9 @@ public abstract class Refset {
             throw new CellValidationException("Cell identified for extraction of numeric value is not of numeric " +
                                                       "type, actual type: " + cell.getCellTypeEnum().toString(),
                                               cell.getRowIndex(), cell.getColumnIndex());
-        return Optional.ofNullable(cell.getNumericCellValue());
+        double value = cell.getNumericCellValue();
+        if (value == 0) return Optional.empty();
+        else return Optional.of(value);
     }
 
 }

@@ -23,8 +23,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,20 +35,20 @@ import java.util.zip.ZipFile;
 public class SpiaDistribution {
 
     private static final Map<DistributionEntry, String> expectedEntries =
-            Collections.unmodifiableMap(new HashMap<>() {
-                {
-                    put(DistributionEntry.REQUESTING,
-                        "RCPA - SPIA Requesting Pathology Terminology Reference Set v3.0.xlsx");
-                    put(DistributionEntry.CHEMICAL,
-                        "RCPA - SPIA Chemical Pathology Terminology Reference Set v3.0.xlsx");
-                    put(DistributionEntry.HAEMATOLOGY, "RCPA - SPIA Haematology Terminology Reference Set v3.0.xlsx");
-                    put(DistributionEntry.IMMUNOPATHOLOGY,
-                        "RCPA - SPIA Immunopathology Terminology Reference Set v3.0.xlsx");
-                    put(DistributionEntry.MICROBIOLOGY_SEROLOGY_MOLECULAR,
-                        "RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0.xlsx");
-                    put(DistributionEntry.PREFERRED_UNITS, "RCPA - SPIA Preferred units v1.0.xlsx");
-                }
-            });
+            Map.of(
+                    DistributionEntry.REQUESTING,
+                    "RCPA - SPIA Requesting Pathology Terminology Reference Set v3.0.xlsx",
+                    DistributionEntry.CHEMICAL,
+                    "RCPA - SPIA Chemical Pathology Terminology Reference Set v3.0.xlsx",
+                    DistributionEntry.HAEMATOLOGY,
+                    "RCPA - SPIA Haematology Terminology Reference Set v3.0.xlsx",
+                    DistributionEntry.IMMUNOPATHOLOGY,
+                    "RCPA - SPIA Immunopathology Terminology Reference Set v3.0.xlsx",
+                    DistributionEntry.MICROBIOLOGY_SEROLOGY_MOLECULAR,
+                    "RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0.xlsx",
+                    DistributionEntry.PREFERRED_UNITS,
+                    "RCPA - SPIA Preferred units v1.0.xlsx"
+            );
     private ZipFile zipFile;
 
     public SpiaDistribution(File file) throws IOException, ValidationException {
@@ -64,7 +62,7 @@ public class SpiaDistribution {
     }
 
     private void validate() throws ValidationException {
-        List<String> entryNames = zipFile.stream().map(entry -> entry.getName()).collect(Collectors.toList());
+        List<String> entryNames = zipFile.stream().map(ZipEntry::getName).collect(Collectors.toList());
         for (String expectedEntryName : expectedEntries.values()) {
             if (!entryNames.contains(expectedEntryName))
                 throw new ValidationException("Expected entry not found in zip archive: " + expectedEntryName);

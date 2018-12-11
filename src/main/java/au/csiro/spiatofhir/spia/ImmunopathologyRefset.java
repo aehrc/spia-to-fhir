@@ -32,7 +32,6 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
              "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version", "History"};
     private static final String SHEET_NAME = "Terminology for Immunopathology";
     private Workbook workbook;
-    private Sheet sheet;
     private List<RefsetEntry> refsetEntries;
 
     /**
@@ -52,7 +51,7 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
     }
 
     private void parse() throws ValidationException {
-        sheet = workbook.getSheet(SHEET_NAME);
+        Sheet sheet = workbook.getSheet(SHEET_NAME);
         refsetEntries = new ArrayList<>();
         for (Row row : sheet) {
             // Check that header row matches expectations.
@@ -61,7 +60,7 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
                 continue;
             }
             // Skip heading rows
-            int[] headingRows = {1, 88, 132, 133, 142, 154, 166, 180, 191};
+            Integer[] headingRows = {1, 88, 132, 133, 142, 154, 166, 180, 191};
             if (Arrays.asList(headingRows).contains(row.getRowNum())) continue;
 
             LoincRefsetEntry refsetEntry = new LoincRefsetEntry();
@@ -70,9 +69,8 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
             Optional<String> rcpaPreferredTerm = getStringValueFromCell(row, 0);
             Optional<String> rcpaSynonymsRaw = getStringValueFromCell(row, 1);
             Set<String> rcpaSynonyms = new HashSet<>();
-            if (rcpaSynonymsRaw.isPresent()) {
-                Arrays.asList(rcpaSynonymsRaw.get().split(";")).stream().forEach(s -> rcpaSynonyms.add(s.trim()));
-            }
+            rcpaSynonymsRaw.ifPresent(s1 -> Arrays.stream(s1.split(";"))
+                                                  .forEach(s -> rcpaSynonyms.add(s.trim())));
             Optional<String> usageGuidance = getStringValueFromCell(row, 2);
             // Length has been omitted, as formulas are being used within the spreadsheet.
             Optional<String> specimen = getStringValueFromCell(row, 4);

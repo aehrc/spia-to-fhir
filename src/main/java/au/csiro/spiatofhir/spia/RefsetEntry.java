@@ -24,10 +24,10 @@ import java.util.Set;
  */
 public interface RefsetEntry {
 
-    public Optional<String> getRcpaPreferredTerm();
+    Optional<String> getRcpaPreferredTerm();
 
-    public Set<String> getRcpaSynonyms();
+    Set<String> getRcpaSynonyms();
 
-    public Optional<String> getCode();
+    Optional<String> getCode();
 
 }

@@ -32,7 +32,6 @@ public class PreferredUnitsRefset extends Refset implements HasRefsetEntries {
     protected static final String[] expectedHeaders = {"Description", "Preferred Display ", "UCUM Unit"};
     private static final String SHEET_NAME = "Preferred units display";
     private Workbook workbook;
-    private Sheet sheet;
     private List<RefsetEntry> refsetEntries;
 
     public PreferredUnitsRefset(Workbook workbook) throws ValidationException {
@@ -49,8 +48,8 @@ public class PreferredUnitsRefset extends Refset implements HasRefsetEntries {
     }
 
     private void parse() throws ValidationException {
-        sheet = workbook.getSheet(SHEET_NAME);
-        refsetEntries = new ArrayList<RefsetEntry>();
+        Sheet sheet = workbook.getSheet(SHEET_NAME);
+        refsetEntries = new ArrayList<>();
         for (Row row : sheet) {
             // Check that header row matches expectations.
             if (row.getRowNum() == 0) {
