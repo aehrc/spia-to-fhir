@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.spia;
 
+import au.csiro.spiatofhir.snomed.SnomedCodeValidator;
 import org.apache.poi.ss.usermodel.*;
 
 import java.util.*;
@@ -31,12 +32,14 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
     private static final String SHEET_NAME = "Terminology for Requesting Path";
     private Workbook workbook;
     private List<RefsetEntry> refsetEntries;
+    private SnomedCodeValidator snomedCodeValidator;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
      */
     public RequestingRefset(Workbook workbook) throws ValidationException {
         this.workbook = workbook;
+        snomedCodeValidator = new SnomedCodeValidator();
         parse();
     }
 
@@ -50,7 +53,7 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
 
     private void parse() throws ValidationException {
         Sheet sheet = workbook.getSheet(SHEET_NAME);
-        refsetEntries = new ArrayList<RefsetEntry>();
+        refsetEntries = new ArrayList<>();
         for (Row row : sheet) {
             // Check that header row matches expectations.
             if (row.getRowNum() == 0) {
@@ -64,13 +67,14 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
             Optional<String> rcpaPreferredTerm = getStringValueFromCell(row, 0);
             Optional<String> rcpaSynonymsRaw = getStringValueFromCell(row, 1);
             Set<String> rcpaSynonyms = new HashSet<>();
-            if (rcpaSynonymsRaw.isPresent()) {
-                Arrays.asList(rcpaSynonymsRaw.get().split(";")).stream().forEach(s -> rcpaSynonyms.add(s.trim()));
-            }
+            rcpaSynonymsRaw.ifPresent(s1 -> Arrays.stream(s1.split(";"))
+                                                  .forEach(s -> rcpaSynonyms.add(s.trim())));
             Optional<String> usageGuidance = getStringValueFromCell(row, 2);
             // Length has been omitted, as formulas are being used within the spreadsheet.
             Optional<String> specimen = getStringValueFromCell(row, 4);
             Optional<String> snomedCode = getSnomedCodeFromCell(row, 5);
+            // Skip whole row unless there is a valid SNOMED code.
+            if (snomedCode.isEmpty() || snomedCodeValidator.validate(snomedCode.get())) continue;
             Optional<Double> version = getNumericValueFromCell(row, 6);
             Optional<String> history = getStringValueFromCell(row, 7);
 
