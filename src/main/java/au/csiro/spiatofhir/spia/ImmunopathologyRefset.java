@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.spia;
 
+import au.csiro.spiatofhir.loinc.LoincCodeValidator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,12 +34,14 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
     private static final String SHEET_NAME = "Terminology for Immunopathology";
     private Workbook workbook;
     private List<RefsetEntry> refsetEntries;
+    private LoincCodeValidator loincCodeValidator;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
      */
     public ImmunopathologyRefset(Workbook workbook) throws ValidationException {
         this.workbook = workbook;
+        loincCodeValidator = new LoincCodeValidator();
         parse();
     }
 
@@ -59,9 +62,6 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
                 validateHeaderRow(row, expectedHeaders);
                 continue;
             }
-            // Skip heading rows
-            Integer[] headingRows = {1, 88, 132, 133, 142, 154, 166, 180, 191};
-            if (Arrays.asList(headingRows).contains(row.getRowNum())) continue;
 
             LoincRefsetEntry refsetEntry = new LoincRefsetEntry();
 
@@ -77,6 +77,8 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
             Optional<String> unit = getStringValueFromCell(row, 5);
             Optional<String> ucum = getStringValueFromCell(row, 6);
             Optional<String> loincCode = getStringValueFromCell(row, 7);
+            // Skip whole row unless there is a valid LOINC code.
+            if (loincCode.isEmpty() || loincCodeValidator.validate(loincCode.get())) continue;
             Optional<String> loincComponent = getStringValueFromCell(row, 8);
             Optional<String> loincProperty = getStringValueFromCell(row, 9);
             Optional<String> loincTiming = getStringValueFromCell(row, 10);

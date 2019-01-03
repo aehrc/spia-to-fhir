@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.spia;
 
+import au.csiro.spiatofhir.loinc.LoincCodeValidator;
 import org.apache.poi.ss.usermodel.*;
 
 import java.util.*;
@@ -36,12 +37,14 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
                    "Orange", ChemicalPathologyRefsetEntry.CombiningResultsFlag.ORANGE);
     private Workbook workbook;
     private List<RefsetEntry> refsetEntries;
+    private LoincCodeValidator loincCodeValidator;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
      */
     public ChemicalPathologyRefset(Workbook workbook) throws ValidationException {
         this.workbook = workbook;
+        loincCodeValidator = new LoincCodeValidator();
         parse();
     }
 
@@ -62,10 +65,6 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
                 validateHeaderRow(row, expectedHeaders);
                 continue;
             }
-            // Skip heading row.
-            if (row.getRowNum() == 172) continue;
-            // This is necessary due to a formula being left at the end of this spreadsheet (230, 15).
-            if (row.getRowNum() > 221) continue;
 
             ChemicalPathologyRefsetEntry refsetEntry = new ChemicalPathologyRefsetEntry();
             // Extract information from row.
@@ -80,6 +79,8 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
             Optional<String> unit = getStringValueFromCell(row, 5);
             Optional<String> ucum = getStringValueFromCell(row, 6);
             Optional<String> loincCode = getStringValueFromCell(row, 7);
+            // Skip whole row unless there is a valid LOINC code.
+            if (loincCode.isEmpty() || loincCodeValidator.validate(loincCode.get())) continue;
             Optional<String> loincComponent = getStringValueFromCell(row, 8);
             Optional<String> loincProperty = getStringValueFromCell(row, 9);
             Optional<String> loincTiming = getStringValueFromCell(row, 10);

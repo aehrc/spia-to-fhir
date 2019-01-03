@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.spia;
 
+import au.csiro.spiatofhir.loinc.LoincCodeValidator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,12 +34,14 @@ public class HaematologyRefset extends Refset implements HasRefsetEntries {
     private static final String SHEET_NAME = "Terminology for Haematology";
     private Workbook workbook;
     private List<RefsetEntry> refsetEntries;
+    private LoincCodeValidator loincCodeValidator;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
      */
     public HaematologyRefset(Workbook workbook) throws ValidationException {
         this.workbook = workbook;
+        loincCodeValidator = new LoincCodeValidator();
         parse();
     }
 
@@ -59,13 +62,13 @@ public class HaematologyRefset extends Refset implements HasRefsetEntries {
                 validateHeaderRow(row, expectedHeaders);
                 continue;
             }
-            // Skip "Cross match" entries.
-            if (row.getRowNum() > 145) continue;
 
             LoincRefsetEntry refsetEntry = new LoincRefsetEntry();
 
             // Extract information from row.
             Optional<String> rcpaPreferredTerm = getStringValueFromCell(row, 0);
+            // Skip rows that have "Cross match" as the preferred term.
+            if (rcpaPreferredTerm.isPresent() && rcpaPreferredTerm.get().equals("Cross match")) continue;
             Optional<String> rcpaSynonymsRaw = getStringValueFromCell(row, 1);
             Set<String> rcpaSynonyms = new HashSet<>();
             rcpaSynonymsRaw.ifPresent(s1 -> Arrays.stream(s1.split(";"))
@@ -76,6 +79,8 @@ public class HaematologyRefset extends Refset implements HasRefsetEntries {
             Optional<String> unit = getStringValueFromCell(row, 5);
             Optional<String> ucum = getStringValueFromCell(row, 6);
             Optional<String> loincCode = getStringValueFromCell(row, 7);
+            // Skip whole row unless there is a valid LOINC code.
+            if (loincCode.isEmpty() || loincCodeValidator.validate(loincCode.get())) continue;
             Optional<String> loincComponent = getStringValueFromCell(row, 8);
             Optional<String> loincProperty = getStringValueFromCell(row, 9);
             Optional<String> loincTiming = getStringValueFromCell(row, 10);
