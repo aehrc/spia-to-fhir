@@ -60,8 +60,9 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
             // Encode the Bundle to JSON and write to the output path.
             IParser jsonParser = FhirContext.forDstu3().newJsonParser();
             String json = jsonParser.encodeResourceToString(transformed);
-            FileWriter fileWriter = new FileWriter(outputPath);
-            fileWriter.write(json);
+            try (FileWriter fileWriter = new FileWriter(outputPath)) {
+                fileWriter.write(json);
+            }
         } catch (Exception e) {
             logger.error("Error occurred during execution: ", e);
             throw new MojoExecutionException("Error occurred during execution: ", e);
