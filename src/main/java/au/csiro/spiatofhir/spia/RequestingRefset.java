@@ -74,7 +74,7 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
             Optional<String> specimen = getStringValueFromCell(row, 4);
             Optional<String> snomedCode = getSnomedCodeFromCell(row, 5);
             // Skip whole row unless there is a valid SNOMED code.
-            if (snomedCode.isEmpty() || snomedCodeValidator.validate(snomedCode.get())) continue;
+            if (snomedCode.isEmpty() || !snomedCodeValidator.validate(snomedCode.get())) continue;
             Optional<Double> version = getNumericValueFromCell(row, 6);
             Optional<String> history = getStringValueFromCell(row, 7);
 

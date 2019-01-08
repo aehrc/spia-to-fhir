@@ -78,7 +78,7 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
             Optional<String> ucum = getStringValueFromCell(row, 6);
             Optional<String> loincCode = getStringValueFromCell(row, 7);
             // Skip whole row unless there is a valid LOINC code.
-            if (loincCode.isEmpty() || loincCodeValidator.validate(loincCode.get())) continue;
+            if (loincCode.isEmpty() || !loincCodeValidator.validate(loincCode.get())) continue;
             Optional<String> loincComponent = getStringValueFromCell(row, 8);
             Optional<String> loincProperty = getStringValueFromCell(row, 9);
             Optional<String> loincTiming = getStringValueFromCell(row, 10);
