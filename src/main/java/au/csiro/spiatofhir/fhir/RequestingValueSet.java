@@ -17,7 +17,11 @@
 package au.csiro.spiatofhir.fhir;
 
 import au.csiro.spiatofhir.spia.HasRefsetEntries;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.ValueSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author John Grimes
@@ -37,9 +41,18 @@ public class RequestingValueSet implements SpiaFhirValueSet {
         valueSet.setId("spia-requesting-refset-3");
         valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-requesting-refset-3");
         valueSet.setVersion("3.0");
+        List<Identifier> identifier = new ArrayList<>();
+        Identifier oid = new Identifier();
+        oid.setSystem("urn:ietf:rfc:3986");
+        // TODO: Add OID.
+        oid.setValue("urn:oid:TBD");
+        identifier.add(oid);
+        valueSet.setIdentifier(identifier);
         valueSet.setName("RCPA - SPIA Requesting Pathology Terminology Reference Set v3.0");
         valueSet.setTitle("RCPA - SPIA Requesting Pathology Terminology Reference Set v3.0");
+        valueSet.setDescription("Standard codes for use in requesting pathology tests in Australia.");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
+        valueSet.getText().getDiv().addText("RCPA - SPIA Requesting Pathology Terminology Reference Set v3.0");
         ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(),
                                                                                              "http://snomed.info/sct");
         valueSet.setCompose(compose);

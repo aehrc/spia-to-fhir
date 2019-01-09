@@ -19,6 +19,8 @@ package au.csiro.spiatofhir.fhir;
 import au.csiro.spiatofhir.spia.LoincRefsetEntry;
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.utilities.xhtml.NodeType;
+import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,15 +32,29 @@ import java.util.List;
 public interface SpiaFhirConceptMap {
 
     static void addCommonElementsToConceptMap(ConceptMap conceptMap) {
+        Meta meta = new Meta();
+        List<UriType> profile = new ArrayList<>();
+        profile.add(new UriType("https://healthterminologies.gov.au/fhir/StructureDefinition/general-concept-map-2"));
+        meta.setProfile(profile);
+        conceptMap.setMeta(meta);
+        Narrative text = new Narrative();
+        text.setStatus(Narrative.NarrativeStatus.EMPTY);
+        XhtmlNode div = new XhtmlNode(NodeType.Element, "div");
+        text.setDiv(div);
+        conceptMap.setText(text);
         conceptMap.setStatus(Enumerations.PublicationStatus.DRAFT);
         conceptMap.setExperimental(true);
         conceptMap.setDate(new Date());
-        conceptMap.setPublisher("Australian E-Health Research Centre, CSIRO");
+        conceptMap.setPublisher("Australian Digital Health Agency");
+        conceptMap.setCopyright(
+                "Copyright © 2019 Australian Digital Health Agency - All rights reserved. This content is licensed " +
+                        "under a Creative Commons Attribution 4.0 International License. See https://creativecommons" +
+                        ".org/licenses/by/4.0/.");
         List<ContactDetail> contact = new ArrayList<>();
         ContactDetail contactDetail = new ContactDetail();
         ContactPoint contactPoint = new ContactPoint();
         contactPoint.setSystem(ContactPoint.ContactPointSystem.EMAIL);
-        contactPoint.setValue("enquiries@aehrc.com");
+        contactPoint.setValue("help@digitalhealth.gov.au");
         contactDetail.addTelecom(contactPoint);
         contact.add(contactDetail);
         conceptMap.setContact(contact);
