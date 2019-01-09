@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.spia;
 
+import au.csiro.spiatofhir.fhir.TerminologyClient;
 import au.csiro.spiatofhir.snomed.SnomedCodeValidator;
 import org.apache.poi.ss.usermodel.*;
 
@@ -30,15 +31,17 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
             {"RCPA Preferred term", "RCPA Synonyms", "Usage guidance", "Length", "Specimen",
              "Terminology binding (SNOMED CT-AU)", "Version", "History"};
     private static final String SHEET_NAME = "Terminology for Requesting Path";
-    private Workbook workbook;
+    private final Workbook workbook;
+    private final TerminologyClient terminologyClient;
+    private final SnomedCodeValidator snomedCodeValidator;
     private List<RefsetEntry> refsetEntries;
-    private SnomedCodeValidator snomedCodeValidator;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
      */
-    public RequestingRefset(Workbook workbook) throws ValidationException {
+    public RequestingRefset(Workbook workbook, TerminologyClient terminologyClient) throws ValidationException {
         this.workbook = workbook;
+        this.terminologyClient = terminologyClient;
         snomedCodeValidator = new SnomedCodeValidator();
         parse();
     }
@@ -64,44 +67,50 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
             SnomedRefsetEntry refsetEntry = new SnomedRefsetEntry();
 
             // Extract information from row.
-            Optional<String> rcpaPreferredTerm = getStringValueFromCell(row, 0);
-            Optional<String> rcpaSynonymsRaw = getStringValueFromCell(row, 1);
+            String rcpaPreferredTerm = getStringValueFromCell(row, 0);
+            String rcpaSynonymsRaw = getStringValueFromCell(row, 1);
             Set<String> rcpaSynonyms = new HashSet<>();
-            rcpaSynonymsRaw.ifPresent(s1 -> Arrays.stream(s1.split(";"))
-                                                  .forEach(s -> rcpaSynonyms.add(s.trim())));
-            Optional<String> usageGuidance = getStringValueFromCell(row, 2);
+            if (rcpaSynonymsRaw != null) {
+                Arrays.stream(rcpaSynonymsRaw.split(";")).forEach(s -> rcpaSynonyms.add(s.trim()));
+            }
+            String usageGuidance = getStringValueFromCell(row, 2);
             // Length has been omitted, as formulas are being used within the spreadsheet.
-            Optional<String> specimen = getStringValueFromCell(row, 4);
-            Optional<String> snomedCode = getSnomedCodeFromCell(row, 5);
+            String specimen = getStringValueFromCell(row, 4);
+            String snomedCode = getSnomedCodeFromCell(row, 5);
             // Skip whole row unless there is a valid SNOMED code.
-            if (snomedCode.isEmpty() || !snomedCodeValidator.validate(snomedCode.get())) continue;
-            Optional<Double> version = getNumericValueFromCell(row, 6);
-            Optional<String> history = getStringValueFromCell(row, 7);
+            if (snomedCode == null || !snomedCodeValidator.validate(snomedCode)) continue;
+            Double version = getNumericValueFromCell(row, 6);
+            String history = getStringValueFromCell(row, 7);
 
             // Populate information into SnomedRefsetEntry object.
             refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
             refsetEntry.setRcpaSynonyms(rcpaSynonyms);
             refsetEntry.setUsageGuidance(usageGuidance);
             refsetEntry.setSpecimen(specimen);
-            refsetEntry.setCode(snomedCode);
+            refsetEntry.setSnomedCode(snomedCode);
             refsetEntry.setVersion(version);
             refsetEntry.setHistory(history);
 
             // Add LoincRefsetEntry object to list.
             refsetEntries.add(refsetEntry);
         }
+        // Lookup and add native display terms to reference set entries.
+        List<String> preferredTerms = lookupDisplayTerms(terminologyClient, "http://snomed.info/sct", refsetEntries);
+        for (int i = 0; i < refsetEntries.size(); i++) {
+            SnomedRefsetEntry refsetEntry = (SnomedRefsetEntry) refsetEntries.get(i);
+            if (preferredTerms.get(i) != null) refsetEntry.setSnomedPreferredTerm(preferredTerms.get(i));
+        }
     }
 
-    private Optional<String> getSnomedCodeFromCell(Row row, int cellNumber) throws CellValidationException {
+    private String getSnomedCodeFromCell(Row row, int cellNumber) throws CellValidationException {
         Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
-        if (cell == null) return Optional.empty();
+        if (cell == null) return null;
         if (cell.getCellTypeEnum() != CellType.STRING)
             throw new CellValidationException(
                     "Cell identified for extraction of SNOMED code is not of string type, actual type: " +
                             cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
         String cellValue = cell.getStringCellValue();
-        String code = cellValue.split("\\|")[0].trim();
-        return Optional.of(code);
+        return cellValue.split("\\|")[0].trim();
     }
 
 }

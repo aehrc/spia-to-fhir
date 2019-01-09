@@ -58,26 +58,21 @@ public interface SpiaFhirValueSet {
         List<ValueSet.ConceptSetComponent> include = new ArrayList<>();
         ValueSet.ConceptSetComponent includeEntry = new ValueSet.ConceptSetComponent();
         List<ValueSet.ConceptReferenceComponent> concept = new ArrayList<>();
+
         for (RefsetEntry entry : refsetEntries) {
-            if (entry.getCode().isPresent()) {
+            if (entry.getCode() != null) {
                 includeEntry.setSystem(system);
                 ValueSet.ConceptReferenceComponent conceptEntry = new ValueSet.ConceptReferenceComponent();
-                conceptEntry.setCode(entry.getCode().get());
-                if (entry.getRcpaPreferredTerm().isPresent()) {
-                    conceptEntry.setDisplay(entry.getRcpaPreferredTerm().get());
-                }
-                if (!entry.getRcpaSynonyms().isEmpty()) {
+                conceptEntry.setCode(entry.getCode());
+                conceptEntry.setDisplay(entry.getNativeDisplay());
+
+                if (entry.getRcpaPreferredTerm() != null || !entry.getRcpaSynonyms().isEmpty()) {
                     List<ValueSet.ConceptReferenceDesignationComponent> designation = new ArrayList<>();
-                    for (String rcpaSynonym : entry.getRcpaSynonyms()) {
-                        ValueSet.ConceptReferenceDesignationComponent designationEntry =
-                                new ValueSet.ConceptReferenceDesignationComponent();
-                        designationEntry.setValue(rcpaSynonym);
-                        Coding designationUse = new Coding();
-                        designationUse.setSystem("http://snomed.info/sct");
-                        designationUse.setCode("900000000000013009");
-                        designationUse.setDisplay("Synonym");
-                        designationEntry.setUse(designationUse);
-                        designation.add(designationEntry);
+                    if (entry.getRcpaPreferredTerm() != null) {
+                        designation.add(buildPreferredTermDesignation(entry));
+                    }
+                    if (!entry.getRcpaSynonyms().isEmpty()) {
+                        designation.addAll(buildSynonymDesignations(entry));
                     }
                     conceptEntry.setDesignation(designation);
                 }
@@ -87,7 +82,36 @@ public interface SpiaFhirValueSet {
         includeEntry.setConcept(concept);
         include.add(includeEntry);
         compose.setInclude(include);
+
         return compose;
+    }
+
+    static ValueSet.ConceptReferenceDesignationComponent buildPreferredTermDesignation(RefsetEntry entry) {
+        ValueSet.ConceptReferenceDesignationComponent designationEntry =
+                new ValueSet.ConceptReferenceDesignationComponent();
+        designationEntry.setValue(entry.getRcpaPreferredTerm());
+        Coding designationUse =
+                new Coding("https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type-3",
+                           "preferred-term",
+                           "RCPA Preferred Term");
+        designationEntry.setUse(designationUse);
+        return designationEntry;
+    }
+
+    static List<ValueSet.ConceptReferenceDesignationComponent> buildSynonymDesignations(RefsetEntry entry) {
+        List<ValueSet.ConceptReferenceDesignationComponent> designationEntries = new ArrayList<>();
+        for (String rcpaSynonym : entry.getRcpaSynonyms()) {
+            ValueSet.ConceptReferenceDesignationComponent designationEntry =
+                    new ValueSet.ConceptReferenceDesignationComponent();
+            designationEntry.setValue(rcpaSynonym);
+            Coding designationUse = new Coding(
+                    "https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type-3",
+                    "synonym",
+                    "RCPA Synonym");
+            designationEntry.setUse(designationUse);
+            designationEntries.add(designationEntry);
+        }
+        return designationEntries;
     }
 
     ValueSet getValueSet();

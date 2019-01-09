@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.spia;
 
+import au.csiro.spiatofhir.fhir.TerminologyClient;
 import au.csiro.spiatofhir.loinc.LoincCodeValidator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -32,15 +33,18 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
             {"RCPA Preferred term", "RCPA Synonyms", "Usage guidance", "Length", "Specimen", "DURATION", "Unit", "UCUM",
              "LOINC", "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version", "History"};
     private static final String SHEET_NAME = "Terminology Micro Sero Molecul";
-    private Workbook workbook;
+    private final Workbook workbook;
+    private final TerminologyClient terminologyClient;
+    private final LoincCodeValidator loincCodeValidator;
     private List<RefsetEntry> refsetEntries;
-    private LoincCodeValidator loincCodeValidator;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
      */
-    public MicrobiologySerologyMolecularRefset(Workbook workbook) throws ValidationException {
+    public MicrobiologySerologyMolecularRefset(Workbook workbook,
+                                               TerminologyClient terminologyClient) throws ValidationException {
         this.workbook = workbook;
+        this.terminologyClient = terminologyClient;
         loincCodeValidator = new LoincCodeValidator();
         parse();
     }
@@ -66,37 +70,38 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
             LoincRefsetEntry refsetEntry = new LoincRefsetEntry();
 
             // Extract information from row.
-            Optional<String> rcpaPreferredTerm = getStringValueFromCell(row, 0);
-            Optional<String> rcpaSynonymsRaw = getStringValueFromCell(row, 1);
+            String rcpaPreferredTerm = getStringValueFromCell(row, 0);
+            String rcpaSynonymsRaw = getStringValueFromCell(row, 1);
             Set<String> rcpaSynonyms = new HashSet<>();
-            rcpaSynonymsRaw.ifPresent(s1 -> Arrays.stream(s1.split(";"))
-                                                  .forEach(s -> rcpaSynonyms.add(s.trim())));
-            Optional<String> usageGuidance = getStringValueFromCell(row, 2);
+            if (rcpaSynonymsRaw != null) {
+                Arrays.stream(rcpaSynonymsRaw.split(";")).forEach(s -> rcpaSynonyms.add(s.trim()));
+            }
+            String usageGuidance = getStringValueFromCell(row, 2);
             // Length has been omitted, as formulas are being used within the spreadsheet.
-            Optional<String> specimen = getStringValueFromCell(row, 4);
-            Optional<String> unit = getStringValueFromCell(row, 6);
-            Optional<String> ucum = getStringValueFromCell(row, 7);
-            Optional<String> loincCode = getStringValueFromCell(row, 8);
+            String specimen = getStringValueFromCell(row, 4);
+            String unit = getStringValueFromCell(row, 6);
+            String ucum = getStringValueFromCell(row, 7);
+            String loincCode = getStringValueFromCell(row, 8);
             // Skip whole row unless there is a valid LOINC code.
-            if (loincCode.isEmpty() || !loincCodeValidator.validate(loincCode.get())) continue;
-            Optional<String> loincComponent = getStringValueFromCell(row, 9);
-            Optional<String> loincProperty = getStringValueFromCell(row, 10);
-            Optional<String> loincTiming = getStringValueFromCell(row, 11);
-            Optional<String> loincSystem = getStringValueFromCell(row, 12);
-            Optional<String> loincScale = getStringValueFromCell(row, 13);
-            Optional<String> loincMethod = getStringValueFromCell(row, 14);
-            Optional<String> loincLongName = getStringValueFromCell(row, 15);
-            Optional<Double> version = getNumericValueFromCell(row, 16);
-            Optional<String> history = getStringValueFromCell(row, 17);
+            if (loincCode == null || !loincCodeValidator.validate(loincCode)) continue;
+            String loincComponent = getStringValueFromCell(row, 9);
+            String loincProperty = getStringValueFromCell(row, 10);
+            String loincTiming = getStringValueFromCell(row, 11);
+            String loincSystem = getStringValueFromCell(row, 12);
+            String loincScale = getStringValueFromCell(row, 13);
+            String loincMethod = getStringValueFromCell(row, 14);
+            String loincLongName = getStringValueFromCell(row, 15);
+            Double version = getNumericValueFromCell(row, 16);
+            String history = getStringValueFromCell(row, 17);
 
             // Populate information into LoincRefsetEntry object.
             refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
             refsetEntry.setRcpaSynonyms(rcpaSynonyms);
             refsetEntry.setUsageGuidance(usageGuidance);
             refsetEntry.setSpecimen(specimen);
-            refsetEntry.setUnit(unit);
-            refsetEntry.setUcum(ucum);
-            refsetEntry.setCode(loincCode);
+            refsetEntry.setRcpaUnit(unit);
+            refsetEntry.setUcumCode(ucum);
+            refsetEntry.setLoincCode(loincCode);
             refsetEntry.setLoincComponent(loincComponent);
             refsetEntry.setLoincProperty(loincProperty);
             refsetEntry.setLoincTiming(loincTiming);
@@ -110,6 +115,13 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
             // Add LoincRefsetEntry object to list.
             refsetEntries.add(refsetEntry);
         }
+        // Lookup and add native display terms to reference set entries.
+        List<String> preferredTerms = lookupDisplayTerms(terminologyClient, "http://loinc.org", refsetEntries);
+        for (int i = 0; i < refsetEntries.size(); i++) {
+            LoincRefsetEntry refsetEntry = (LoincRefsetEntry) refsetEntries.get(i);
+            if (preferredTerms.get(i) != null) refsetEntry.setLoincLongName(preferredTerms.get(i));
+        }
+        addUcumDisplays(terminologyClient, refsetEntries);
     }
 
 }

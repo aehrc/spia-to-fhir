@@ -16,7 +16,6 @@
 
 package au.csiro.spiatofhir.spia;
 
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -24,6 +23,7 @@ import java.util.Set;
  */
 public class SnomedRefsetEntry implements RefsetEntry {
 
+    private String snomedPreferredTerm;
     private String rcpaPreferredTerm;
     private Set<String> rcpaSynonyms;
     private String usageGuidance;
@@ -36,14 +36,34 @@ public class SnomedRefsetEntry implements RefsetEntry {
     public SnomedRefsetEntry() {
     }
 
-    public Optional<String> getRcpaPreferredTerm() {
-        return Optional.ofNullable(rcpaPreferredTerm);
+    @Override
+    public String getNativeDisplay() {
+        return snomedPreferredTerm;
     }
 
-    public void setRcpaPreferredTerm(Optional<String> rcpaPreferredTerm) {
-        this.rcpaPreferredTerm = rcpaPreferredTerm.orElse(null);
+    @Override
+    public String getCode() {
+        return snomedCode;
     }
 
+    public String getSnomedPreferredTerm() {
+        return snomedPreferredTerm;
+    }
+
+    public void setSnomedPreferredTerm(String snomedPreferredTerm) {
+        this.snomedPreferredTerm = snomedPreferredTerm;
+    }
+
+    @Override
+    public String getRcpaPreferredTerm() {
+        return rcpaPreferredTerm;
+    }
+
+    public void setRcpaPreferredTerm(String rcpaPreferredTerm) {
+        this.rcpaPreferredTerm = rcpaPreferredTerm;
+    }
+
+    @Override
     public Set<String> getRcpaSynonyms() {
         return rcpaSynonyms;
     }
@@ -52,52 +72,52 @@ public class SnomedRefsetEntry implements RefsetEntry {
         this.rcpaSynonyms = rcpaSynonyms;
     }
 
-    public Optional<String> getUsageGuidance() {
-        return Optional.ofNullable(usageGuidance);
+    public String getUsageGuidance() {
+        return usageGuidance;
     }
 
-    public void setUsageGuidance(Optional<String> usageGuidance) {
-        this.usageGuidance = usageGuidance.orElse(null);
+    public void setUsageGuidance(String usageGuidance) {
+        this.usageGuidance = usageGuidance;
     }
 
-    public Optional<Double> getLength() {
-        return Optional.ofNullable(length);
+    public Double getLength() {
+        return length;
     }
 
-    public void setLength(Optional<Double> length) {
-        this.length = length.orElse(null);
+    public void setLength(Double length) {
+        this.length = length;
     }
 
-    public Optional<String> getSpecimen() {
-        return Optional.ofNullable(specimen);
+    public String getSpecimen() {
+        return specimen;
     }
 
-    public void setSpecimen(Optional<String> specimen) {
-        this.specimen = specimen.orElse(null);
+    public void setSpecimen(String specimen) {
+        this.specimen = specimen;
     }
 
-    public Optional<String> getCode() {
-        return Optional.ofNullable(snomedCode);
+    public String getSnomedCode() {
+        return snomedCode;
     }
 
-    public void setCode(Optional<String> code) {
-        this.snomedCode = code.orElse(null);
+    public void setSnomedCode(String snomedCode) {
+        this.snomedCode = snomedCode;
     }
 
-    public Optional<Double> getVersion() {
-        return Optional.ofNullable(version);
+    public Double getVersion() {
+        return version;
     }
 
-    public void setVersion(Optional<Double> version) {
-        this.version = version.orElse(null);
+    public void setVersion(Double version) {
+        this.version = version;
     }
 
-    public Optional<String> getHistory() {
-        return Optional.ofNullable(history);
+    public String getHistory() {
+        return history;
     }
 
-    public void setHistory(Optional<String> history) {
-        this.history = history.orElse(null);
+    public void setHistory(String history) {
+        this.history = history;
     }
 
 }

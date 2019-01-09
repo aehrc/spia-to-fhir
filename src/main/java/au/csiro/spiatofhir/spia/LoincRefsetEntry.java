@@ -16,7 +16,6 @@
 
 package au.csiro.spiatofhir.spia;
 
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -29,8 +28,9 @@ public class LoincRefsetEntry implements RefsetEntry {
     private String usageGuidance;
     private Double length;
     private String specimen;
-    private String unit;
-    private String ucum;
+    private String rcpaUnit;
+    private String ucumCode;
+    private String ucumDisplay;
     private String loincCode;
     private String loincComponent;
     private String loincProperty;
@@ -45,14 +45,26 @@ public class LoincRefsetEntry implements RefsetEntry {
     public LoincRefsetEntry() {
     }
 
-    public Optional<String> getRcpaPreferredTerm() {
-        return Optional.ofNullable(rcpaPreferredTerm);
+    @Override
+    public String getNativeDisplay() {
+        return loincLongName;
     }
 
-    public void setRcpaPreferredTerm(Optional<String> rcpaPreferredTerm) {
-        this.rcpaPreferredTerm = rcpaPreferredTerm.orElse(null);
+    @Override
+    public String getCode() {
+        return loincCode;
     }
 
+    @Override
+    public String getRcpaPreferredTerm() {
+        return rcpaPreferredTerm;
+    }
+
+    public void setRcpaPreferredTerm(String rcpaPreferredTerm) {
+        this.rcpaPreferredTerm = rcpaPreferredTerm;
+    }
+
+    @Override
     public Set<String> getRcpaSynonyms() {
         return rcpaSynonyms;
     }
@@ -61,124 +73,132 @@ public class LoincRefsetEntry implements RefsetEntry {
         this.rcpaSynonyms = rcpaSynonyms;
     }
 
-    public Optional<String> getUsageGuidance() {
-        return Optional.ofNullable(usageGuidance);
+    public String getUsageGuidance() {
+        return usageGuidance;
     }
 
-    public void setUsageGuidance(Optional<String> usageGuidance) {
-        this.usageGuidance = usageGuidance.orElse(null);
+    public void setUsageGuidance(String usageGuidance) {
+        this.usageGuidance = usageGuidance;
     }
 
-    public Optional<Double> getLength() {
-        return Optional.ofNullable(length);
+    public Double getLength() {
+        return length;
     }
 
-    public void setLength(Optional<Double> length) {
-        this.length = length.orElse(null);
+    public void setLength(Double length) {
+        this.length = length;
     }
 
-    public Optional<String> getSpecimen() {
-        return Optional.ofNullable(specimen);
+    public String getSpecimen() {
+        return specimen;
     }
 
-    public void setSpecimen(Optional<String> specimen) {
-        this.specimen = specimen.orElse(null);
+    public void setSpecimen(String specimen) {
+        this.specimen = specimen;
     }
 
-    public Optional<String> getUnit() {
-        return Optional.ofNullable(unit);
+    public String getRcpaUnit() {
+        return rcpaUnit;
     }
 
-    public void setUnit(Optional<String> unit) {
-        this.unit = unit.orElse(null);
+    public void setRcpaUnit(String rcpaUnit) {
+        this.rcpaUnit = rcpaUnit;
     }
 
-    public Optional<String> getUcum() {
-        return Optional.ofNullable(ucum);
+    public String getUcumCode() {
+        return ucumCode;
     }
 
-    public void setUcum(Optional<String> ucum) {
-        this.ucum = ucum.orElse(null);
+    public void setUcumCode(String ucumCode) {
+        this.ucumCode = ucumCode;
     }
 
-    public Optional<String> getCode() {
-        return Optional.ofNullable(loincCode);
+    public String getUcumDisplay() {
+        return ucumDisplay;
     }
 
-    public void setCode(Optional<String> code) {
-        this.loincCode = code.orElse(null);
+    public void setUcumDisplay(String ucumDisplay) {
+        this.ucumDisplay = ucumDisplay;
     }
 
-    public Optional<String> getLoincComponent() {
-        return Optional.ofNullable(loincComponent);
+    public String getLoincCode() {
+        return loincCode;
     }
 
-    public void setLoincComponent(Optional<String> loincComponent) {
-        this.loincComponent = loincComponent.orElse(null);
+    public void setLoincCode(String loincCode) {
+        this.loincCode = loincCode;
     }
 
-    public Optional<String> getLoincProperty() {
-        return Optional.ofNullable(loincProperty);
+    public String getLoincComponent() {
+        return loincComponent;
     }
 
-    public void setLoincProperty(Optional<String> loincProperty) {
-        this.loincProperty = loincProperty.orElse(null);
+    public void setLoincComponent(String loincComponent) {
+        this.loincComponent = loincComponent;
     }
 
-    public Optional<String> getLoincTiming() {
-        return Optional.ofNullable(loincTiming);
+    public String getLoincProperty() {
+        return loincProperty;
     }
 
-    public void setLoincTiming(Optional<String> loincTiming) {
-        this.loincTiming = loincTiming.orElse(null);
+    public void setLoincProperty(String loincProperty) {
+        this.loincProperty = loincProperty;
     }
 
-    public Optional<String> getLoincSystem() {
-        return Optional.ofNullable(loincSystem);
+    public String getLoincTiming() {
+        return loincTiming;
     }
 
-    public void setLoincSystem(Optional<String> loincSystem) {
-        this.loincSystem = loincSystem.orElse(null);
+    public void setLoincTiming(String loincTiming) {
+        this.loincTiming = loincTiming;
     }
 
-    public Optional<String> getLoincScale() {
-        return Optional.ofNullable(loincScale);
+    public String getLoincSystem() {
+        return loincSystem;
     }
 
-    public void setLoincScale(Optional<String> loincScale) {
-        this.loincScale = loincScale.orElse(null);
+    public void setLoincSystem(String loincSystem) {
+        this.loincSystem = loincSystem;
     }
 
-    public Optional<String> getLoincMethod() {
-        return Optional.ofNullable(loincMethod);
+    public String getLoincScale() {
+        return loincScale;
     }
 
-    public void setLoincMethod(Optional<String> loincMethod) {
-        this.loincMethod = loincMethod.orElse(null);
+    public void setLoincScale(String loincScale) {
+        this.loincScale = loincScale;
     }
 
-    public Optional<String> getLoincLongName() {
-        return Optional.ofNullable(loincLongName);
+    public String getLoincMethod() {
+        return loincMethod;
     }
 
-    public void setLoincLongName(Optional<String> loincLongName) {
-        this.loincLongName = loincLongName.orElse(null);
+    public void setLoincMethod(String loincMethod) {
+        this.loincMethod = loincMethod;
     }
 
-    public Optional<Double> getVersion() {
-        return Optional.ofNullable(version);
+    public String getLoincLongName() {
+        return loincLongName;
     }
 
-    public void setVersion(Optional<Double> version) {
-        this.version = version.orElse(null);
+    public void setLoincLongName(String loincLongName) {
+        this.loincLongName = loincLongName;
     }
 
-    public Optional<String> getHistory() {
-        return Optional.ofNullable(history);
+    public Double getVersion() {
+        return version;
     }
 
-    public void setHistory(Optional<String> history) {
-        this.history = history.orElse(null);
+    public void setVersion(Double version) {
+        this.version = version;
+    }
+
+    public String getHistory() {
+        return history;
+    }
+
+    public void setHistory(String history) {
+        this.history = history;
     }
 
 }

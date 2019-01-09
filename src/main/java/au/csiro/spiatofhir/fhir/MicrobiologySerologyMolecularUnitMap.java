@@ -25,7 +25,7 @@ import org.hl7.fhir.dstu3.model.UriType;
  */
 public class MicrobiologySerologyMolecularUnitMap {
 
-    private HasRefsetEntries refset;
+    private final HasRefsetEntries refset;
     private ConceptMap conceptMap;
 
     public MicrobiologySerologyMolecularUnitMap(HasRefsetEntries refset) {

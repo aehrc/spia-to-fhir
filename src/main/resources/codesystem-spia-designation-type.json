@@ -1,0 +1,43 @@
+{
+  "resourceType": "CodeSystem",
+  "id": "spia-designation-type-3",
+  "url": "https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type-3",
+  "version": "3.0",
+  "name": "RCPA - SPIA Designation Type v3.0",
+  "title": "spia-designation-type-3",
+  "status": "draft",
+  "experimental": true,
+  "date": "2019-01-08",
+  "publisher": "Australian E-Health Research Centre, CSIRO",
+  "contact": [
+    {
+      "telecom": [
+        {
+          "system": "email",
+          "value": "enquiries@aehrc.com"
+        }
+      ]
+    }
+  ],
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "urn:iso:std:iso:3166",
+          "code": "AU",
+          "display": "Australia"
+        }
+      ]
+    }
+  ],
+  "concept": [
+    {
+      "code": "preferred-term",
+      "display": "RCPA Preferred Term"
+    },
+    {
+      "code": "synonym",
+      "display": "RCPA Synonym"
+    }
+  ]
+}

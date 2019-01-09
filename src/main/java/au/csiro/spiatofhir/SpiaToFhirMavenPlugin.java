@@ -17,6 +17,7 @@
 package au.csiro.spiatofhir;
 
 import au.csiro.spiatofhir.fhir.SpiaFhirBundle;
+import au.csiro.spiatofhir.fhir.TerminologyClient;
 import au.csiro.spiatofhir.spia.SpiaDistribution;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
@@ -37,7 +38,7 @@ import java.io.FileWriter;
 @Mojo(name = "transform")
 public class SpiaToFhirMavenPlugin extends AbstractMojo {
 
-    private static Logger logger = LoggerFactory.getLogger(SpiaToFhirMavenPlugin.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpiaToFhirMavenPlugin.class);
 
     @Parameter(property = "SpiaToFhir.inputPath", required = true)
     private String inputPath;
@@ -45,20 +46,25 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
     @Parameter(property = "SpiaToFhir.outputPath", required = true)
     private String outputPath;
 
+    @Parameter(property = "SpiaToFhir.terminologyServerUrl", required = true)
+    private String terminologyServerUrl;
+
     @Override
     public void execute() throws MojoExecutionException {
         try {
+            FhirContext fhirContext = FhirContext.forDstu3();
+            TerminologyClient terminologyClient = new TerminologyClient(fhirContext, terminologyServerUrl);
             File inputFile = new File(inputPath);
 
             // Parse RCPA distribution.
-            SpiaDistribution spiaDistribution = new SpiaDistribution(inputFile);
+            SpiaDistribution spiaDistribution = new SpiaDistribution(inputFile, terminologyClient);
 
             // Convert distribution into a FHIR Bundle.
-            SpiaFhirBundle spiaFhirBundle = new SpiaFhirBundle(spiaDistribution);
+            SpiaFhirBundle spiaFhirBundle = new SpiaFhirBundle(fhirContext, spiaDistribution);
             Bundle transformed = spiaFhirBundle.getBundle();
 
             // Encode the Bundle to JSON and write to the output path.
-            IParser jsonParser = FhirContext.forDstu3().newJsonParser();
+            IParser jsonParser = fhirContext.newJsonParser();
             String json = jsonParser.encodeResourceToString(transformed);
             try (FileWriter fileWriter = new FileWriter(outputPath)) {
                 fileWriter.write(json);

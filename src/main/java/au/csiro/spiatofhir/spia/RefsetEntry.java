@@ -16,7 +16,6 @@
 
 package au.csiro.spiatofhir.spia;
 
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -24,10 +23,12 @@ import java.util.Set;
  */
 public interface RefsetEntry {
 
-    Optional<String> getRcpaPreferredTerm();
+    String getNativeDisplay();
+
+    String getRcpaPreferredTerm();
 
     Set<String> getRcpaSynonyms();
 
-    Optional<String> getCode();
+    String getCode();
 
 }

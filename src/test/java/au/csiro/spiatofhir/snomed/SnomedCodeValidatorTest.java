@@ -10,9 +10,9 @@ import junit.framework.TestCase;
  */
 public class SnomedCodeValidatorTest extends TestCase {
 
-    private static String[] validCodes =
+    private static final String[] validCodes =
             {"21433011000036107", "54316011000036102", "2594011000036109", "780701000168107", "21258011000036102"};
-    private static String[] invalidCodes =
+    private static final String[] invalidCodes =
             {"dog", "1234", "21433011000036106", "21258001000036102", "0438505003", "001256", "53919011000036101."};
     private SnomedCodeValidator snomedCodeValidator;
 

@@ -24,7 +24,7 @@ import org.hl7.fhir.dstu3.model.ValueSet;
  */
 public class RequestingValueSet implements SpiaFhirValueSet {
 
-    private HasRefsetEntries refset;
+    private final HasRefsetEntries refset;
     private ValueSet valueSet;
 
     public RequestingValueSet(HasRefsetEntries refset) {

@@ -17,7 +17,6 @@
 package au.csiro.spiatofhir.spia;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -28,17 +27,14 @@ public class UcumRefsetEntry implements RefsetEntry {
     private String rcpaPreferredTerm;
     private String description;
     private String ucumCode;
+    private String ucumDisplay;
 
     public UcumRefsetEntry() {
     }
 
     @Override
-    public Optional<String> getRcpaPreferredTerm() {
-        return Optional.ofNullable(rcpaPreferredTerm);
-    }
-
-    public void setRcpaPreferredTerm(Optional<String> rcpaPreferredTerm) {
-        this.rcpaPreferredTerm = rcpaPreferredTerm.orElse(null);
+    public String getNativeDisplay() {
+        return ucumDisplay;
     }
 
     @Override
@@ -46,20 +42,42 @@ public class UcumRefsetEntry implements RefsetEntry {
         return new HashSet<>();
     }
 
-    public Optional<String> getDescription() {
-        return Optional.ofNullable(description);
+    @Override
+    public String getCode() {
+        return ucumCode;
     }
 
-    public void setDescription(Optional<String> description) {
-        this.description = description.orElse(null);
+    @Override
+    public String getRcpaPreferredTerm() {
+        return rcpaPreferredTerm;
     }
 
-    public Optional<String> getCode() {
-        return Optional.ofNullable(ucumCode);
+    public void setRcpaPreferredTerm(String rcpaPreferredTerm) {
+        this.rcpaPreferredTerm = rcpaPreferredTerm;
     }
 
-    public void setCode(Optional<String> code) {
-        this.ucumCode = code.orElse(null);
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getUcumCode() {
+        return ucumCode;
+    }
+
+    public void setUcumCode(String ucumCode) {
+        this.ucumCode = ucumCode;
+    }
+
+    public String getUcumDisplay() {
+        return ucumDisplay;
+    }
+
+    public void setUcumDisplay(String ucumDisplay) {
+        this.ucumDisplay = ucumDisplay;
     }
 
 }

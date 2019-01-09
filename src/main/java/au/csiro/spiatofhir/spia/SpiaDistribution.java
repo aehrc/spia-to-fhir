@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.spia;
 
+import au.csiro.spiatofhir.fhir.TerminologyClient;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -50,9 +51,11 @@ public class SpiaDistribution {
                     "RCPA - SPIA Preferred units v1.0.xlsx"
             );
     private ZipFile zipFile;
+    private TerminologyClient terminologyClient;
 
-    public SpiaDistribution(File file) throws IOException, ValidationException {
+    public SpiaDistribution(File file, TerminologyClient terminologyClient) throws IOException, ValidationException {
         zipFile = new ZipFile(file);
+        this.terminologyClient = terminologyClient;
         validate();
     }
 
@@ -82,17 +85,17 @@ public class SpiaDistribution {
         }
         switch (distributionEntry) {
             case REQUESTING:
-                return new RequestingRefset(workbook);
+                return new RequestingRefset(workbook, terminologyClient);
             case CHEMICAL:
-                return new ChemicalPathologyRefset(workbook);
+                return new ChemicalPathologyRefset(workbook, terminologyClient);
             case MICROBIOLOGY_SEROLOGY_MOLECULAR:
-                return new MicrobiologySerologyMolecularRefset(workbook);
+                return new MicrobiologySerologyMolecularRefset(workbook, terminologyClient);
             case HAEMATOLOGY:
-                return new HaematologyRefset(workbook);
+                return new HaematologyRefset(workbook, terminologyClient);
             case IMMUNOPATHOLOGY:
-                return new ImmunopathologyRefset(workbook);
+                return new ImmunopathologyRefset(workbook, terminologyClient);
             case PREFERRED_UNITS:
-                return new PreferredUnitsRefset(workbook);
+                return new PreferredUnitsRefset(workbook, terminologyClient);
             default:
                 throw new RuntimeException("Entry not supported yet: " + distributionEntry.toString());
         }

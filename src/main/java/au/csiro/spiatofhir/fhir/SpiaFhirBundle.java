@@ -19,10 +19,14 @@ package au.csiro.spiatofhir.fhir;
 import au.csiro.spiatofhir.spia.HasRefsetEntries;
 import au.csiro.spiatofhir.spia.SpiaDistribution;
 import au.csiro.spiatofhir.spia.ValidationException;
+import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.CodeSystem;
 import org.hl7.fhir.dstu3.model.Resource;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +37,14 @@ import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.*;
  */
 public class SpiaFhirBundle {
 
-    private SpiaDistribution spiaDistribution;
+    private final SpiaDistribution spiaDistribution;
+    private final FhirContext fhirContext;
     private Bundle bundle;
 
-    public SpiaFhirBundle(SpiaDistribution spiaDistribution) throws IOException, ValidationException {
+    public SpiaFhirBundle(FhirContext fhirContext, SpiaDistribution spiaDistribution)
+            throws IOException, ValidationException {
         this.spiaDistribution = spiaDistribution;
+        this.fhirContext = fhirContext;
         transform();
     }
 
@@ -84,6 +91,13 @@ public class SpiaFhirBundle {
         // Preferred units
         PreferredUnitsValueSet preferredUnitsValueSet = new PreferredUnitsValueSet(preferredUnitsRefset);
         resources.add(preferredUnitsValueSet.getValueSet());
+        // Supporting terminology
+        try (InputStream designationTypeStream = getClass().getResourceAsStream(
+                "/codesystem-spia-designation-type.json")) {
+            CodeSystem designationType = (CodeSystem) fhirContext.newJsonParser().parseResource(new InputStreamReader(
+                    designationTypeStream));
+            resources.add(designationType);
+        }
 
         for (Resource resource : resources) {
             Bundle.BundleEntryComponent bundleEntry = new Bundle.BundleEntryComponent();

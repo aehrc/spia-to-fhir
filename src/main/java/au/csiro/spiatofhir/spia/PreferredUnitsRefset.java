@@ -16,13 +16,13 @@
 
 package au.csiro.spiatofhir.spia;
 
+import au.csiro.spiatofhir.fhir.TerminologyClient;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author John Grimes
@@ -31,11 +31,13 @@ public class PreferredUnitsRefset extends Refset implements HasRefsetEntries {
 
     protected static final String[] expectedHeaders = {"Description", "Preferred Display ", "UCUM Unit"};
     private static final String SHEET_NAME = "Preferred units display";
-    private Workbook workbook;
+    private final Workbook workbook;
+    private final TerminologyClient terminologyClient;
     private List<RefsetEntry> refsetEntries;
 
-    public PreferredUnitsRefset(Workbook workbook) throws ValidationException {
+    public PreferredUnitsRefset(Workbook workbook, TerminologyClient terminologyClient) throws ValidationException {
         this.workbook = workbook;
+        this.terminologyClient = terminologyClient;
         parse();
     }
 
@@ -60,17 +62,23 @@ public class PreferredUnitsRefset extends Refset implements HasRefsetEntries {
             UcumRefsetEntry refsetEntry = new UcumRefsetEntry();
 
             // Extract information from row.
-            Optional<String> description = getStringValueFromCell(row, 0);
-            Optional<String> rcpaPreferredTerm = getStringValueFromCell(row, 1);
-            Optional<String> ucumCode = getStringValueFromCell(row, 2);
+            String description = getStringValueFromCell(row, 0);
+            String rcpaPreferredTerm = getStringValueFromCell(row, 1);
+            String ucumCode = getStringValueFromCell(row, 2);
 
             // Populate information into UcumRefsetEntry object.
             refsetEntry.setDescription(description);
             refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
-            refsetEntry.setCode(ucumCode);
+            refsetEntry.setUcumCode(ucumCode);
 
             // Add UcumRefsetEntry object to list.
             refsetEntries.add(refsetEntry);
+        }
+        // Lookup and add native display terms to reference set entries.
+        List<String> preferredTerms = lookupDisplayTerms(terminologyClient, "http://unitsofmeasure.org", refsetEntries);
+        for (int i = 0; i < refsetEntries.size(); i++) {
+            UcumRefsetEntry refsetEntry = (UcumRefsetEntry) refsetEntries.get(i);
+            if (preferredTerms.get(i) != null) refsetEntry.setUcumDisplay(preferredTerms.get(i));
         }
     }
 

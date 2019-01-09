@@ -57,16 +57,14 @@ public interface SpiaFhirConceptMap {
         ConceptMap.ConceptMapGroupComponent group = new ConceptMap.ConceptMapGroupComponent();
         for (RefsetEntry entry : refsetEntries) {
             LoincRefsetEntry loincEntry = (LoincRefsetEntry) entry;
-            if (loincEntry.getCode().isEmpty() || loincEntry.getUcum().isEmpty()) continue;
+            if (loincEntry.getCode() == null || loincEntry.getUcumCode() == null) continue;
             ConceptMap.SourceElementComponent element = new ConceptMap.SourceElementComponent();
-            element.setCode(loincEntry.getCode().get());
-            if (loincEntry.getRcpaPreferredTerm().isPresent())
-                element.setDisplay(loincEntry.getRcpaPreferredTerm().get());
+            element.setCode(loincEntry.getCode());
+            if (loincEntry.getNativeDisplay() != null) element.setDisplay(loincEntry.getNativeDisplay());
             ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
-            if (loincEntry.getUcum().isEmpty()) continue;
-            target.setCode(loincEntry.getUcum().get());
-            if (loincEntry.getUnit().isPresent())
-                target.setDisplay(loincEntry.getUnit().get());
+            if (loincEntry.getUcumCode().isEmpty()) continue;
+            target.setCode(loincEntry.getUcumCode());
+            if (loincEntry.getUcumDisplay() != null) target.setDisplay(loincEntry.getUcumDisplay());
             target.setEquivalence(Enumerations.ConceptMapEquivalence.RELATEDTO);
             element.getTarget().add(target);
             group.getElement().add(element);
