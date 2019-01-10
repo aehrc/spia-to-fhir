@@ -87,7 +87,7 @@ public interface SpiaFhirValueSet {
                     if (entry.getRcpaPreferredTerm() != null) {
                         designation.add(buildPreferredTermDesignation(entry));
                     }
-                    if (!entry.getRcpaSynonyms().isEmpty()) {
+                    if (entry.getRcpaSynonyms() != null && !entry.getRcpaSynonyms().isEmpty()) {
                         designation.addAll(buildSynonymDesignations(entry));
                     }
                     conceptEntry.setDesignation(designation);

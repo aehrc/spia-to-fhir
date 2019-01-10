@@ -47,6 +47,8 @@ public class SpiaDistribution {
                     "RCPA - SPIA Immunopathology Terminology Reference Set v3.0.xlsx",
                     DistributionEntry.MICROBIOLOGY_SEROLOGY_MOLECULAR,
                     "RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0.xlsx",
+                    DistributionEntry.MICROBIOLOGY_ORGANISMS,
+                    "RCPA - SPIA Microbiology Subset of Organisms mapped to SNOMED CT v3.0.xlsx",
                     DistributionEntry.PREFERRED_UNITS,
                     "RCPA - SPIA Preferred units v1.0.xlsx"
             );
@@ -90,6 +92,8 @@ public class SpiaDistribution {
                 return new ChemicalPathologyRefset(workbook, terminologyClient);
             case MICROBIOLOGY_SEROLOGY_MOLECULAR:
                 return new MicrobiologySerologyMolecularRefset(workbook, terminologyClient);
+            case MICROBIOLOGY_ORGANISMS:
+                return new MicrobiologySubsetOfOrganismsRefset(workbook, terminologyClient);
             case HAEMATOLOGY:
                 return new HaematologyRefset(workbook, terminologyClient);
             case IMMUNOPATHOLOGY:
@@ -107,6 +111,7 @@ public class SpiaDistribution {
         HAEMATOLOGY,
         IMMUNOPATHOLOGY,
         MICROBIOLOGY_SEROLOGY_MOLECULAR,
+        MICROBIOLOGY_ORGANISMS,
         PREFERRED_UNITS
     }
 

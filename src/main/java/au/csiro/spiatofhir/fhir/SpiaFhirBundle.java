@@ -59,6 +59,8 @@ public class SpiaFhirBundle {
         HasRefsetEntries chemicalRefset = (HasRefsetEntries) spiaDistribution.getRefset(CHEMICAL);
         HasRefsetEntries microbiologyRefset = (HasRefsetEntries) spiaDistribution.getRefset(
                 MICROBIOLOGY_SEROLOGY_MOLECULAR);
+        HasRefsetEntries microbiologyOrganismsRefset = (HasRefsetEntries) spiaDistribution.getRefset(
+                MICROBIOLOGY_ORGANISMS);
         HasRefsetEntries haematologyRefset = (HasRefsetEntries) spiaDistribution.getRefset(HAEMATOLOGY);
         HasRefsetEntries immunopathologyRefset = (HasRefsetEntries) spiaDistribution.getRefset(IMMUNOPATHOLOGY);
         HasRefsetEntries preferredUnitsRefset = (HasRefsetEntries) spiaDistribution.getRefset(PREFERRED_UNITS);
@@ -78,6 +80,10 @@ public class SpiaFhirBundle {
                 microbiologyRefset);
         resources.add(microbiologyValueSet.getValueSet());
         resources.add(microbiologyUnitMap.getConceptMap());
+        // Microbiology organisms
+        MicrobiologySubsetOfOrganismsValueSet microbiologySubsetOfOrganismsValueSet =
+                new MicrobiologySubsetOfOrganismsValueSet(microbiologyOrganismsRefset);
+        resources.add(microbiologySubsetOfOrganismsValueSet.getValueSet());
         // Haematology
         HaematologyValueSet haematologyValueSet = new HaematologyValueSet(haematologyRefset);
         HaematologyUnitMap haematologyUnitMap = new HaematologyUnitMap(haematologyRefset);
