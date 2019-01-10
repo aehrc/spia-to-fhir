@@ -1,6 +1,6 @@
 {
   "resourceType": "CodeSystem",
-  "id": "spia-designation-type-3",
+  "id": "spia-designation-type",
   "identifier": {
     "system": "urn:ietf:rfc:3986",
     "value": "urn:oid:TBD"
@@ -13,12 +13,12 @@
   },
   "text": {
     "status": "empty",
-    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">RCPA - SPIA Designation Type v3.0</div>"
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">RCPA - SPIA Designation Type</div>"
   },
-  "url": "https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type-3",
-  "version": "3.0",
-  "name": "RCPA - SPIA Designation Type v3.0",
-  "title": "spia-designation-type-3",
+  "url": "https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type",
+  "version": "1.0.0",
+  "name": "RCPA - SPIA Designation Type",
+  "title": "spia-designation-type",
   "description": "Codes describing special designation types used by ValueSets which describe reference sets within the SPIA standard.",
   "status": "draft",
   "experimental": true,

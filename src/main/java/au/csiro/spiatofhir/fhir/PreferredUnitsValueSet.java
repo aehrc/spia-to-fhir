@@ -38,9 +38,9 @@ public class PreferredUnitsValueSet implements SpiaFhirValueSet {
 
     private void buildValueSet() {
         valueSet = new ValueSet();
-        valueSet.setId("spia-preferred-units-refset-3");
-        valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-3");
-        valueSet.setVersion("3.0");
+        valueSet.setId("spia-preferred-units-refset-1");
+        valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1");
+        valueSet.setVersion("1.0.0");
         List<Identifier> identifier = new ArrayList<>();
         Identifier oid = new Identifier();
         oid.setSystem("urn:ietf:rfc:3986");
@@ -48,11 +48,13 @@ public class PreferredUnitsValueSet implements SpiaFhirValueSet {
         oid.setValue("urn:oid:TBD");
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
-        valueSet.setName("RCPA - SPIA Preferred Units Reference Set v3.0");
-        valueSet.setTitle("RCPA - SPIA Preferred Units Reference Set v3.0");
-        valueSet.setDescription("A set of preferred units of measure for use within pathology reporting in Australia.");
+        valueSet.setName("RCPA - SPIA Preferred Units Reference Set");
+        valueSet.setTitle("RCPA - SPIA Preferred Units Reference Set");
+        valueSet.setDescription(
+                "A set of preferred units of measure for use within pathology reporting in Australia, based on the " +
+                        "SPIA Preferred Units Reference Set (v1.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
-        valueSet.getText().getDiv().addText("RCPA - SPIA Preferred Units Reference Set v3.0");
+        valueSet.getText().getDiv().addText("RCPA - SPIA Preferred Units Reference Set");
         ValueSet.ValueSetComposeComponent compose =
                 SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(), "http://unitsofmeasure.org");
         valueSet.setCompose(compose);

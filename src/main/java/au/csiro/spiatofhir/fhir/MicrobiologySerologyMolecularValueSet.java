@@ -38,9 +38,9 @@ public class MicrobiologySerologyMolecularValueSet implements SpiaFhirValueSet {
 
     private void buildValueSet() {
         valueSet = new ValueSet();
-        valueSet.setId("spia-microbiology-serology-molecular-refset-3");
-        valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-serology-molecular-refset-3");
-        valueSet.setVersion("3.0");
+        valueSet.setId("spia-microbiology-serology-molecular-refset-1");
+        valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-serology-molecular-refset-1");
+        valueSet.setVersion("1.0.0");
         List<Identifier> identifier = new ArrayList<>();
         Identifier oid = new Identifier();
         oid.setSystem("urn:ietf:rfc:3986");
@@ -48,9 +48,11 @@ public class MicrobiologySerologyMolecularValueSet implements SpiaFhirValueSet {
         oid.setValue("urn:oid:TBD");
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
-        valueSet.setName("RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0");
-        valueSet.setTitle("RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0");
-        valueSet.setDescription("Standard codes for use in reporting microbiology pathology results in Australia");
+        valueSet.setName("RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set");
+        valueSet.setTitle("RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set");
+        valueSet.setDescription(
+                "Standard codes for use in reporting microbiology pathology results in Australia, based on the SPIA " +
+                        "Microbiology Serology Molecular Pathology Reference Set (v3.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
         valueSet.getText().getDiv().addText(
                 "RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0");

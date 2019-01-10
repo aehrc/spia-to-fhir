@@ -38,9 +38,9 @@ public class ImmunopathologyValueSet implements SpiaFhirValueSet {
 
     private void buildValueSet() {
         valueSet = new ValueSet();
-        valueSet.setId("spia-immunopathology-refset-3");
-        valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-immunopathology-refset-3");
-        valueSet.setVersion("3.0");
+        valueSet.setId("spia-immunopathology-refset-1");
+        valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-immunopathology-refset-1");
+        valueSet.setVersion("1.0.0");
         List<Identifier> identifier = new ArrayList<>();
         Identifier oid = new Identifier();
         oid.setSystem("urn:ietf:rfc:3986");
@@ -48,11 +48,13 @@ public class ImmunopathologyValueSet implements SpiaFhirValueSet {
         oid.setValue("urn:oid:TBD");
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
-        valueSet.setName("RCPA - SPIA Immunopathology Terminology Reference Set v3.0");
-        valueSet.setTitle("RCPA - SPIA Immunopathology Terminology Reference Set v3.0");
-        valueSet.setDescription("Standard codes for use in reporting immunopathology results in Australia");
+        valueSet.setName("RCPA - SPIA Immunopathology Terminology Reference Set");
+        valueSet.setTitle("RCPA - SPIA Immunopathology Terminology Reference Set");
+        valueSet.setDescription(
+                "Standard codes for use in reporting immunopathology results in Australia, based on the SPIA " +
+                        "Immunopathology Terminology Reference Set (v3.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
-        valueSet.getText().getDiv().addText("RCPA - SPIA Immunopathology Terminology Reference Set v3.0");
+        valueSet.getText().getDiv().addText("RCPA - SPIA Immunopathology Terminology Reference Set");
         ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(),
                                                                                              "http://loinc.org");
         valueSet.setCompose(compose);

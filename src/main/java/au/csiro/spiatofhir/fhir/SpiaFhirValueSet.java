@@ -107,7 +107,7 @@ public interface SpiaFhirValueSet {
                 new ValueSet.ConceptReferenceDesignationComponent();
         designationEntry.setValue(entry.getRcpaPreferredTerm());
         Coding designationUse =
-                new Coding("https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type-3",
+                new Coding("https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type",
                            "preferred-term",
                            "RCPA Preferred Term");
         designationEntry.setUse(designationUse);
@@ -121,7 +121,7 @@ public interface SpiaFhirValueSet {
                     new ValueSet.ConceptReferenceDesignationComponent();
             designationEntry.setValue(rcpaSynonym);
             Coding designationUse = new Coding(
-                    "https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type-3",
+                    "https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type",
                     "synonym",
                     "RCPA Synonym");
             designationEntry.setUse(designationUse);
