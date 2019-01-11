@@ -8,6 +8,28 @@
     <artifactId>spia-to-fhir-maven-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
+    <description>A Maven plugin for converting terminology from version 3 of the Standards for Pathology Informatics in
+        Australia (SPIA) into a set of FHIR STU3 terminology resources.
+    </description>
+    <url>https://github.com/aehrc/spia-to-fhir</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>John Grimes</name>
+            <email>John.Grimes@csiro.au</email>
+            <id>johngrimes</id>
+            <organization>Australian e-Health Research Centre</organization>
+            <organizationUrl>https://aehrc.com/</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
 
     <properties>
         <hapiFhirVersion>3.6.0</hapiFhirVersion>
