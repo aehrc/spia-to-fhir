@@ -35,6 +35,7 @@ import java.util.zip.ZipFile;
  */
 public class SpiaDistribution {
 
+    // Map to the files within the distribution that contain each reference set.
     private static final Map<DistributionEntry, String> expectedEntries =
             Map.of(
                     DistributionEntry.REQUESTING,

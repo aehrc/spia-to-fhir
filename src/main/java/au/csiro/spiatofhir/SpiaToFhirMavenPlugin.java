@@ -33,6 +33,12 @@ import java.io.File;
 import java.io.FileWriter;
 
 /**
+ * Takes the SPIA distribution located at the `inputPath`, transforms it into a set of FHIR resources, then outputs a
+ * FHIR JSON Bundle to the `outputPath`.
+ * <p>
+ * Requires the help of a FHIR terminology server, accessible at `terminologyServerUrl`, for populating native
+ * display terms within ValueSets and ConceptMaps.
+ *
  * @author John Grimes
  */
 @Mojo(name = "transform")
@@ -40,13 +46,13 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
 
     private static final Logger logger = LoggerFactory.getLogger(SpiaToFhirMavenPlugin.class);
 
-    @Parameter(property = "SpiaToFhir.inputPath", required = true)
+    @Parameter(property = "inputPath", required = true)
     private String inputPath;
 
-    @Parameter(property = "SpiaToFhir.outputPath", required = true)
+    @Parameter(property = "outputPath", required = true)
     private String outputPath;
 
-    @Parameter(property = "SpiaToFhir.terminologyServerUrl", required = true)
+    @Parameter(property = "terminologyServerUrl", required = true)
     private String terminologyServerUrl;
 
     @Override

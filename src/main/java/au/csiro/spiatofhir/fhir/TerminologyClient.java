@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Client for interacting with a FHIR terminology server.
+ *
  * @author John Grimes
  */
 public class TerminologyClient {

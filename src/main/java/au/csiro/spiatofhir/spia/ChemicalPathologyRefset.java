@@ -92,6 +92,7 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
             String loincScale = getStringValueFromCell(row, 12);
             String loincMethod = getStringValueFromCell(row, 13);
             String loincLongName = getStringValueFromCell(row, 14);
+            // TODO: Take the combining results flag and somehow represent it within the corresponding ValueSet.
             ChemicalPathologyRefsetEntry.CombiningResultsFlag combiningResultsFlag =
                     getCombiningResultsFlagFromCell(row, 15);
             Double version = getNumericValueFromCell(row, 16);

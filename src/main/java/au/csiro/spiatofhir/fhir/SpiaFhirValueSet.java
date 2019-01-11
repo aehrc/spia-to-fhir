@@ -30,6 +30,9 @@ import java.util.List;
  */
 public interface SpiaFhirValueSet {
 
+    /**
+     * Populates the elements that are common to all ValueSets.
+     */
     static void addCommonElementsToValueSet(ValueSet valueSet) {
         Meta meta = new Meta();
         List<UriType> profile = new ArrayList<>();
@@ -69,6 +72,9 @@ public interface SpiaFhirValueSet {
         valueSet.setJurisdiction(jurisdiction);
     }
 
+    /**
+     * Builds the compose element of a ValueSet, using a list of reference set entries.
+     */
     static ValueSet.ValueSetComposeComponent buildComposeFromEntries(List<RefsetEntry> refsetEntries, String system) {
         ValueSet.ValueSetComposeComponent compose = new ValueSet.ValueSetComposeComponent();
         List<ValueSet.ConceptSetComponent> include = new ArrayList<>();
@@ -80,8 +86,11 @@ public interface SpiaFhirValueSet {
                 includeEntry.setSystem(system);
                 ValueSet.ConceptReferenceComponent conceptEntry = new ValueSet.ConceptReferenceComponent();
                 conceptEntry.setCode(entry.getCode());
+                // The display is set to the display text retrieved from the terminology server.
                 conceptEntry.setDisplay(entry.getNativeDisplay());
 
+                // RCPA preferred terms and synonyms are represented using designations, which are identified using
+                // codes from the CodeSystem included in the Bundle.
                 if (entry.getRcpaPreferredTerm() != null || !entry.getRcpaSynonyms().isEmpty()) {
                     List<ValueSet.ConceptReferenceDesignationComponent> designation = new ArrayList<>();
                     if (entry.getRcpaPreferredTerm() != null) {
@@ -102,6 +111,9 @@ public interface SpiaFhirValueSet {
         return compose;
     }
 
+    /**
+     * Builds a designation element for an RCPA preferred term.
+     */
     static ValueSet.ConceptReferenceDesignationComponent buildPreferredTermDesignation(RefsetEntry entry) {
         ValueSet.ConceptReferenceDesignationComponent designationEntry =
                 new ValueSet.ConceptReferenceDesignationComponent();
@@ -114,6 +126,9 @@ public interface SpiaFhirValueSet {
         return designationEntry;
     }
 
+    /**
+     * Builds a designation element for an RCPA synonym.
+     */
     static List<ValueSet.ConceptReferenceDesignationComponent> buildSynonymDesignations(RefsetEntry entry) {
         List<ValueSet.ConceptReferenceDesignationComponent> designationEntries = new ArrayList<>();
         for (String rcpaSynonym : entry.getRcpaSynonyms()) {

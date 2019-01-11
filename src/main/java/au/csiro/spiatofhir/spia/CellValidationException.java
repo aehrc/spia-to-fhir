@@ -17,6 +17,8 @@
 package au.csiro.spiatofhir.spia;
 
 /**
+ * Thrown when encountering cells in spreadsheets that do not contain the expected data types.
+ *
  * @author John Grimes
  */
 public class CellValidationException extends ValidationException {

@@ -53,7 +53,12 @@ public class SpiaFhirBundle {
         buildBundle();
     }
 
+    /**
+     * Feeding the SPIA reference sets to the classes that know how to build the FHIR resources, then puts the
+     * resulting resources into a FHIR Bundle.
+     */
     private void buildBundle() throws IOException, ValidationException {
+        // Get the SPIA reference sets which contain the source data.
         List<Resource> resources = new ArrayList<>();
         HasRefsetEntries requestingRefset = (HasRefsetEntries) spiaDistribution.getRefset(REQUESTING);
         HasRefsetEntries chemicalRefset = (HasRefsetEntries) spiaDistribution.getRefset(CHEMICAL);
@@ -65,6 +70,7 @@ public class SpiaFhirBundle {
         HasRefsetEntries immunopathologyRefset = (HasRefsetEntries) spiaDistribution.getRefset(IMMUNOPATHOLOGY);
         HasRefsetEntries preferredUnitsRefset = (HasRefsetEntries) spiaDistribution.getRefset(PREFERRED_UNITS);
 
+        // Build each of the ValueSets and ConceptMaps using the source reference sets.
         // Requesting
         RequestingValueSet requestingValueSet = new RequestingValueSet(requestingRefset);
         resources.add(requestingValueSet.getValueSet());
@@ -97,7 +103,8 @@ public class SpiaFhirBundle {
         // Preferred units
         PreferredUnitsValueSet preferredUnitsValueSet = new PreferredUnitsValueSet(preferredUnitsRefset);
         resources.add(preferredUnitsValueSet.getValueSet());
-        // Supporting terminology
+
+        // Get supporting terminology resources from the resources directory.
         try (InputStream designationTypeStream = getClass().getResourceAsStream(
                 "/codesystem-spia-designation-type.json")) {
             CodeSystem designationType = (CodeSystem) fhirContext.newJsonParser().parseResource(new InputStreamReader(
@@ -105,6 +112,7 @@ public class SpiaFhirBundle {
             resources.add(designationType);
         }
 
+        // Add all resources to the Bundle.
         for (Resource resource : resources) {
             Bundle.BundleEntryComponent bundleEntry = new Bundle.BundleEntryComponent();
             bundleEntry.setResource(resource);

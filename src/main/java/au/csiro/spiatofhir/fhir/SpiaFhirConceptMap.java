@@ -31,6 +31,9 @@ import java.util.List;
  */
 public interface SpiaFhirConceptMap {
 
+    /**
+     * Populates the elements that are common to all ConceptMaps.
+     */
     static void addCommonElementsToConceptMap(ConceptMap conceptMap) {
         Meta meta = new Meta();
         List<UriType> profile = new ArrayList<>();
@@ -69,6 +72,9 @@ public interface SpiaFhirConceptMap {
         conceptMap.setJurisdiction(jurisdiction);
     }
 
+    /**
+     * Builds the group element of a ConceptMap, using a list of reference set entries.
+     */
     static ConceptMap.ConceptMapGroupComponent buildGroupFromEntries(List<RefsetEntry> refsetEntries) {
         ConceptMap.ConceptMapGroupComponent group = new ConceptMap.ConceptMapGroupComponent();
         for (RefsetEntry entry : refsetEntries) {

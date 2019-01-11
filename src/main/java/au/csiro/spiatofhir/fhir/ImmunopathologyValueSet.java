@@ -44,7 +44,7 @@ public class ImmunopathologyValueSet implements SpiaFhirValueSet {
         List<Identifier> identifier = new ArrayList<>();
         Identifier oid = new Identifier();
         oid.setSystem("urn:ietf:rfc:3986");
-        // TODO: Add OID.
+        // TODO: Add a real OID.
         oid.setValue("urn:oid:TBD");
         identifier.add(oid);
         valueSet.setIdentifier(identifier);

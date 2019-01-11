@@ -41,8 +41,11 @@ public abstract class Refset {
      */
     protected static List<String> lookupDisplayTerms(TerminologyClient terminologyClient, String system,
                                                      List<RefsetEntry> refsetEntries) {
+        // Get the codes from the reference set entries.
         List<String> codes = refsetEntries.stream().map(RefsetEntry::getCode).collect(Collectors.toList());
+        // Perform a lookup on each code using the terminology server.
         Bundle result = terminologyClient.batchLookup(system, codes, new ArrayList<>());
+        // Return a list of displays.
         return result.getEntry()
                      .stream()
                      .map(Refset::entryToParameters)
@@ -56,15 +59,19 @@ public abstract class Refset {
      */
     protected static void addUcumDisplays(TerminologyClient terminologyClient,
                                           List<RefsetEntry> refsetEntries) {
+        // Get the UCUM codes from the reference set entries.
         List<String> codes = refsetEntries.stream()
                                           .map(refsetEntry -> ((LoincRefsetEntry) refsetEntry).getUcumCode())
                                           .collect(Collectors.toList());
+        // Perform a lookup on each code using the terminology server.
         Bundle result = terminologyClient.batchLookup("http://unitsofmeasure.org", codes, new ArrayList<>());
+        // Get the display term from each lookup result.
         List<String> displays = result.getEntry()
                                       .stream()
                                       .map(Refset::entryToParameters)
                                       .map(Refset::parametersToDisplayValue)
                                       .collect(Collectors.toList());
+        // Set the UCUM display to the authoritative display from the terminology server.
         for (int i = 0; i < refsetEntries.size(); i++) {
             LoincRefsetEntry refsetEntry = (LoincRefsetEntry) refsetEntries.get(i);
             if (displays.get(i) != null) refsetEntry.setUcumDisplay(displays.get(i));
@@ -86,6 +93,9 @@ public abstract class Refset {
                                               .orElse(null) : null;
     }
 
+    /**
+     * Throws an exception if the supplied spreadsheet row does not match the specified array of expected headers.
+     */
     protected void validateHeaderRow(Row row, String[] expectedHeaders) throws ValidationException {
         ArrayList<String> headerValues = new ArrayList<>();
         for (Cell cell : row) {
@@ -95,6 +105,9 @@ public abstract class Refset {
             throw new ValidationException("Header values do not match expected values.");
     }
 
+    /**
+     * Returns a string value from the specified cell within a row, and asserts that it actually is a string.
+     */
     protected String getStringValueFromCell(Row row, int cellNumber) throws ValidationException {
         Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
         if (cell == null) return null;
@@ -105,6 +118,9 @@ public abstract class Refset {
         return cell.getStringCellValue().trim();
     }
 
+    /**
+     * Returns a numeric value from the specified cell within a row, and asserts that it actually is numeric.
+     */
     protected Double getNumericValueFromCell(Row row, int cellNumber) throws ValidationException {
         Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
         if (cell == null) return null;
