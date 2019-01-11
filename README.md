@@ -18,7 +18,7 @@ The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing 
 10. Immunopathology unit map (ConceptMap)
 11. Preferred unit reference set (UCUM ValueSet)
 
-A FHIR terminology server is required for the build process, as it is used to populate the native display terms into the ValueSets and ConceptMaps.
+A FHIR terminology server that contains SNOMED CT, LOINC and UCUM is required for the build process, as it is used to populate the native display terms into the ValueSets and ConceptMaps.
 
 You can execute the plugin with the following command:
 
