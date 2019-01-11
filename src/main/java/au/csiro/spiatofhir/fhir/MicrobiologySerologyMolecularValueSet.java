@@ -49,7 +49,7 @@ public class MicrobiologySerologyMolecularValueSet implements SpiaFhirValueSet {
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
         valueSet.setName("RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set");
-        valueSet.setTitle("RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set");
+        valueSet.setTitle("spia-microbiology-serology-molecular-refset");
         valueSet.setDescription(
                 "Standard codes for use in reporting microbiology pathology results in Australia, based on the SPIA " +
                         "Microbiology Serology Molecular Pathology Reference Set (v3.0).");

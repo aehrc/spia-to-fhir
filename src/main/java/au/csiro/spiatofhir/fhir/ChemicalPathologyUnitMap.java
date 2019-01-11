@@ -45,7 +45,7 @@ public class ChemicalPathologyUnitMap {
         oid.setValue("urn:oid:TBD");
         conceptMap.setIdentifier(oid);
         conceptMap.setName("RCPA - SPIA Chemical Pathology Unit Map");
-        conceptMap.setTitle("RCPA - SPIA Chemical Pathology Unit Map");
+        conceptMap.setTitle("spia-chemical-pathology-unit-map");
         conceptMap.setDescription(
                 "Map between the SPIA Chemical Pathology Reference Set (v3.0) and the corresponding RCPA preferred " +
                         "units (v1.0) for each code.");

@@ -49,7 +49,7 @@ public class ImmunopathologyValueSet implements SpiaFhirValueSet {
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
         valueSet.setName("RCPA - SPIA Immunopathology Terminology Reference Set");
-        valueSet.setTitle("RCPA - SPIA Immunopathology Terminology Reference Set");
+        valueSet.setTitle("spia-immunopathology-refset");
         valueSet.setDescription(
                 "Standard codes for use in reporting immunopathology results in Australia, based on the SPIA " +
                         "Immunopathology Terminology Reference Set (v3.0).");

@@ -45,7 +45,7 @@ public class HaematologyUnitMap {
         oid.setValue("urn:oid:TBD");
         conceptMap.setIdentifier(oid);
         conceptMap.setName("RCPA - SPIA Haematology Unit Map");
-        conceptMap.setTitle("RCPA - SPIA Haematology Unit Map");
+        conceptMap.setTitle("spia-haematology-unit-map");
         conceptMap.setDescription(
                 "Map between the SPIA Haematology Reference Set (v3.0) and the corresponding RCPA preferred units (v1" +
                         ".0) for each code.");

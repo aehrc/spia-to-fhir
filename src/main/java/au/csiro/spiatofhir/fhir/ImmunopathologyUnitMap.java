@@ -45,7 +45,7 @@ public class ImmunopathologyUnitMap {
         oid.setValue("urn:oid:TBD");
         conceptMap.setIdentifier(oid);
         conceptMap.setName("RCPA - SPIA Immunopathology Unit Map");
-        conceptMap.setTitle("RCPA - SPIA Immunopathology Unit Map");
+        conceptMap.setTitle("spia-immunopathology-unit-map");
         conceptMap.setDescription(
                 "Map between the SPIA Immunopathology Reference Set (v3.0) and the corresponding RCPA preferred units" +
                         " (v1.0) for each code.");

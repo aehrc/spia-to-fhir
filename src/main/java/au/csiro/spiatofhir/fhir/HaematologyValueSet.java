@@ -49,7 +49,7 @@ public class HaematologyValueSet implements SpiaFhirValueSet {
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
         valueSet.setName("RCPA - SPIA Haematology Terminology Reference Set");
-        valueSet.setTitle("RCPA - SPIA Haematology Terminology Reference Set");
+        valueSet.setTitle("spia-haematology-refset");
         valueSet.setDescription(
                 "Standard codes for use in reporting haematology pathology results in Australia, based on the SPIA " +
                         "Haematology Terminology Reference Set (v3.0).");
