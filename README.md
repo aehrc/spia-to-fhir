@@ -23,5 +23,5 @@ A FHIR terminology server that contains SNOMED CT, LOINC and UCUM is required fo
 You can execute the plugin with the following command:
 
 ```
-mvn -DinputPath=[zip file] -DoutputPath=[bundle JSON file] -DterminologyServerUrl=[FHIR terminology server endpoint] install
+mvn -DinputPath=[zip file] -DoutputPath=[bundle JSON file] -DterminologyServerUrl=[FHIR terminology server endpoint] package
 ```
