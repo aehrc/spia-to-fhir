@@ -17,6 +17,8 @@
 package au.csiro.spiatofhir.spia;
 
 import au.csiro.spiatofhir.fhir.TerminologyClient;
+import au.csiro.spiatofhir.loinc.LoincCodeValidator;
+import au.csiro.spiatofhir.snomed.SnomedCodeValidator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -131,6 +133,54 @@ public abstract class Refset {
         double value = cell.getNumericCellValue();
         if (value == 0) return null;
         else return value;
+    }
+
+    /**
+     * Returns a string value from the specified cell within a row, asserting that a valid (though not necessarily
+     * existent) SNOMED CT identifier is within the content and trimming any extraneous surrounding content, such as
+     * preferred term.
+     */
+    protected String getSnomedCodeFromCell(Row row, int cellNumber)
+            throws CellValidationException, InvalidCodeException, BlankCodeException {
+        Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+        if (cell == null)
+            throw new BlankCodeException("Blank SNOMED code encountered", row.getRowNum(), cellNumber);
+        if (cell.getCellTypeEnum() != CellType.STRING)
+            throw new CellValidationException(
+                    "Cell identified for extraction of SNOMED code is not of string type, actual type: " +
+                            cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
+        String cellValue = cell.getStringCellValue()
+                               .split("\\|")[0].trim();
+        // Check for the validity of the SNOMED code.
+        SnomedCodeValidator snomedCodeValidator = new SnomedCodeValidator();
+        if (!snomedCodeValidator.validate(cellValue))
+            throw new InvalidCodeException("Invalid SNOMED code encountered: " + cellValue,
+                                           cell.getRowIndex(),
+                                           cell.getColumnIndex());
+        return cellValue;
+    }
+
+    /**
+     * Returns a string value from the specified cell within a row, asserting that it is a valid (though not
+     * necessarily existent) LOINC code.
+     */
+    protected String getLoincCodeFromCell(Row row, int cellNumber)
+            throws CellValidationException, InvalidCodeException, BlankCodeException {
+        Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+        if (cell == null)
+            throw new BlankCodeException("Blank LOINC code encountered", row.getRowNum(), cellNumber);
+        if (cell.getCellTypeEnum() != CellType.STRING)
+            throw new CellValidationException(
+                    "Cell identified for extraction of LOINC code is not of string type, actual type: " +
+                            cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
+        String cellValue = cell.getStringCellValue().trim();
+        // Check for the validity of the LOINC code.
+        LoincCodeValidator loincCodeValidator = new LoincCodeValidator();
+        if (!loincCodeValidator.validate(cellValue))
+            throw new InvalidCodeException("Invalid LOINC code encountered: " + cellValue,
+                                           cell.getRowIndex(),
+                                           cell.getColumnIndex());
+        return cellValue;
     }
 
 }

@@ -17,27 +17,26 @@
 package au.csiro.spiatofhir.spia;
 
 import au.csiro.spiatofhir.fhir.TerminologyClient;
-import au.csiro.spiatofhir.snomed.SnomedCodeValidator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author John Grimes
  */
 public class MicrobiologySubsetOfOrganismsRefset extends Refset implements HasRefsetEntries {
 
+    protected static final Logger logger = LoggerFactory.getLogger(MicrobiologySubsetOfOrganismsRefset.class);
     protected static final String[] expectedHeaders =
             {"RCPA Preferred Organism name", "Terminology binding (SNOMED CT-AU)", "Version", "History", ""};
     private static final String SHEET_NAME = "Organisms mapped to SNOMED";
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
-    private final SnomedCodeValidator snomedCodeValidator;
     private List<RefsetEntry> refsetEntries;
 
     /**
@@ -47,7 +46,6 @@ public class MicrobiologySubsetOfOrganismsRefset extends Refset implements HasRe
             throws ValidationException {
         this.workbook = workbook;
         this.terminologyClient = terminologyClient;
-        snomedCodeValidator = new SnomedCodeValidator();
         parse();
     }
 
@@ -69,31 +67,28 @@ public class MicrobiologySubsetOfOrganismsRefset extends Refset implements HasRe
                 continue;
             }
 
-            SnomedRefsetEntry refsetEntry = new SnomedRefsetEntry();
-            // Extract information from row.
-            String rcpaPreferredTerm = getStringValueFromCell(row, 0);
-            // Extract the SNOMED code from the content of the cell - the spreadsheet has both SCTID and preferred
-            // term in the same column.
-            String snomedCode = getStringValueFromCell(row, 1);
-            if (snomedCode == null) continue;
-            Pattern codePattern = Pattern.compile("\\d+");
-            Matcher codeMatcher = codePattern.matcher(snomedCode);
-            if (codeMatcher.find()) {
-                snomedCode = codeMatcher.group();
+            try {
+                SnomedRefsetEntry refsetEntry = new SnomedRefsetEntry();
+
+                // Extract information from row.
+                String rcpaPreferredTerm = getStringValueFromCell(row, 0);
+                String snomedCode = getSnomedCodeFromCell(row, 1);
+                Double version = getNumericValueFromCell(row, 2);
+                String history = getStringValueFromCell(row, 3);
+
+                // Populate information into ChemicalPathologyRefsetEntry object.
+                refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
+                refsetEntry.setSnomedCode(snomedCode);
+                refsetEntry.setVersion(version);
+                refsetEntry.setHistory(history);
+
+                // Add SnomedRefsetEntry object to list.
+                refsetEntries.add(refsetEntry);
+            } catch (BlankCodeException e) {
+            } catch (InvalidCodeException e) {
+                // Skip any row which contains an invalid SNOMED code. A warning log message will be emitted.
+                logger.warn(e.getMessage());
             }
-            // Skip whole row unless there is a valid LOINC code.
-            if (snomedCode == null || !snomedCodeValidator.validate(snomedCode)) continue;
-            Double version = getNumericValueFromCell(row, 2);
-            String history = getStringValueFromCell(row, 3);
-
-            // Populate information into ChemicalPathologyRefsetEntry object.
-            refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
-            refsetEntry.setSnomedCode(snomedCode);
-            refsetEntry.setVersion(version);
-            refsetEntry.setHistory(history);
-
-            // Add SnomedRefsetEntry object to list.
-            refsetEntries.add(refsetEntry);
         }
         // Lookup and add native display terms to reference set entries.
         List<String> preferredTerms = lookupDisplayTerms(terminologyClient,
