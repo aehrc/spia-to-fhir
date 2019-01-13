@@ -23,7 +23,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +37,8 @@ import java.util.stream.Collectors;
  * @author John Grimes
  */
 public abstract class Refset {
+
+    private static final Logger logger = LoggerFactory.getLogger(Refset.class);
 
     /**
      * Returns a list of display terms corresponding to the supplied list of reference set entries, sourced using the
@@ -81,9 +86,15 @@ public abstract class Refset {
     }
 
     private static Parameters entryToParameters(Bundle.BundleEntryComponent entry) {
-        return entry.getResource().fhirType().equals("Parameters")
-               ? (Parameters) entry.getResource()
-               : null;
+        if (entry.getResource().fhirType().equals("Parameters")) return (Parameters) entry.getResource();
+        else if (entry.getResource().fhirType().equals("OperationOutcome")) {
+            OperationOutcome operationOutcome = (OperationOutcome) entry.getResource();
+            String opOutcomeMessage = operationOutcome.getIssueFirstRep().getDiagnostics();
+            // Filter out log warnings for outcomes relating to blank unit codes.
+            if (!opOutcomeMessage.matches("Invalid type for 'code' parameter\\."))
+                logger.warn(operationOutcome.getIssueFirstRep().getDiagnostics());
+        }
+        return null;
     }
 
     private static String parametersToDisplayValue(Parameters parameters) {
