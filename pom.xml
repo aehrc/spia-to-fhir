@@ -55,6 +55,11 @@
             <version>${hapiFhirVersion}</version>
         </dependency>
         <dependency>
+            <groupId>org.fhir</groupId>
+            <artifactId>ucum</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>${poiVersion}</version>

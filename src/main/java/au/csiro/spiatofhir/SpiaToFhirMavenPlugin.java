@@ -25,6 +25,8 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.fhir.ucum.UcumEssenceService;
+import org.fhir.ucum.UcumService;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,10 +62,13 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
         try {
             FhirContext fhirContext = FhirContext.forDstu3();
             TerminologyClient terminologyClient = new TerminologyClient(fhirContext, terminologyServerUrl);
+            UcumService ucumService = new UcumEssenceService(Thread.currentThread()
+                                                                   .getContextClassLoader()
+                                                                   .getResourceAsStream("ucum-essence.xml"));
             File inputFile = new File(inputPath);
 
             // Parse RCPA distribution.
-            SpiaDistribution spiaDistribution = new SpiaDistribution(inputFile, terminologyClient);
+            SpiaDistribution spiaDistribution = new SpiaDistribution(inputFile, terminologyClient, ucumService);
 
             // Convert distribution into a FHIR Bundle.
             SpiaFhirBundle spiaFhirBundle = new SpiaFhirBundle(fhirContext, spiaDistribution);

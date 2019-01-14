@@ -20,6 +20,7 @@ import au.csiro.spiatofhir.fhir.TerminologyClient;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.fhir.ucum.UcumService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,14 +38,17 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
     private static final String SHEET_NAME = "Terminology for Immunopathology";
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
+    private final UcumService ucumService;
     private List<RefsetEntry> refsetEntries;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
      */
-    public ImmunopathologyRefset(Workbook workbook, TerminologyClient terminologyClient) throws ValidationException {
+    public ImmunopathologyRefset(Workbook workbook, TerminologyClient terminologyClient, UcumService ucumService)
+            throws ValidationException {
         this.workbook = workbook;
         this.terminologyClient = terminologyClient;
+        this.ucumService = ucumService;
         parse();
     }
 
@@ -79,8 +83,14 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
                 String usageGuidance = getStringValueFromCell(row, 2);
                 // Length has been omitted, as formulas are being used within the spreadsheet.
                 String specimen = getStringValueFromCell(row, 4);
-                String unit = getStringValueFromCell(row, 5);
-                String ucum = getStringValueFromCell(row, 6);
+                String rcpaUnit = getStringValueFromCell(row, 5);
+                String ucumCode = null;
+                try {
+                    ucumCode = getUcumCodeFromCell(ucumService, row, 6);
+                } catch (BlankCodeException e) {
+                } catch (InvalidCodeException e) {
+                    logger.warn(e.getMessage());
+                }
                 String loincCode = getLoincCodeFromCell(row, 7);
                 String loincComponent = getStringValueFromCell(row, 8);
                 String loincProperty = getStringValueFromCell(row, 9);
@@ -97,8 +107,8 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
                 refsetEntry.setRcpaSynonyms(rcpaSynonyms);
                 refsetEntry.setUsageGuidance(usageGuidance);
                 refsetEntry.setSpecimen(specimen);
-                refsetEntry.setRcpaUnit(unit);
-                refsetEntry.setUcumCode(ucum);
+                refsetEntry.setRcpaUnit(rcpaUnit);
+                refsetEntry.setUcumCode(ucumCode);
                 refsetEntry.setLoincCode(loincCode);
                 refsetEntry.setLoincComponent(loincComponent);
                 refsetEntry.setLoincProperty(loincProperty);

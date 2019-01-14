@@ -22,6 +22,7 @@ import au.csiro.spiatofhir.snomed.SnomedCodeValidator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+import org.fhir.ucum.UcumService;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.Parameters;
@@ -91,8 +92,12 @@ public abstract class Refset {
             OperationOutcome operationOutcome = (OperationOutcome) entry.getResource();
             String opOutcomeMessage = operationOutcome.getIssueFirstRep().getDiagnostics();
             // Filter out log warnings for outcomes relating to blank unit codes.
-            if (!opOutcomeMessage.matches("Invalid type for 'code' parameter\\."))
-                logger.warn(operationOutcome.getIssueFirstRep().getDiagnostics());
+            if (!opOutcomeMessage.matches("Invalid type for 'code' parameter\\.")) {
+                String message = operationOutcome.getIssueFirstRep()
+                                                 .getDiagnostics()
+                                                 .replaceFirst("\\[[a-f0-9\\-]*\\]: ", "");
+                logger.warn("Error looking up display for code: \"" + message + "\"");
+            }
         }
         return null;
     }
@@ -165,7 +170,7 @@ public abstract class Refset {
         // Check for the validity of the SNOMED code.
         SnomedCodeValidator snomedCodeValidator = new SnomedCodeValidator();
         if (!snomedCodeValidator.validate(cellValue))
-            throw new InvalidCodeException("Invalid SNOMED code encountered: " + cellValue,
+            throw new InvalidCodeException("Invalid SNOMED code encountered: \"" + cellValue + "\"",
                                            cell.getRowIndex(),
                                            cell.getColumnIndex());
         return cellValue;
@@ -188,7 +193,29 @@ public abstract class Refset {
         // Check for the validity of the LOINC code.
         LoincCodeValidator loincCodeValidator = new LoincCodeValidator();
         if (!loincCodeValidator.validate(cellValue))
-            throw new InvalidCodeException("Invalid LOINC code encountered: " + cellValue,
+            throw new InvalidCodeException("Invalid LOINC code encountered: \"" + cellValue + "\"",
+                                           cell.getRowIndex(),
+                                           cell.getColumnIndex());
+        return cellValue;
+    }
+
+    /**
+     * Returns a string value from the specified cell within a row, asserting that it is a valid UCUM expression.
+     */
+    protected String getUcumCodeFromCell(UcumService ucumService, Row row, int cellNumber)
+            throws BlankCodeException, CellValidationException, InvalidCodeException {
+        Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+        if (cell == null)
+            throw new BlankCodeException("Blank UCUM code encountered", row.getRowNum(), cellNumber);
+        if (cell.getCellTypeEnum() != CellType.STRING)
+            throw new CellValidationException(
+                    "Cell identified for extraction of UCUM code is not of string type, actual type: " +
+                            cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
+        String cellValue = cell.getStringCellValue().trim();
+        // Check for the validity of the UCUM code.
+        String result = ucumService.validate(cellValue);
+        if (result != null)
+            throw new InvalidCodeException("UCUM code validation failed: \"" + result + "\"",
                                            cell.getRowIndex(),
                                            cell.getColumnIndex());
         return cellValue;

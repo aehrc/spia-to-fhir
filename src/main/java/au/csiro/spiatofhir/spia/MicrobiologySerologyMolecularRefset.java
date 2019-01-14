@@ -20,6 +20,7 @@ import au.csiro.spiatofhir.fhir.TerminologyClient;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.fhir.ucum.UcumService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,15 +38,18 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
     private static final String SHEET_NAME = "Terminology Micro Sero Molecul";
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
+    private final UcumService ucumService;
     private List<RefsetEntry> refsetEntries;
 
     /**
      * Creates a new reference set, based on the contents of the supplied workbook.
      */
-    public MicrobiologySerologyMolecularRefset(Workbook workbook,
-                                               TerminologyClient terminologyClient) throws ValidationException {
+    public MicrobiologySerologyMolecularRefset(Workbook workbook, TerminologyClient terminologyClient,
+                                               UcumService ucumService)
+            throws ValidationException {
         this.workbook = workbook;
         this.terminologyClient = terminologyClient;
+        this.ucumService = ucumService;
         parse();
     }
 
@@ -80,8 +84,14 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
                 String usageGuidance = getStringValueFromCell(row, 2);
                 // Length has been omitted, as formulas are being used within the spreadsheet.
                 String specimen = getStringValueFromCell(row, 4);
-                String unit = getStringValueFromCell(row, 6);
-                String ucum = getStringValueFromCell(row, 7);
+                String rcpaUnit = getStringValueFromCell(row, 6);
+                String ucumCode = null;
+                try {
+                    ucumCode = getUcumCodeFromCell(ucumService, row, 7);
+                } catch (BlankCodeException e) {
+                } catch (InvalidCodeException e) {
+                    logger.warn(e.getMessage());
+                }
                 String loincCode = getLoincCodeFromCell(row, 8);
                 String loincComponent = getStringValueFromCell(row, 9);
                 String loincProperty = getStringValueFromCell(row, 10);
@@ -98,8 +108,8 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
                 refsetEntry.setRcpaSynonyms(rcpaSynonyms);
                 refsetEntry.setUsageGuidance(usageGuidance);
                 refsetEntry.setSpecimen(specimen);
-                refsetEntry.setRcpaUnit(unit);
-                refsetEntry.setUcumCode(ucum);
+                refsetEntry.setRcpaUnit(rcpaUnit);
+                refsetEntry.setUcumCode(ucumCode);
                 refsetEntry.setLoincCode(loincCode);
                 refsetEntry.setLoincComponent(loincComponent);
                 refsetEntry.setLoincProperty(loincProperty);

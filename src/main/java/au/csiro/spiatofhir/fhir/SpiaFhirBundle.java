@@ -20,6 +20,7 @@ import au.csiro.spiatofhir.spia.HasRefsetEntries;
 import au.csiro.spiatofhir.spia.SpiaDistribution;
 import au.csiro.spiatofhir.spia.ValidationException;
 import ca.uhn.fhir.context.FhirContext;
+import org.fhir.ucum.UcumException;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CodeSystem;
 import org.hl7.fhir.dstu3.model.Resource;
@@ -42,13 +43,13 @@ public class SpiaFhirBundle {
     private Bundle bundle;
 
     public SpiaFhirBundle(FhirContext fhirContext, SpiaDistribution spiaDistribution)
-            throws IOException, ValidationException {
+            throws IOException, ValidationException, UcumException {
         this.spiaDistribution = spiaDistribution;
         this.fhirContext = fhirContext;
         transform();
     }
 
-    private void transform() throws IOException, ValidationException {
+    private void transform() throws IOException, ValidationException, UcumException {
         bundle = new Bundle();
         buildBundle();
     }

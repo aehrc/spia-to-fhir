@@ -20,6 +20,9 @@ import au.csiro.spiatofhir.fhir.TerminologyClient;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.fhir.ucum.UcumService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +32,19 @@ import java.util.List;
  */
 public class PreferredUnitsRefset extends Refset implements HasRefsetEntries {
 
+    protected static final Logger logger = LoggerFactory.getLogger(PreferredUnitsRefset.class);
     protected static final String[] expectedHeaders = {"Description", "Preferred Display ", "UCUM Unit"};
     private static final String SHEET_NAME = "Preferred units display";
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
+    private final UcumService ucumService;
     private List<RefsetEntry> refsetEntries;
 
-    public PreferredUnitsRefset(Workbook workbook, TerminologyClient terminologyClient) throws ValidationException {
+    public PreferredUnitsRefset(Workbook workbook, TerminologyClient terminologyClient, UcumService ucumService)
+            throws ValidationException {
         this.workbook = workbook;
         this.terminologyClient = terminologyClient;
+        this.ucumService = ucumService;
         parse();
     }
 
@@ -59,20 +66,26 @@ public class PreferredUnitsRefset extends Refset implements HasRefsetEntries {
                 continue;
             }
 
-            UcumRefsetEntry refsetEntry = new UcumRefsetEntry();
+            try {
+                UcumRefsetEntry refsetEntry = new UcumRefsetEntry();
 
-            // Extract information from row.
-            String description = getStringValueFromCell(row, 0);
-            String rcpaPreferredTerm = getStringValueFromCell(row, 1);
-            String ucumCode = getStringValueFromCell(row, 2);
+                // Extract information from row.
+                String description = getStringValueFromCell(row, 0);
+                String rcpaPreferredTerm = getStringValueFromCell(row, 1);
+                String ucumCode = getUcumCodeFromCell(ucumService, row, 2);
 
-            // Populate information into UcumRefsetEntry object.
-            refsetEntry.setDescription(description);
-            refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
-            refsetEntry.setUcumCode(ucumCode);
+                // Populate information into UcumRefsetEntry object.
+                refsetEntry.setDescription(description);
+                refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
+                refsetEntry.setUcumCode(ucumCode);
 
-            // Add UcumRefsetEntry object to list.
-            refsetEntries.add(refsetEntry);
+                // Add UcumRefsetEntry object to list.
+                refsetEntries.add(refsetEntry);
+            } catch (BlankCodeException e) {
+            } catch (InvalidCodeException e) {
+                // Skip any row which contains an invalid UCUM code. A warning log message will be emitted.
+                logger.warn(e.getMessage());
+            }
         }
         // Lookup and add native display terms to reference set entries.
         List<String> preferredTerms = lookupDisplayTerms(terminologyClient, "http://unitsofmeasure.org", refsetEntries);

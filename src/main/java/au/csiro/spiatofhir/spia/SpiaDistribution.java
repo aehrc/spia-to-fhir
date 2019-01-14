@@ -20,6 +20,9 @@ import au.csiro.spiatofhir.fhir.TerminologyClient;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.fhir.ucum.UcumService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,17 +56,22 @@ public class SpiaDistribution {
                     DistributionEntry.PREFERRED_UNITS,
                     "RCPA - SPIA Preferred units v1.0.xlsx"
             );
+    private static final Logger logger = LoggerFactory.getLogger(SpiaDistribution.class);
     private ZipFile zipFile;
     private TerminologyClient terminologyClient;
+    private UcumService ucumService;
 
-    public SpiaDistribution(File file, TerminologyClient terminologyClient) throws IOException, ValidationException {
+    public SpiaDistribution(File file, TerminologyClient terminologyClient, UcumService ucumService)
+            throws IOException, ValidationException {
         zipFile = new ZipFile(file);
         this.terminologyClient = terminologyClient;
+        this.ucumService = ucumService;
         validate();
     }
 
     private InputStream getNamedEntryAsStream(DistributionEntry distributionEntry) throws IOException {
         ZipEntry entry = zipFile.getEntry(expectedEntries.get(distributionEntry));
+        logger.info("Reading file: \"" + entry.getName() + "\"");
         return zipFile.getInputStream(entry);
     }
 
@@ -90,17 +98,17 @@ public class SpiaDistribution {
             case REQUESTING:
                 return new RequestingRefset(workbook, terminologyClient);
             case CHEMICAL:
-                return new ChemicalPathologyRefset(workbook, terminologyClient);
+                return new ChemicalPathologyRefset(workbook, terminologyClient, ucumService);
             case MICROBIOLOGY_SEROLOGY_MOLECULAR:
-                return new MicrobiologySerologyMolecularRefset(workbook, terminologyClient);
+                return new MicrobiologySerologyMolecularRefset(workbook, terminologyClient, ucumService);
             case MICROBIOLOGY_ORGANISMS:
                 return new MicrobiologySubsetOfOrganismsRefset(workbook, terminologyClient);
             case HAEMATOLOGY:
-                return new HaematologyRefset(workbook, terminologyClient);
+                return new HaematologyRefset(workbook, terminologyClient, ucumService);
             case IMMUNOPATHOLOGY:
-                return new ImmunopathologyRefset(workbook, terminologyClient);
+                return new ImmunopathologyRefset(workbook, terminologyClient, ucumService);
             case PREFERRED_UNITS:
-                return new PreferredUnitsRefset(workbook, terminologyClient);
+                return new PreferredUnitsRefset(workbook, terminologyClient, ucumService);
             default:
                 throw new RuntimeException("Entry not supported yet: " + distributionEntry.toString());
         }
