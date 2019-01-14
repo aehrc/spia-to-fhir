@@ -118,6 +118,9 @@ public class SpiaFhirBundle {
             bundleEntry.setResource(resource);
             bundle.addEntry(bundleEntry);
         }
+
+        // Set the Bundle type to `collection`.
+        bundle.setType(Bundle.BundleType.COLLECTION);
     }
 
     /**
