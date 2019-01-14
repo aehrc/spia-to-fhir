@@ -6,7 +6,7 @@
 
     <groupId>au.csiro</groupId>
     <artifactId>spia-to-fhir-maven-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <description>A Maven plugin for converting terminology from version 3 of the Standards for Pathology Informatics in
         Australia (SPIA) into a set of FHIR STU3 terminology resources.
