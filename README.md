@@ -4,7 +4,7 @@ A [Maven](https://maven.apache.org/) plugin for converting terminology from vers
 
 The input is the [ZIP archive](https://www.healthterminologies.gov.au/access?content=rcpadownload) distributed on the National Clinical Terminology Service web site.
 
-The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing the following ten resources:
+The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing the following resources:
 
 1. Requesting reference set (SNOMED CT ValueSet)
 2. Chemical pathology reporting reference set (LOINC ValueSet)
