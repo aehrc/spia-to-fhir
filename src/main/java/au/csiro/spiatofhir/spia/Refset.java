@@ -184,7 +184,7 @@ public abstract class Refset {
      * Returns a string value from the specified cell within a row, asserting that it is a valid (though not
      * necessarily existent) LOINC code.
      */
-    protected String getLoincCodeFromCell(Row row, int cellNumber)
+    protected String getLoincCodeFromCell(Row row, int cellNumber, TerminologyClient terminologyClient)
             throws CellValidationException, InvalidCodeException, BlankCodeException {
         Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
         if (cell == null)
@@ -195,9 +195,13 @@ public abstract class Refset {
                             cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
         String cellValue = cell.getStringCellValue().trim();
         // Check for the validity of the LOINC code.
-        LoincCodeValidator loincCodeValidator = new LoincCodeValidator();
+        LoincCodeValidator loincCodeValidator = new LoincCodeValidator(terminologyClient);
         if (!loincCodeValidator.validate(cellValue))
             throw new InvalidCodeException("Invalid LOINC code encountered: \"" + cellValue + "\"",
+                    cell.getRowIndex(),
+                    cell.getColumnIndex());
+        if (!loincCodeValidator.checkActive(cellValue))
+            throw new InvalidCodeException("Inactive LOINC code encountered: \"" + cellValue + "\"",
                     cell.getRowIndex(),
                     cell.getColumnIndex());
         return cellValue;

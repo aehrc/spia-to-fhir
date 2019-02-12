@@ -32,13 +32,13 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
     protected static final Logger logger = LoggerFactory.getLogger(ChemicalPathologyRefset.class);
     protected static final String[] expectedHeaders =
             {"RCPA Preferred term", "RCPA Synonyms", "Usage guidance", "Length", "Specimen", "Unit", "UCUM", "LOINC",
-             "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Combining Results Flag",
-             "Version", "History"};
+                    "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Combining Results Flag",
+                    "Version", "History"};
     private static final String SHEET_NAME = "Terminology for Chem Pathology";
     private static final Map<String, ChemicalPathologyRefsetEntry.CombiningResultsFlag> combiningResultsFlagMap =
             Map.of("Red", ChemicalPathologyRefsetEntry.CombiningResultsFlag.RED,
-                   "Green", ChemicalPathologyRefsetEntry.CombiningResultsFlag.GREEN,
-                   "Orange", ChemicalPathologyRefsetEntry.CombiningResultsFlag.ORANGE);
+                    "Green", ChemicalPathologyRefsetEntry.CombiningResultsFlag.GREEN,
+                    "Orange", ChemicalPathologyRefsetEntry.CombiningResultsFlag.ORANGE);
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
     private final UcumService ucumService;
@@ -94,7 +94,7 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
                 } catch (InvalidCodeException e) {
                     logger.warn(e.getMessage());
                 }
-                String loincCode = getLoincCodeFromCell(row, 7);
+                String loincCode = getLoincCodeFromCell(row, 7, terminologyClient);
                 String loincComponent = getStringValueFromCell(row, 8);
                 String loincProperty = getStringValueFromCell(row, 9);
                 String loincTiming = getStringValueFromCell(row, 10);
@@ -136,8 +136,8 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
         }
         // Lookup and add native display terms to reference set entries.
         List<String> preferredTerms = lookupDisplayTerms(terminologyClient,
-                                                         "http://loinc.org",
-                                                         refsetEntries);
+                "http://loinc.org",
+                refsetEntries);
         for (int i = 0; i < refsetEntries.size(); i++) {
             ChemicalPathologyRefsetEntry refsetEntry = (ChemicalPathologyRefsetEntry) refsetEntries.get(i);
             if (preferredTerms.get(i) != null) refsetEntry.setLoincLongName(preferredTerms.get(i));

@@ -34,7 +34,7 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
     protected static final Logger logger = LoggerFactory.getLogger(MicrobiologySerologyMolecularRefset.class);
     protected static final String[] expectedHeaders =
             {"RCPA Preferred term", "RCPA Synonyms", "Usage guidance", "Length", "Specimen", "DURATION", "Unit", "UCUM",
-             "LOINC", "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version", "History"};
+                    "LOINC", "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version", "History"};
     private static final String SHEET_NAME = "Terminology Micro Sero Molecul";
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
@@ -92,7 +92,7 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
                 } catch (InvalidCodeException e) {
                     logger.warn(e.getMessage());
                 }
-                String loincCode = getLoincCodeFromCell(row, 8);
+                String loincCode = getLoincCodeFromCell(row, 8, terminologyClient);
                 String loincComponent = getStringValueFromCell(row, 9);
                 String loincProperty = getStringValueFromCell(row, 10);
                 String loincTiming = getStringValueFromCell(row, 11);

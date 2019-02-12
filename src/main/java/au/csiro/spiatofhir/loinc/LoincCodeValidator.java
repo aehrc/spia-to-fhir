@@ -16,6 +16,13 @@
 
 package au.csiro.spiatofhir.loinc;
 
+import au.csiro.spiatofhir.fhir.TerminologyClient;
+import org.hl7.fhir.dstu3.model.BooleanType;
+import org.hl7.fhir.dstu3.model.CodeType;
+import org.hl7.fhir.dstu3.model.Parameters;
+
+import java.util.Collections;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +30,15 @@ import java.util.regex.Pattern;
  * @author John Grimes
  */
 public class LoincCodeValidator {
+
+    private TerminologyClient terminologyClient;
+
+    public LoincCodeValidator() {
+    }
+
+    public LoincCodeValidator(TerminologyClient terminologyClient) {
+        this.terminologyClient = terminologyClient;
+    }
 
     /**
      * Validates whether an input string is a valid LOINC code, in terms of its structure and the validity of its
@@ -67,6 +83,25 @@ public class LoincCodeValidator {
         }
         sum = Math.abs(sum) + 10;
         return (10 - (sum % 10)) % 10;
+    }
+
+
+    public boolean checkActive(String code) {
+        Parameters result = terminologyClient.lookup("http://loinc.org", code, Collections.singletonList("inactive"));
+        if (result.getParameter() == null) return true;
+        Optional<Parameters.ParametersParameterComponent> parameter = result.getParameter().stream()
+                .filter(p -> {
+                    boolean isProperty = p.getName().equals("property");
+                    Optional<Parameters.ParametersParameterComponent> codePart = p.getPart().stream()
+                            .filter(pp -> pp.getName().equals("code") && ((CodeType) pp.getValue()).asStringValue().equals("inactive"))
+                            .findFirst();
+                    Optional<Parameters.ParametersParameterComponent> valuePart = p.getPart().stream()
+                            .filter(pp -> pp.getName().equals("valueBoolean") && ((BooleanType) pp.getValue()).booleanValue())
+                            .findFirst();
+                    return isProperty && codePart.isPresent() && valuePart.isPresent();
+                })
+                .findFirst();
+        return parameter.isEmpty();
     }
 
 }

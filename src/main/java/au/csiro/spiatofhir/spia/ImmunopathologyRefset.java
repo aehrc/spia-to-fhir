@@ -34,7 +34,7 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
     protected static final Logger logger = LoggerFactory.getLogger(ImmunopathologyRefset.class);
     protected static final String[] expectedHeaders =
             {"RCPA Preferred term", "RCPA Synonyms", "Usage guidance", "Length", "Specimen", "Unit", "UCUM", "LOINC",
-             "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version", "History"};
+                    "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version", "History"};
     private static final String SHEET_NAME = "Terminology for Immunopathology";
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
@@ -91,7 +91,7 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
                 } catch (InvalidCodeException e) {
                     logger.warn(e.getMessage());
                 }
-                String loincCode = getLoincCodeFromCell(row, 7);
+                String loincCode = getLoincCodeFromCell(row, 7, terminologyClient);
                 String loincComponent = getStringValueFromCell(row, 8);
                 String loincProperty = getStringValueFromCell(row, 9);
                 String loincTiming = getStringValueFromCell(row, 10);
