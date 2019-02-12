@@ -55,10 +55,10 @@ public abstract class Refset {
         Bundle result = terminologyClient.batchLookup(system, codes, new ArrayList<>());
         // Return a list of displays.
         return result.getEntry()
-                     .stream()
-                     .map(Refset::entryToParameters)
-                     .map(Refset::parametersToDisplayValue)
-                     .collect(Collectors.toList());
+                .stream()
+                .map(Refset::entryToParameters)
+                .map(Refset::parametersToDisplayValue)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -69,16 +69,16 @@ public abstract class Refset {
                                           List<RefsetEntry> refsetEntries) {
         // Get the UCUM codes from the reference set entries.
         List<String> codes = refsetEntries.stream()
-                                          .map(refsetEntry -> ((LoincRefsetEntry) refsetEntry).getUcumCode())
-                                          .collect(Collectors.toList());
+                .map(refsetEntry -> ((LoincRefsetEntry) refsetEntry).getUcumCode())
+                .collect(Collectors.toList());
         // Perform a lookup on each code using the terminology server.
         Bundle result = terminologyClient.batchLookup("http://unitsofmeasure.org", codes, new ArrayList<>());
         // Get the display term from each lookup result.
         List<String> displays = result.getEntry()
-                                      .stream()
-                                      .map(Refset::entryToParameters)
-                                      .map(Refset::parametersToDisplayValue)
-                                      .collect(Collectors.toList());
+                .stream()
+                .map(Refset::entryToParameters)
+                .map(Refset::parametersToDisplayValue)
+                .collect(Collectors.toList());
         // Set the UCUM display to the authoritative display from the terminology server.
         for (int i = 0; i < refsetEntries.size(); i++) {
             LoincRefsetEntry refsetEntry = (LoincRefsetEntry) refsetEntries.get(i);
@@ -94,8 +94,8 @@ public abstract class Refset {
             // Filter out log warnings for outcomes relating to blank unit codes.
             if (!opOutcomeMessage.matches("Invalid type for 'code' parameter\\.")) {
                 String message = operationOutcome.getIssueFirstRep()
-                                                 .getDiagnostics()
-                                                 .replaceFirst("\\[[a-f0-9\\-]*\\]: ", "");
+                        .getDiagnostics()
+                        .replaceFirst("\\[[a-f0-9\\-]*\\]: ", "");
                 logger.warn("Error looking up display for code: \"" + message + "\"");
             }
         }
@@ -104,11 +104,11 @@ public abstract class Refset {
 
     private static String parametersToDisplayValue(Parameters parameters) {
         return parameters != null ? parameters.getParameter()
-                                              .stream()
-                                              .filter(parameter -> parameter.getName().equals("display"))
-                                              .map(parameter -> parameter.getValue().toString())
-                                              .findFirst()
-                                              .orElse(null) : null;
+                .stream()
+                .filter(parameter -> parameter.getName().equals("display"))
+                .map(parameter -> parameter.getValue().toString())
+                .findFirst()
+                .orElse(null) : null;
     }
 
     /**
@@ -131,8 +131,8 @@ public abstract class Refset {
         if (cell == null) return null;
         if (cell.getCellTypeEnum() != CellType.STRING)
             throw new CellValidationException("Cell identified for extraction of string value is not of string type, " +
-                                                      "actual type: " + cell.getCellTypeEnum().toString(),
-                                              cell.getRowIndex(), cell.getColumnIndex());
+                    "actual type: " + cell.getCellTypeEnum().toString(),
+                    cell.getRowIndex(), cell.getColumnIndex());
         return cell.getStringCellValue().trim();
     }
 
@@ -144,8 +144,8 @@ public abstract class Refset {
         if (cell == null) return null;
         if (cell.getCellTypeEnum() != CellType.NUMERIC)
             throw new CellValidationException("Cell identified for extraction of numeric value is not of numeric " +
-                                                      "type, actual type: " + cell.getCellTypeEnum().toString(),
-                                              cell.getRowIndex(), cell.getColumnIndex());
+                    "type, actual type: " + cell.getCellTypeEnum().toString(),
+                    cell.getRowIndex(), cell.getColumnIndex());
         double value = cell.getNumericCellValue();
         if (value == 0) return null;
         else return value;
@@ -156,7 +156,7 @@ public abstract class Refset {
      * existent) SNOMED CT identifier is within the content and trimming any extraneous surrounding content, such as
      * preferred term.
      */
-    protected String getSnomedCodeFromCell(Row row, int cellNumber)
+    protected String getSnomedCodeFromCell(Row row, int cellNumber, TerminologyClient terminologyClient)
             throws CellValidationException, InvalidCodeException, BlankCodeException {
         Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
         if (cell == null)
@@ -166,13 +166,17 @@ public abstract class Refset {
                     "Cell identified for extraction of SNOMED code is not of string type, actual type: " +
                             cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
         String cellValue = cell.getStringCellValue()
-                               .split("\\|")[0].trim();
+                .split("\\|")[0].trim();
         // Check for the validity of the SNOMED code.
-        SnomedCodeValidator snomedCodeValidator = new SnomedCodeValidator();
+        SnomedCodeValidator snomedCodeValidator = new SnomedCodeValidator(terminologyClient);
         if (!snomedCodeValidator.validate(cellValue))
             throw new InvalidCodeException("Invalid SNOMED code encountered: \"" + cellValue + "\"",
-                                           cell.getRowIndex(),
-                                           cell.getColumnIndex());
+                    cell.getRowIndex(),
+                    cell.getColumnIndex());
+        if (!snomedCodeValidator.checkActive(cellValue))
+            throw new InvalidCodeException("Inactive SNOMED code encountered: \"" + cellValue + "\"",
+                    cell.getRowIndex(),
+                    cell.getColumnIndex());
         return cellValue;
     }
 
@@ -194,8 +198,8 @@ public abstract class Refset {
         LoincCodeValidator loincCodeValidator = new LoincCodeValidator();
         if (!loincCodeValidator.validate(cellValue))
             throw new InvalidCodeException("Invalid LOINC code encountered: \"" + cellValue + "\"",
-                                           cell.getRowIndex(),
-                                           cell.getColumnIndex());
+                    cell.getRowIndex(),
+                    cell.getColumnIndex());
         return cellValue;
     }
 
@@ -216,8 +220,8 @@ public abstract class Refset {
         String result = ucumService.validate(cellValue);
         if (result != null)
             throw new InvalidCodeException("UCUM code validation failed: \"" + result + "\"",
-                                           cell.getRowIndex(),
-                                           cell.getColumnIndex());
+                    cell.getRowIndex(),
+                    cell.getColumnIndex());
         return cellValue;
     }
 

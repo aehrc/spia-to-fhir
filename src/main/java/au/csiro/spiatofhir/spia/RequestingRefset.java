@@ -33,7 +33,7 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
     protected static final Logger logger = LoggerFactory.getLogger(RequestingRefset.class);
     protected static final String[] expectedHeaders =
             {"RCPA Preferred term", "RCPA Synonyms", "Usage guidance", "Length", "Specimen",
-             "Terminology binding (SNOMED CT-AU)", "Version", "History"};
+                    "Terminology binding (SNOMED CT-AU)", "Version", "History"};
     private static final String SHEET_NAME = "Terminology for Requesting Path";
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
@@ -80,7 +80,7 @@ public class RequestingRefset extends Refset implements HasRefsetEntries {
                 // Length has been omitted, as formulas are being used within the spreadsheet.
                 String specimen = getStringValueFromCell(row, 4);
                 // Skip any row which contains an invalid SNOMED code.
-                String snomedCode = getSnomedCodeFromCell(row, 5);
+                String snomedCode = getSnomedCodeFromCell(row, 5, terminologyClient);
                 Double version = getNumericValueFromCell(row, 6);
                 String history = getStringValueFromCell(row, 7);
 

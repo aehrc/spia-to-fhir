@@ -39,6 +39,27 @@ public class TerminologyClient {
         client = fhirContext.newRestfulGenericClient(serverBase);
     }
 
+    public Parameters lookup(String system, String code, List<String> properties) {
+        long start = System.nanoTime();
+
+        Parameters inParams = new Parameters();
+        inParams.addParameter().setName("system").setValue(new UriType(system));
+        inParams.addParameter().setName("code").setValue(new CodeType(code));
+        for (String property : properties) {
+            inParams.addParameter().setName("property").setValue(new StringType(property));
+        }
+        Parameters outParams = client.operation()
+                .onType(CodeSystem.class)
+                .named("$lookup")
+                .withParameters(inParams)
+                .execute();
+
+        double elapsedMs = TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS);
+        logger.debug(
+                "Executed lookup of " + system + "|" + code + " in " + String.format("%.1f", elapsedMs) + " ms");
+        return outParams;
+    }
+
     /**
      * Executes lookup operations for a set of codes within a specified CodeSystem, then returns a bundle containing
      * the results of those operations.
@@ -55,17 +76,17 @@ public class TerminologyClient {
                 inParams.addParameter().setName("property").setValue(new StringType(property));
             }
             bundle.addEntry()
-                  .setResource(inParams)
-                  .getRequest()
-                  .setMethod(Bundle.HTTPVerb.POST)
-                  .setUrl("CodeSystem/$lookup");
+                    .setResource(inParams)
+                    .getRequest()
+                    .setMethod(Bundle.HTTPVerb.POST)
+                    .setUrl("CodeSystem/$lookup");
         }
         Bundle result = client
                 .transaction()
                 .withBundle(bundle)
                 .execute();
         double elapsedMs = TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS);
-        logger.info(
+        logger.debug(
                 "Executed batch lookup of " + codes.size() + " codes from " + system + " CodeSystem in " +
                         String.format("%.1f", elapsedMs) + " ms");
         return result;

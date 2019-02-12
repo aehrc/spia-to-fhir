@@ -72,7 +72,7 @@ public class MicrobiologySubsetOfOrganismsRefset extends Refset implements HasRe
 
                 // Extract information from row.
                 String rcpaPreferredTerm = getStringValueFromCell(row, 0);
-                String snomedCode = getSnomedCodeFromCell(row, 1);
+                String snomedCode = getSnomedCodeFromCell(row, 1, terminologyClient);
                 Double version = getNumericValueFromCell(row, 2);
                 String history = getStringValueFromCell(row, 3);
 
@@ -92,8 +92,8 @@ public class MicrobiologySubsetOfOrganismsRefset extends Refset implements HasRe
         }
         // Lookup and add native display terms to reference set entries.
         List<String> preferredTerms = lookupDisplayTerms(terminologyClient,
-                                                         "http://snomed.info/sct",
-                                                         refsetEntries);
+                "http://snomed.info/sct",
+                refsetEntries);
         for (int i = 0; i < refsetEntries.size(); i++) {
             SnomedRefsetEntry refsetEntry = (SnomedRefsetEntry) refsetEntries.get(i);
             if (preferredTerms.get(i) != null) refsetEntry.setSnomedPreferredTerm(preferredTerms.get(i));
