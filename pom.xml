@@ -176,19 +176,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>au.csiro</groupId>
-                <artifactId>spia-to-fhir-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>transform</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
