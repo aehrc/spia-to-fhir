@@ -86,8 +86,6 @@ public interface SpiaFhirValueSet {
                 includeEntry.setSystem(system);
                 ValueSet.ConceptReferenceComponent conceptEntry = new ValueSet.ConceptReferenceComponent();
                 conceptEntry.setCode(entry.getCode());
-                // The display is set to the display text retrieved from the terminology server.
-                conceptEntry.setDisplay(entry.getNativeDisplay());
 
                 // RCPA preferred terms and synonyms are represented using designations, which are identified using
                 // codes from the CodeSystem included in the Bundle.
