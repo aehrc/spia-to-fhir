@@ -82,11 +82,9 @@ public interface SpiaFhirConceptMap {
             if (loincEntry.getCode() == null || loincEntry.getUcumCode() == null) continue;
             ConceptMap.SourceElementComponent element = new ConceptMap.SourceElementComponent();
             element.setCode(loincEntry.getCode());
-            if (loincEntry.getNativeDisplay() != null) element.setDisplay(loincEntry.getNativeDisplay());
             ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
             if (loincEntry.getUcumCode().isEmpty()) continue;
             target.setCode(loincEntry.getUcumCode());
-            if (loincEntry.getUcumDisplay() != null) target.setDisplay(loincEntry.getUcumDisplay());
             target.setEquivalence(Enumerations.ConceptMapEquivalence.RELATEDTO);
             element.getTarget().add(target);
             group.getElement().add(element);
