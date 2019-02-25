@@ -81,6 +81,6 @@ public class SnomedCodeValidator {
                     return isProperty && codePart.isPresent() && valuePart.isPresent();
                 })
                 .findFirst();
-        return parameter.isEmpty();
+        return !parameter.isPresent();
     }
 }

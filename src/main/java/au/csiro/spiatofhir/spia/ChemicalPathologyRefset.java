@@ -35,10 +35,11 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
                     "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Combining Results Flag",
                     "Version", "History"};
     private static final String SHEET_NAME = "Terminology for Chem Pathology";
-    private static final Map<String, ChemicalPathologyRefsetEntry.CombiningResultsFlag> combiningResultsFlagMap =
-            Map.of("Red", ChemicalPathologyRefsetEntry.CombiningResultsFlag.RED,
-                    "Green", ChemicalPathologyRefsetEntry.CombiningResultsFlag.GREEN,
-                    "Orange", ChemicalPathologyRefsetEntry.CombiningResultsFlag.ORANGE);
+    private static final Map<String, ChemicalPathologyRefsetEntry.CombiningResultsFlag> combiningResultsFlagMap = new HashMap<String, ChemicalPathologyRefsetEntry.CombiningResultsFlag>() {{
+        put("Red", ChemicalPathologyRefsetEntry.CombiningResultsFlag.RED);
+        put("Green", ChemicalPathologyRefsetEntry.CombiningResultsFlag.GREEN);
+        put("Orange", ChemicalPathologyRefsetEntry.CombiningResultsFlag.ORANGE);
+    }};
     private final Workbook workbook;
     private final TerminologyClient terminologyClient;
     private final UcumService ucumService;

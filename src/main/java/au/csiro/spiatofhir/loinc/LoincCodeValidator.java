@@ -101,7 +101,7 @@ public class LoincCodeValidator {
                     return isProperty && codePart.isPresent() && valuePart.isPresent();
                 })
                 .findFirst();
-        return parameter.isEmpty();
+        return !parameter.isPresent();
     }
 
 }
