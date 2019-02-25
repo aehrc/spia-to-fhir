@@ -20,8 +20,10 @@ The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing 
 
 A FHIR terminology server that contains SNOMED CT, LOINC and UCUM is required for the build process, as it is used to populate the native display terms into the ValueSets and ConceptMaps.
 
-You can execute the plugin with the following command:
+You can execute the plugin with the following commands:
 
 ```
-mvn -DinputPath=[zip file] -DoutputPath=[bundle JSON file] -DterminologyServerUrl=[FHIR terminology server endpoint] package
+mvn install
+
+mvn -DinputPath=[zip file] -DoutputPath=[bundle JSON file] -DterminologyServerUrl=[FHIR terminology server endpoint] au.csiro:spia-to-fhir-maven-plugin:transform
 ```
