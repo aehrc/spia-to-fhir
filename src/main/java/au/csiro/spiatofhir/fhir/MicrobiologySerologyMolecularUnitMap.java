@@ -44,8 +44,8 @@ public class MicrobiologySerologyMolecularUnitMap {
         // TODO: Add a real OID.
         oid.setValue("urn:oid:TBD");
         conceptMap.setIdentifier(oid);
-        conceptMap.setName("RCPA - SPIA Microbiology Serology Molecular Unit Map");
-        conceptMap.setTitle("spia-microbiology-unit-map");
+        conceptMap.setTitle("RCPA - SPIA Microbiology Serology Molecular Unit Map");
+        conceptMap.setName("spia-microbiology-unit-map");
         conceptMap.setDescription(
                 "Map between the SPIA Microbiology Reference Set (v3.0) and the corresponding RCPA preferred units " +
                         "(v1.0) for each code.");

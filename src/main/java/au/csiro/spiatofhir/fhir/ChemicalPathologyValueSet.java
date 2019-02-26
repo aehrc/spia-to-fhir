@@ -48,8 +48,8 @@ public class ChemicalPathologyValueSet implements SpiaFhirValueSet {
         oid.setValue("urn:oid:TBD");
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
-        valueSet.setName("RCPA - SPIA Chemical Pathology Terminology Reference Set");
-        valueSet.setTitle("spia-chemical-pathology-refset");
+        valueSet.setTitle("RCPA - SPIA Chemical Pathology Terminology Reference Set");
+        valueSet.setName("spia-chemical-pathology-refset");
         valueSet.setDescription(
                 "Standard codes for use in reporting chemical pathology results in Australia, based on the SPIA " +
                         "Chemical Pathology Terminology Reference Set (v3.0).");

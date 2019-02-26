@@ -48,8 +48,8 @@ public class RequestingValueSet implements SpiaFhirValueSet {
         oid.setValue("urn:oid:TBD");
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
-        valueSet.setName("RCPA - SPIA Requesting Pathology Terminology Reference Set");
-        valueSet.setTitle("spia-requesting-refset");
+        valueSet.setTitle("RCPA - SPIA Requesting Pathology Terminology Reference Set");
+        valueSet.setName("spia-requesting-refset");
         valueSet.setDescription(
                 "Standard codes for use in requesting pathology tests in Australia, based on the SPIA Requesting " +
                         "Pathology Reference Set (v3.0).");

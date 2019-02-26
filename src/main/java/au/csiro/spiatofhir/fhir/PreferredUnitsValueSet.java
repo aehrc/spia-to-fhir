@@ -48,8 +48,8 @@ public class PreferredUnitsValueSet implements SpiaFhirValueSet {
         oid.setValue("urn:oid:TBD");
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
-        valueSet.setName("RCPA - SPIA Preferred Units Reference Set");
-        valueSet.setTitle("spia-preferred-units-refset");
+        valueSet.setTitle("RCPA - SPIA Preferred Units Reference Set");
+        valueSet.setName("spia-preferred-units-refset");
         valueSet.setDescription(
                 "A set of preferred units of measure for use within pathology reporting in Australia, based on the " +
                         "SPIA Preferred Units Reference Set (v1.0).");

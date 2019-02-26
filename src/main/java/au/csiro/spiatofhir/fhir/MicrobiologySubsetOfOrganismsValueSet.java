@@ -48,8 +48,8 @@ public class MicrobiologySubsetOfOrganismsValueSet implements SpiaFhirValueSet {
         oid.setValue("urn:oid:TBD");
         identifier.add(oid);
         valueSet.setIdentifier(identifier);
-        valueSet.setName("RCPA - SPIA Microbiology Subset of Organisms Reference Set");
-        valueSet.setTitle("spia-microbiology-organisms-refset");
+        valueSet.setTitle("RCPA - SPIA Microbiology Subset of Organisms Reference Set");
+        valueSet.setName("spia-microbiology-organisms-refset");
         valueSet.setDescription(
                 "Standard set of organism codes for use in reporting pathology results in Australia, based on the " +
                         "SPIA Microbiology Subset of Organisms Reference Set (v3.0).");
