@@ -32,7 +32,7 @@
     </developers>
 
     <properties>
-        <hapiFhirVersion>3.6.0</hapiFhirVersion>
+        <hapiFhirVersion>3.8.0</hapiFhirVersion>
         <log4jVersion>2.11.1</log4jVersion>
         <slf4jVersion>1.7.25</slf4jVersion>
         <poiVersion>3.17</poiVersion>
