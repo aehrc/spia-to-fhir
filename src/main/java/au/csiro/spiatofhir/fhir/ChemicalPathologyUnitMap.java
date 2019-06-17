@@ -55,7 +55,7 @@ public class ChemicalPathologyUnitMap {
         conceptMap.getText().getDiv().addText("RCPA - SPIA Chemical Pathology Unit Map");
         conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-chemical-pathology-refset-1"));
         conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));
-        ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap.buildGroupFromEntries(refset.getRefsetEntries());
+        ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap.buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());
         group.setSource("http://loinc.org");
         group.setTarget("http://unitsofmeasure.org");
         conceptMap.getGroup().add(group);

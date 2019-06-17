@@ -78,8 +78,10 @@ public class SpiaFhirBundle {
         // Chemical pathology
         ChemicalPathologyValueSet chemicalPathologyValueSet = new ChemicalPathologyValueSet(chemicalRefset);
         ChemicalPathologyUnitMap chemicalPathologyUnitMap = new ChemicalPathologyUnitMap(chemicalRefset);
+        ChemicalCombiningResultsMap chemicalCombiningResultsMap = new ChemicalCombiningResultsMap(chemicalRefset);
         resources.add(chemicalPathologyValueSet.getValueSet());
         resources.add(chemicalPathologyUnitMap.getConceptMap());
+        resources.add(chemicalCombiningResultsMap.getConceptMap());
         // Microbiology serology molecular
         MicrobiologySerologyMolecularValueSet microbiologyValueSet =
                 new MicrobiologySerologyMolecularValueSet(microbiologyRefset);
@@ -107,10 +109,16 @@ public class SpiaFhirBundle {
 
         // Get supporting terminology resources from the resources directory.
         try (InputStream designationTypeStream = getClass().getResourceAsStream(
-                "/codesystem-spia-designation-type.json")) {
+                "/spia-designation-type.CodeSystem.json")) {
             CodeSystem designationType = (CodeSystem) fhirContext.newJsonParser().parseResource(new InputStreamReader(
                     designationTypeStream));
             resources.add(designationType);
+        }
+        try (InputStream designationTypeStream = getClass().getResourceAsStream(
+                "/spia-combining-results-flag.CodeSystem.json")) {
+            CodeSystem combiningResultsFlag = (CodeSystem) fhirContext.newJsonParser().parseResource(new InputStreamReader(
+                    designationTypeStream));
+            resources.add(combiningResultsFlag);
         }
 
         // Add all resources to the Bundle.

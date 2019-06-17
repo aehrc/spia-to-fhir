@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.fhir;
 
+import au.csiro.spiatofhir.spia.ChemicalPathologyRefsetEntry;
 import au.csiro.spiatofhir.spia.LoincRefsetEntry;
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import org.hl7.fhir.dstu3.model.*;
@@ -73,9 +74,9 @@ public interface SpiaFhirConceptMap {
     }
 
     /**
-     * Builds the group element of a ConceptMap, using a list of reference set entries.
+     * Builds the group element of a ConceptMap, using a list of reference set entries and their preferred units.
      */
-    static ConceptMap.ConceptMapGroupComponent buildGroupFromEntries(List<RefsetEntry> refsetEntries) {
+    static ConceptMap.ConceptMapGroupComponent buildPreferredUnitGroupFromEntries(List<RefsetEntry> refsetEntries) {
         ConceptMap.ConceptMapGroupComponent group = new ConceptMap.ConceptMapGroupComponent();
         for (RefsetEntry entry : refsetEntries) {
             LoincRefsetEntry loincEntry = (LoincRefsetEntry) entry;
@@ -85,6 +86,26 @@ public interface SpiaFhirConceptMap {
             ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
             if (loincEntry.getUcumCode().isEmpty()) continue;
             target.setCode(loincEntry.getUcumCode());
+            target.setEquivalence(Enumerations.ConceptMapEquivalence.RELATEDTO);
+            element.getTarget().add(target);
+            group.getElement().add(element);
+        }
+        return group;
+    }
+
+    /**
+     * Builds the group element of a ConceptMap, using a list of reference set entries and their combining results
+     * flags.
+     */
+    static ConceptMap.ConceptMapGroupComponent buildCombiningResultsFlagsGroupFromEntries(List<RefsetEntry> refsetEntries) {
+        ConceptMap.ConceptMapGroupComponent group = new ConceptMap.ConceptMapGroupComponent();
+        for (RefsetEntry entry : refsetEntries) {
+            ChemicalPathologyRefsetEntry chemicalEntry = (ChemicalPathologyRefsetEntry) entry;
+            if (chemicalEntry.getCode() == null || chemicalEntry.getCombiningResultsFlag() == null) continue;
+            ConceptMap.SourceElementComponent element = new ConceptMap.SourceElementComponent();
+            element.setCode(chemicalEntry.getCode());
+            ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
+            target.setCode(chemicalEntry.getCombiningResultsFlag().getCode());
             target.setEquivalence(Enumerations.ConceptMapEquivalence.RELATEDTO);
             element.getTarget().add(target);
             group.getElement().add(element);

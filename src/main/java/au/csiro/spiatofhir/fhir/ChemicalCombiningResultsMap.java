@@ -24,41 +24,40 @@ import org.hl7.fhir.dstu3.model.UriType;
 /**
  * @author John Grimes
  */
-public class MicrobiologySerologyMolecularUnitMap {
+public class ChemicalCombiningResultsMap {
 
     private final HasRefsetEntries refset;
     private ConceptMap conceptMap;
 
-    public MicrobiologySerologyMolecularUnitMap(HasRefsetEntries refset) {
+    public ChemicalCombiningResultsMap(HasRefsetEntries refset) {
         this.refset = refset;
         buildConceptMap();
     }
 
     private void buildConceptMap() {
         conceptMap = new ConceptMap();
-        conceptMap.setId("spia-microbiology-unit-map-1");
-        conceptMap.setUrl("https://www.rcpa.edu.au/fhir/ConceptMap/spia-microbiology-serology-molecular-unit-map-1");
+        conceptMap.setId("spia-chemical-combining-results-map-1");
+        conceptMap.setUrl("https://www.rcpa.edu.au/fhir/ConceptMap/spia-chemical-combining-results-map-1");
         conceptMap.setVersion("1.0.0");
         Identifier oid = new Identifier();
         oid.setSystem("urn:ietf:rfc:3986");
         // TODO: Add a real OID.
         oid.setValue("urn:oid:TBD");
         conceptMap.setIdentifier(oid);
-        conceptMap.setTitle("RCPA - SPIA Microbiology Serology Molecular Unit Map");
-        conceptMap.setName("spia-microbiology-unit-map");
-        conceptMap.setDescription(
-                "Map between the SPIA Microbiology Reference Set (v3.0) and the corresponding RCPA preferred units " +
-                        "(v1.0) for each code.");
+        conceptMap.setTitle("RCPA - SPIA Chemical Combining Results Map");
+        conceptMap.setName("spia-chemical-combining-results-map");
+        conceptMap.setDescription( "Map between the SPIA Chemical Pathology Reference Set (v3.0) and the " +
+                "corresponding combining results flag for each code.");
         conceptMap.setPurpose(
-                "Resolving RCPA specified units for members of the SPIA Microbiology Serology Molecular Reference " +
-                        "Set.");
+                "Resolving the combining results flags for members of the SPIA Chemical Pathology Reference Set.");
         SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
-        conceptMap.getText().getDiv().addText("RCPA - SPIA Microbiology Serology Molecular Unit Map");
-        conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-refset-1"));
-        conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));
-        ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap.buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());
+        conceptMap.getText().getDiv().addText("RCPA - SPIA Chemical Combining Results Map");
+        conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-chemical-pathology-refset-1"));
+        conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-combining-results-flag"));
+        ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap
+                .buildCombiningResultsFlagsGroupFromEntries(refset.getRefsetEntries());
         group.setSource("http://loinc.org");
-        group.setTarget("http://unitsofmeasure.org");
+        group.setTarget("https://www.rcpa.edu.au/fhir/CodeSystem/spia-combining-results-flag");
         conceptMap.getGroup().add(group);
     }
 

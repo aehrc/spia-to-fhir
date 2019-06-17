@@ -25,8 +25,8 @@ public class ChemicalPathologyRefsetEntry extends LoincRefsetEntry {
 
     private CombiningResultsFlag combiningResultsFlag;
 
-    public Optional<CombiningResultsFlag> getCombiningResultsFlag() {
-        return Optional.of(combiningResultsFlag);
+    public CombiningResultsFlag getCombiningResultsFlag(){
+        return combiningResultsFlag;
     }
 
     public void setCombiningResultsFlag(CombiningResultsFlag combiningResultsFlag) {
@@ -34,7 +34,17 @@ public class ChemicalPathologyRefsetEntry extends LoincRefsetEntry {
     }
 
     public enum CombiningResultsFlag {
-        RED, GREEN, ORANGE
+        RED ("red"), GREEN ("green"), ORANGE ("orange");
+
+        private final String code;
+
+        CombiningResultsFlag(String code) {
+           this.code = code;
+        }
+
+        public String getCode() {
+            return code;
+        }
     }
 
 }
