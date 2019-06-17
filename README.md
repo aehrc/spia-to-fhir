@@ -21,7 +21,7 @@ The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing 
 13. SPIA designation type (CodeSystem)
 14. SPIA combining result flag (CodeSystem)
 
-A FHIR terminology server that contains SNOMED CT, LOINC and UCUM is required for the build process, as it is used to populate the native display terms into the ValueSets and ConceptMaps.
+A FHIR terminology server that contains SNOMED CT and LOINC is required for the build process, as it is used to validate the content within the source files.
 
 You can execute the plugin with the following commands:
 
