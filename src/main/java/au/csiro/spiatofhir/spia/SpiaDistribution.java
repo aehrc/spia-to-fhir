@@ -84,7 +84,7 @@ public class SpiaDistribution {
         Workbook workbook;
         try {
             workbook = WorkbookFactory.create(inputStream);
-        } catch (InvalidFormatException e) {
+        } catch (IOException e) {
             throw new ValidationException("Invalid Excel workbook format - must be OOXML (2007-) format");
         }
         switch (distributionEntry) {
