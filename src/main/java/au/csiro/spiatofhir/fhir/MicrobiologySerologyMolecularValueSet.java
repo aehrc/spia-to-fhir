@@ -21,6 +21,7 @@ import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.ValueSet;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,10 +30,12 @@ import java.util.List;
 public class MicrobiologySerologyMolecularValueSet implements SpiaFhirValueSet {
 
     private final HasRefsetEntries refset;
+    private final Date publicationDate;
     private ValueSet valueSet;
 
-    public MicrobiologySerologyMolecularValueSet(HasRefsetEntries refset) {
+    public MicrobiologySerologyMolecularValueSet(HasRefsetEntries refset, Date publicationDate) {
         this.refset = refset;
+        this.publicationDate = publicationDate;
         buildValueSet();
     }
 
@@ -53,6 +56,7 @@ public class MicrobiologySerologyMolecularValueSet implements SpiaFhirValueSet {
         valueSet.setDescription(
                 "Standard codes for use in reporting microbiology pathology results in Australia, based on the SPIA " +
                         "Microbiology Serology Molecular Pathology Reference Set (v3.0).");
+        valueSet.setDate(publicationDate);
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
         ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(),
                                                                                              "http://loinc.org");

@@ -21,16 +21,20 @@ import org.hl7.fhir.dstu3.model.ConceptMap;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.UriType;
 
+import java.util.Date;
+
 /**
  * @author John Grimes
  */
 public class ChemicalCombiningResultsMap {
 
     private final HasRefsetEntries refset;
+    private final Date publicationDate;
     private ConceptMap conceptMap;
 
-    public ChemicalCombiningResultsMap(HasRefsetEntries refset) {
+    public ChemicalCombiningResultsMap(HasRefsetEntries refset, Date publicationDate) {
         this.refset = refset;
+        this.publicationDate = publicationDate;
         buildConceptMap();
     }
 
@@ -50,6 +54,7 @@ public class ChemicalCombiningResultsMap {
                 "corresponding combining results flag for each code.");
         conceptMap.setPurpose(
                 "Resolving the combining results flags for members of the SPIA Chemical Pathology Reference Set.");
+        conceptMap.setDate(publicationDate);
         SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
         conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-chemical-pathology-refset-1"));
         conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-combining-results-flag"));

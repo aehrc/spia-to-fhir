@@ -48,7 +48,6 @@ public interface SpiaFhirValueSet {
         valueSet.setText(text);
         valueSet.setStatus(Enumerations.PublicationStatus.DRAFT);
         valueSet.setExperimental(true);
-        valueSet.setDate(new Date());
         valueSet.setPublisher("Australian Digital Health Agency");
         valueSet.setCopyright(
                 "Copyright © 2019 Australian Digital Health Agency - All rights reserved. This content is licensed " +

@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 
 /**
  * Takes the SPIA distribution located at the `inputPath`, transforms it into a set of FHIR resources, then outputs a
@@ -47,6 +48,7 @@ import java.io.FileWriter;
 public class SpiaToFhirMavenPlugin extends AbstractMojo {
 
     private static final Logger logger = LoggerFactory.getLogger(SpiaToFhirMavenPlugin.class);
+    private static final String publicationDatePattern = "yyyy-MM-dd";
 
     @Parameter(property = "inputPath", required = true)
     private String inputPath;
@@ -57,21 +59,29 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
     @Parameter(property = "terminologyServerUrl", required = true)
     private String terminologyServerUrl;
 
+    @Parameter(property = "publicationDate", required = true)
+    private String publicationDate;
+
     @Override
     public void execute() throws MojoExecutionException {
         try {
             FhirContext fhirContext = FhirContext.forDstu3();
             TerminologyClient terminologyClient = new TerminologyClient(fhirContext, terminologyServerUrl);
             UcumService ucumService = new UcumEssenceService(Thread.currentThread()
-                                                                   .getContextClassLoader()
-                                                                   .getResourceAsStream("ucum-essence.xml"));
+                    .getContextClassLoader()
+                    .getResourceAsStream("ucum-essence.xml"));
             File inputFile = new File(inputPath);
+            SimpleDateFormat publicationDateFormat = new SimpleDateFormat(publicationDatePattern);
 
             // Parse RCPA distribution.
             SpiaDistribution spiaDistribution = new SpiaDistribution(inputFile, terminologyClient, ucumService);
 
             // Convert distribution into a FHIR Bundle.
-            SpiaFhirBundle spiaFhirBundle = new SpiaFhirBundle(fhirContext, spiaDistribution);
+            SpiaFhirBundle spiaFhirBundle = new SpiaFhirBundle(
+                    fhirContext,
+                    spiaDistribution,
+                    publicationDateFormat.parse(publicationDate)
+            );
             Bundle transformed = spiaFhirBundle.getBundle();
 
             // Encode the Bundle to JSON and write to the output path.

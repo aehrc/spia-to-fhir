@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.*;
@@ -40,12 +41,14 @@ public class SpiaFhirBundle {
 
     private final SpiaDistribution spiaDistribution;
     private final FhirContext fhirContext;
+    private final Date publicationDate;
     private Bundle bundle;
 
-    public SpiaFhirBundle(FhirContext fhirContext, SpiaDistribution spiaDistribution)
+    public SpiaFhirBundle(FhirContext fhirContext, SpiaDistribution spiaDistribution, Date publicationDate)
             throws IOException, ValidationException, UcumException {
         this.spiaDistribution = spiaDistribution;
         this.fhirContext = fhirContext;
+        this.publicationDate = publicationDate;
         transform();
     }
 
@@ -73,38 +76,38 @@ public class SpiaFhirBundle {
 
         // Build each of the ValueSets and ConceptMaps using the source reference sets.
         // Requesting
-        RequestingValueSet requestingValueSet = new RequestingValueSet(requestingRefset);
+        RequestingValueSet requestingValueSet = new RequestingValueSet(requestingRefset, publicationDate);
         resources.add(requestingValueSet.getValueSet());
         // Chemical pathology
-        ChemicalPathologyValueSet chemicalPathologyValueSet = new ChemicalPathologyValueSet(chemicalRefset);
-        ChemicalPathologyUnitMap chemicalPathologyUnitMap = new ChemicalPathologyUnitMap(chemicalRefset);
-        ChemicalCombiningResultsMap chemicalCombiningResultsMap = new ChemicalCombiningResultsMap(chemicalRefset);
+        ChemicalPathologyValueSet chemicalPathologyValueSet = new ChemicalPathologyValueSet(chemicalRefset, publicationDate);
+        ChemicalPathologyUnitMap chemicalPathologyUnitMap = new ChemicalPathologyUnitMap(chemicalRefset, publicationDate);
+        ChemicalCombiningResultsMap chemicalCombiningResultsMap = new ChemicalCombiningResultsMap(chemicalRefset, publicationDate);
         resources.add(chemicalPathologyValueSet.getValueSet());
         resources.add(chemicalPathologyUnitMap.getConceptMap());
         resources.add(chemicalCombiningResultsMap.getConceptMap());
         // Microbiology serology molecular
         MicrobiologySerologyMolecularValueSet microbiologyValueSet =
-                new MicrobiologySerologyMolecularValueSet(microbiologyRefset);
+                new MicrobiologySerologyMolecularValueSet(microbiologyRefset, publicationDate);
         MicrobiologySerologyMolecularUnitMap microbiologyUnitMap = new MicrobiologySerologyMolecularUnitMap(
-                microbiologyRefset);
+                microbiologyRefset, publicationDate);
         resources.add(microbiologyValueSet.getValueSet());
         resources.add(microbiologyUnitMap.getConceptMap());
         // Microbiology organisms
         MicrobiologySubsetOfOrganismsValueSet microbiologySubsetOfOrganismsValueSet =
-                new MicrobiologySubsetOfOrganismsValueSet(microbiologyOrganismsRefset);
+                new MicrobiologySubsetOfOrganismsValueSet(microbiologyOrganismsRefset, publicationDate);
         resources.add(microbiologySubsetOfOrganismsValueSet.getValueSet());
         // Haematology
-        HaematologyValueSet haematologyValueSet = new HaematologyValueSet(haematologyRefset);
-        HaematologyUnitMap haematologyUnitMap = new HaematologyUnitMap(haematologyRefset);
+        HaematologyValueSet haematologyValueSet = new HaematologyValueSet(haematologyRefset, publicationDate);
+        HaematologyUnitMap haematologyUnitMap = new HaematologyUnitMap(haematologyRefset, publicationDate);
         resources.add(haematologyValueSet.getValueSet());
         resources.add(haematologyUnitMap.getConceptMap());
         // Immunopathology
-        ImmunopathologyValueSet immunopathologyValueSet = new ImmunopathologyValueSet(immunopathologyRefset);
-        ImmunopathologyUnitMap immunopathologyUnitMap = new ImmunopathologyUnitMap(immunopathologyRefset);
+        ImmunopathologyValueSet immunopathologyValueSet = new ImmunopathologyValueSet(immunopathologyRefset, publicationDate);
+        ImmunopathologyUnitMap immunopathologyUnitMap = new ImmunopathologyUnitMap(immunopathologyRefset, publicationDate);
         resources.add(immunopathologyValueSet.getValueSet());
         resources.add(immunopathologyUnitMap.getConceptMap());
         // Preferred units
-        PreferredUnitsValueSet preferredUnitsValueSet = new PreferredUnitsValueSet(preferredUnitsRefset);
+        PreferredUnitsValueSet preferredUnitsValueSet = new PreferredUnitsValueSet(preferredUnitsRefset, publicationDate);
         resources.add(preferredUnitsValueSet.getValueSet());
 
         // Get supporting terminology resources from the resources directory.

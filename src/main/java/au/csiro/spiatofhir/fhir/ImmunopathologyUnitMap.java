@@ -21,16 +21,20 @@ import org.hl7.fhir.dstu3.model.ConceptMap;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.UriType;
 
+import java.util.Date;
+
 /**
  * @author John Grimes
  */
 public class ImmunopathologyUnitMap {
 
     private final HasRefsetEntries refset;
+    private final Date publicationDate;
     private ConceptMap conceptMap;
 
-    public ImmunopathologyUnitMap(HasRefsetEntries refset) {
+    public ImmunopathologyUnitMap(HasRefsetEntries refset, Date publicationDate) {
         this.refset = refset;
+        this.publicationDate = publicationDate;
         buildConceptMap();
     }
 
@@ -51,6 +55,7 @@ public class ImmunopathologyUnitMap {
                         " (v1.0) for each code.");
         conceptMap.setPurpose("Resolving RCPA specified units for members of the SPIA Immunopathology Reference " +
                                       "Set.");
+        conceptMap.setDate(publicationDate);
         SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
         conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-immunopathology-refset-1"));
         conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));

@@ -49,7 +49,6 @@ public interface SpiaFhirConceptMap {
         conceptMap.setText(text);
         conceptMap.setStatus(Enumerations.PublicationStatus.DRAFT);
         conceptMap.setExperimental(true);
-        conceptMap.setDate(new Date());
         conceptMap.setPublisher("Australian Digital Health Agency");
         conceptMap.setCopyright(
                 "Copyright © 2019 Australian Digital Health Agency - All rights reserved. This content is licensed " +
