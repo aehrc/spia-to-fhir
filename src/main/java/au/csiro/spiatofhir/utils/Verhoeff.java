@@ -1,17 +1,17 @@
 /*
- *    Copyright 2019 Australian e-Health Research Centre, CSIRO
+ * Copyright 2019 Australian e-Health Research Centre, CSIRO
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package au.csiro.spiatofhir.utils;
@@ -26,97 +26,97 @@ package au.csiro.spiatofhir.utils;
  */
 public class Verhoeff {
 
-    // The multiplication table
-    static final int[][] d = new int[][]
-            {
-                    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
-                    {1, 2, 3, 4, 0, 6, 7, 8, 9, 5},
-                    {2, 3, 4, 0, 1, 7, 8, 9, 5, 6},
-                    {3, 4, 0, 1, 2, 8, 9, 5, 6, 7},
-                    {4, 0, 1, 2, 3, 9, 5, 6, 7, 8},
-                    {5, 9, 8, 7, 6, 0, 4, 3, 2, 1},
-                    {6, 5, 9, 8, 7, 1, 0, 4, 3, 2},
-                    {7, 6, 5, 9, 8, 2, 1, 0, 4, 3},
-                    {8, 7, 6, 5, 9, 3, 2, 1, 0, 4},
-                    {9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
-            };
+  // The multiplication table
+  static final int[][] d = new int[][]
+      {
+          {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+          {1, 2, 3, 4, 0, 6, 7, 8, 9, 5},
+          {2, 3, 4, 0, 1, 7, 8, 9, 5, 6},
+          {3, 4, 0, 1, 2, 8, 9, 5, 6, 7},
+          {4, 0, 1, 2, 3, 9, 5, 6, 7, 8},
+          {5, 9, 8, 7, 6, 0, 4, 3, 2, 1},
+          {6, 5, 9, 8, 7, 1, 0, 4, 3, 2},
+          {7, 6, 5, 9, 8, 2, 1, 0, 4, 3},
+          {8, 7, 6, 5, 9, 3, 2, 1, 0, 4},
+          {9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
+      };
 
-    // The permutation table
-    static final int[][] p = new int[][]
-            {
-                    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
-                    {1, 5, 7, 6, 2, 8, 3, 0, 9, 4},
-                    {5, 8, 0, 3, 7, 9, 6, 1, 4, 2},
-                    {8, 9, 1, 6, 0, 4, 3, 5, 2, 7},
-                    {9, 4, 5, 3, 1, 2, 6, 8, 7, 0},
-                    {4, 2, 8, 6, 5, 7, 3, 9, 0, 1},
-                    {2, 7, 9, 3, 8, 0, 6, 4, 1, 5},
-                    {7, 0, 4, 6, 9, 1, 3, 2, 5, 8}
-            };
+  // The permutation table
+  static final int[][] p = new int[][]
+      {
+          {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+          {1, 5, 7, 6, 2, 8, 3, 0, 9, 4},
+          {5, 8, 0, 3, 7, 9, 6, 1, 4, 2},
+          {8, 9, 1, 6, 0, 4, 3, 5, 2, 7},
+          {9, 4, 5, 3, 1, 2, 6, 8, 7, 0},
+          {4, 2, 8, 6, 5, 7, 3, 9, 0, 1},
+          {2, 7, 9, 3, 8, 0, 6, 4, 1, 5},
+          {7, 0, 4, 6, 9, 1, 3, 2, 5, 8}
+      };
 
-    // The inverse table
-    static final int[] inv = {0, 4, 3, 2, 1, 5, 6, 7, 8, 9};
+  // The inverse table
+  static final int[] inv = {0, 4, 3, 2, 1, 5, 6, 7, 8, 9};
 
-    /*
-     * For a given number generates a Verhoeff digit
-     *
-     */
-    public static String generateVerhoeff(String num) {
+  /*
+   * For a given number generates a Verhoeff digit
+   *
+   */
+  public static String generateVerhoeff(String num) {
 
-        int c = 0;
-        int[] myArray = stringToReversedIntArray(num);
+    int c = 0;
+    int[] myArray = stringToReversedIntArray(num);
 
-        for (int i = 0; i < myArray.length; i++) {
-            c = d[c][p[((i + 1) % 8)][myArray[i]]];
-        }
-
-        return Integer.toString(inv[c]);
+    for (int i = 0; i < myArray.length; i++) {
+      c = d[c][p[((i + 1) % 8)][myArray[i]]];
     }
 
-    /*
-     * Validates that an entered number is Verhoeff compliant.
-     * NB: Make sure the check digit is the last one.
-     */
-    public static boolean validateVerhoeff(String num) {
+    return Integer.toString(inv[c]);
+  }
 
-        int c = 0;
-        int[] myArray = stringToReversedIntArray(num);
+  /*
+   * Validates that an entered number is Verhoeff compliant.
+   * NB: Make sure the check digit is the last one.
+   */
+  public static boolean validateVerhoeff(String num) {
 
-        for (int i = 0; i < myArray.length; i++) {
-            c = d[c][p[(i % 8)][myArray[i]]];
-        }
+    int c = 0;
+    int[] myArray = stringToReversedIntArray(num);
 
-        return (c == 0);
+    for (int i = 0; i < myArray.length; i++) {
+      c = d[c][p[(i % 8)][myArray[i]]];
     }
 
-    /*
-     * Converts a string to a reversed integer array.
-     */
-    private static int[] stringToReversedIntArray(String num) {
+    return (c == 0);
+  }
 
-        int[] myArray = new int[num.length()];
+  /*
+   * Converts a string to a reversed integer array.
+   */
+  private static int[] stringToReversedIntArray(String num) {
 
-        for (int i = 0; i < num.length(); i++) {
-            myArray[i] = Integer.parseInt(num.substring(i, i + 1));
-        }
+    int[] myArray = new int[num.length()];
 
-        myArray = reverse(myArray);
-
-        return myArray;
-
+    for (int i = 0; i < num.length(); i++) {
+      myArray[i] = Integer.parseInt(num.substring(i, i + 1));
     }
 
-    /*
-     * Reverses an int array
-     */
-    private static int[] reverse(int[] myArray) {
-        int[] reversed = new int[myArray.length];
+    myArray = reverse(myArray);
 
-        for (int i = 0; i < myArray.length; i++) {
-            reversed[i] = myArray[myArray.length - (i + 1)];
-        }
+    return myArray;
 
-        return reversed;
+  }
+
+  /*
+   * Reverses an int array
+   */
+  private static int[] reverse(int[] myArray) {
+    int[] reversed = new int[myArray.length];
+
+    for (int i = 0; i < myArray.length; i++) {
+      reversed[i] = myArray[myArray.length - (i + 1)];
     }
+
+    return reversed;
+  }
 
 }
