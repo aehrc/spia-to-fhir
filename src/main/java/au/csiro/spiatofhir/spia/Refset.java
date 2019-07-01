@@ -140,10 +140,10 @@ public abstract class Refset {
     if (cell == null) {
       return null;
     }
-    if (cell.getCellTypeEnum() != CellType.STRING) {
+    if (cell.getCellType() != CellType.STRING) {
       throw new CellValidationException(
           "Cell identified for extraction of string value is not of string type, " +
-              "actual type: " + cell.getCellTypeEnum().toString(),
+              "actual type: " + cell.getCellType().toString(),
           cell.getRowIndex(), cell.getColumnIndex());
     }
     return cell.getStringCellValue().trim();
@@ -158,10 +158,10 @@ public abstract class Refset {
     if (cell == null) {
       return null;
     }
-    if (cell.getCellTypeEnum() != CellType.NUMERIC) {
+    if (cell.getCellType() != CellType.NUMERIC) {
       throw new CellValidationException(
           "Cell identified for extraction of numeric value is not of numeric type, actual type: "
-              + cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
+              + cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
     }
     double value = cell.getNumericCellValue();
     if (value == 0) {
@@ -183,10 +183,10 @@ public abstract class Refset {
     if (cell == null) {
       throw new BlankCodeException("Blank SNOMED code encountered", row.getRowNum(), cellNumber);
     }
-    if (cell.getCellTypeEnum() != CellType.STRING) {
+    if (cell.getCellType() != CellType.STRING) {
       throw new CellValidationException(
           "Cell identified for extraction of SNOMED code is not of string type, actual type: " +
-              cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
+              cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
     }
     String cellValue = cell.getStringCellValue()
         .split("\\|")[0].trim();
@@ -216,10 +216,10 @@ public abstract class Refset {
     if (cell == null) {
       throw new BlankCodeException("Blank LOINC code encountered", row.getRowNum(), cellNumber);
     }
-    if (cell.getCellTypeEnum() != CellType.STRING) {
+    if (cell.getCellType() != CellType.STRING) {
       throw new CellValidationException(
           "Cell identified for extraction of LOINC code is not of string type, actual type: " +
-              cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
+              cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
     }
     String cellValue = cell.getStringCellValue().trim();
     // Check for the validity of the LOINC code.
@@ -247,10 +247,10 @@ public abstract class Refset {
     if (cell == null) {
       throw new BlankCodeException("Blank UCUM code encountered", row.getRowNum(), cellNumber);
     }
-    if (cell.getCellTypeEnum() != CellType.STRING) {
+    if (cell.getCellType() != CellType.STRING) {
       throw new CellValidationException(
           "Cell identified for extraction of UCUM code is not of string type, actual type: " +
-              cell.getCellTypeEnum().toString(), cell.getRowIndex(), cell.getColumnIndex());
+              cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
     }
     String cellValue = cell.getStringCellValue().trim();
     // Check for the validity of the UCUM code.

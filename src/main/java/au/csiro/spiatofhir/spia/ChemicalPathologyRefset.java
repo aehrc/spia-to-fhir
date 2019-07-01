@@ -159,10 +159,10 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
     if (cell == null) {
       return null;
     }
-    if (cell.getCellTypeEnum() != CellType.STRING) {
+    if (cell.getCellType() != CellType.STRING) {
       throw new CellValidationException(
           "Cell identified for extraction of Combining Results Flag is not of string type, "
-              + "actual type: " + cell.getCellTypeEnum().toString(), cell.getRowIndex(),
+              + "actual type: " + cell.getCellType().toString(), cell.getRowIndex(),
           cell.getColumnIndex());
     }
     if (!combiningResultsFlagMap.containsKey(cell.getStringCellValue())) {
