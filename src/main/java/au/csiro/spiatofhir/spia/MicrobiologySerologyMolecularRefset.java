@@ -17,7 +17,9 @@
 package au.csiro.spiatofhir.spia;
 
 import au.csiro.spiatofhir.fhir.TerminologyClient;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -78,11 +80,7 @@ public class MicrobiologySerologyMolecularRefset extends Refset implements HasRe
 
         // Extract information from row.
         String rcpaPreferredTerm = getStringValueFromCell(row, 0);
-        String rcpaSynonymsRaw = getStringValueFromCell(row, 1);
-        Set<String> rcpaSynonyms = new HashSet<>();
-        if (rcpaSynonymsRaw != null) {
-          Arrays.stream(rcpaSynonymsRaw.split(";")).forEach(s -> rcpaSynonyms.add(s.trim()));
-        }
+        Set<String> rcpaSynonyms = getDelimitedStringsFromCell(row, 1);
         String usageGuidance = getStringValueFromCell(row, 2);
         // Length has been omitted, as formulas are being used within the spreadsheet.
         String specimen = getStringValueFromCell(row, 4);

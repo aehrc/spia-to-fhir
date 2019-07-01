@@ -19,9 +19,7 @@ package au.csiro.spiatofhir.spia;
 import au.csiro.spiatofhir.fhir.TerminologyClient;
 import au.csiro.spiatofhir.loinc.LoincCodeValidator;
 import au.csiro.spiatofhir.snomed.SnomedCodeValidator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -39,6 +37,7 @@ import org.slf4j.LoggerFactory;
 public abstract class Refset {
 
   private static final Logger logger = LoggerFactory.getLogger(Refset.class);
+  private static final String MULTI_VALUE_DELIMITER = ";";
 
   /**
    * Returns a list of display terms corresponding to the supplied list of reference set entries,
@@ -153,6 +152,24 @@ public abstract class Refset {
               + "\" (row: " + cell.getRowIndex() + ", column: " + cell.getColumnIndex() + ")");
     }
     return trimmedValue;
+  }
+
+  protected Set<String> getDelimitedStringsFromCell(Row row, int cellNumber)
+      throws ValidationException {
+    String rawValue = getStringValueFromCell(row, cellNumber);
+    Set<String> delimitedStrings = new HashSet<>();
+    if (rawValue != null) {
+      Arrays.stream(rawValue.split(";")).forEach(s -> {
+        String trimmedValue = s.trim();
+        if (!s.equals(trimmedValue)) {
+          logger.warn(
+              "Encountered delimited value with leading or trailing whitespace, \"" + s
+                  + "\" (row: " + row.getRowNum() + ", column: " + cellNumber + ")");
+        }
+        delimitedStrings.add(trimmedValue);
+      });
+    }
+    return delimitedStrings;
   }
 
   /**

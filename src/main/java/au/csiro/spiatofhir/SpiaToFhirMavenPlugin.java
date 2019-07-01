@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 public class SpiaToFhirMavenPlugin extends AbstractMojo {
 
   private static final Logger logger = LoggerFactory.getLogger(SpiaToFhirMavenPlugin.class);
-  private static final String publicationDatePattern = "yyyy-MM-dd";
+  private static final String PUBLICATION_DATE_PATTERN = "yyyy-MM-dd";
 
   @Parameter(property = "inputPath", required = true)
   private String inputPath;
@@ -71,7 +71,7 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
           .getContextClassLoader()
           .getResourceAsStream("ucum-essence.xml"));
       File inputFile = new File(inputPath);
-      SimpleDateFormat publicationDateFormat = new SimpleDateFormat(publicationDatePattern);
+      SimpleDateFormat publicationDateFormat = new SimpleDateFormat(PUBLICATION_DATE_PATTERN);
 
       // Parse RCPA distribution.
       SpiaDistribution spiaDistribution = new SpiaDistribution(inputFile, terminologyClient,

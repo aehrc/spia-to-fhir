@@ -82,11 +82,7 @@ public class ChemicalPathologyRefset extends Refset implements HasRefsetEntries 
 
         // Extract information from row.
         String rcpaPreferredTerm = getStringValueFromCell(row, 0);
-        String rcpaSynonymsRaw = getStringValueFromCell(row, 1);
-        Set<String> rcpaSynonyms = new HashSet<>();
-        if (rcpaSynonymsRaw != null) {
-          Arrays.stream(rcpaSynonymsRaw.split(";")).forEach(s -> rcpaSynonyms.add(s.trim()));
-        }
+        Set<String> rcpaSynonyms = getDelimitedStringsFromCell(row, 1);
         String usageGuidance = getStringValueFromCell(row, 2);
         // Length has been omitted, as formulas are being used within the spreadsheet.
         String specimen = getStringValueFromCell(row, 4);
