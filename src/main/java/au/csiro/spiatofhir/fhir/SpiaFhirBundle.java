@@ -52,7 +52,7 @@ public class SpiaFhirBundle {
     transform();
   }
 
-  private void transform() throws IOException, ValidationException, UcumException {
+  private void transform() throws IOException, ValidationException {
     bundle = new Bundle();
     buildBundle();
   }

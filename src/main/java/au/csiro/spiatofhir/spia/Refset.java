@@ -101,7 +101,7 @@ public abstract class Refset {
       if (!opOutcomeMessage.matches("Invalid type for 'code' parameter\\.")) {
         String message = operationOutcome.getIssueFirstRep()
             .getDiagnostics()
-            .replaceFirst("\\[[a-f0-9\\-]*\\]: ", "");
+            .replaceFirst("\\[[a-f0-9\\-]*]: ", "");
         logger.warn("Error looking up display for code: \"" + message + "\"");
       }
     }
