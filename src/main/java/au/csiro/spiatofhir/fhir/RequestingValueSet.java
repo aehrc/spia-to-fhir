@@ -54,7 +54,6 @@ public class RequestingValueSet implements SpiaFhirValueSet {
                 "Standard codes for use in requesting pathology tests in Australia, based on the SPIA Requesting " +
                         "Pathology Reference Set (v3.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
-        valueSet.getText().getDiv().addText("RCPA - SPIA Requesting Pathology Terminology Reference Set");
         ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(),
                                                                                              "http://snomed.info/sct");
         valueSet.setCompose(compose);

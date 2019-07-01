@@ -54,8 +54,6 @@ public class MicrobiologySubsetOfOrganismsValueSet implements SpiaFhirValueSet {
                 "Standard set of organism codes for use in reporting pathology results in Australia, based on the " +
                         "SPIA Microbiology Subset of Organisms Reference Set (v3.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
-        valueSet.getText().getDiv().addText(
-                "RCPA - SPIA Microbiology Subset of Organisms Reference Set");
         ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(),
                                                                                              "http://snomed.info/sct");
         valueSet.setCompose(compose);

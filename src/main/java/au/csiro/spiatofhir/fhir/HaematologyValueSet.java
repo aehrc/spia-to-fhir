@@ -54,7 +54,6 @@ public class HaematologyValueSet implements SpiaFhirValueSet {
                 "Standard codes for use in reporting haematology pathology results in Australia, based on the SPIA " +
                         "Haematology Terminology Reference Set (v3.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
-        valueSet.getText().getDiv().addText("RCPA - SPIA Haematology Terminology Reference Set");
         ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(),
                                                                                              "http://loinc.org");
         valueSet.setCompose(compose);

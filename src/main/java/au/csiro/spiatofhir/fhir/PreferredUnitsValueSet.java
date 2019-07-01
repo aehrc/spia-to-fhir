@@ -54,7 +54,6 @@ public class PreferredUnitsValueSet implements SpiaFhirValueSet {
                 "A set of preferred units of measure for use within pathology reporting in Australia, based on the " +
                         "SPIA Preferred Units Reference Set (v1.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
-        valueSet.getText().getDiv().addText("RCPA - SPIA Preferred Units Reference Set");
         ValueSet.ValueSetComposeComponent compose =
                 SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(), "http://unitsofmeasure.org");
         valueSet.setCompose(compose);

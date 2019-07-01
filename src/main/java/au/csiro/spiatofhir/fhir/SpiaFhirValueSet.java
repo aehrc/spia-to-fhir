@@ -41,8 +41,9 @@ public interface SpiaFhirValueSet {
         meta.setProfile(profile);
         valueSet.setMeta(meta);
         Narrative text = new Narrative();
-        text.setStatus(Narrative.NarrativeStatus.EMPTY);
+        text.setStatus(Narrative.NarrativeStatus.GENERATED);
         XhtmlNode div = new XhtmlNode(NodeType.Element, "div");
+        div.addText(valueSet.getTitle());
         text.setDiv(div);
         valueSet.setText(text);
         valueSet.setStatus(Enumerations.PublicationStatus.DRAFT);

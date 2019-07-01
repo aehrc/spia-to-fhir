@@ -54,7 +54,6 @@ public class ImmunopathologyValueSet implements SpiaFhirValueSet {
                 "Standard codes for use in reporting immunopathology results in Australia, based on the SPIA " +
                         "Immunopathology Terminology Reference Set (v3.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
-        valueSet.getText().getDiv().addText("RCPA - SPIA Immunopathology Terminology Reference Set");
         ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(),
                                                                                              "http://loinc.org");
         valueSet.setCompose(compose);

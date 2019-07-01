@@ -54,8 +54,6 @@ public class MicrobiologySerologyMolecularValueSet implements SpiaFhirValueSet {
                 "Standard codes for use in reporting microbiology pathology results in Australia, based on the SPIA " +
                         "Microbiology Serology Molecular Pathology Reference Set (v3.0).");
         SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
-        valueSet.getText().getDiv().addText(
-                "RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0");
         ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet.buildComposeFromEntries(refset.getRefsetEntries(),
                                                                                              "http://loinc.org");
         valueSet.setCompose(compose);

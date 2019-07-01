@@ -52,7 +52,6 @@ public class ChemicalPathologyUnitMap {
         conceptMap.setPurpose("Resolving RCPA specified units for members of the SPIA Chemical Pathology Reference " +
                                       "Set.");
         SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
-        conceptMap.getText().getDiv().addText("RCPA - SPIA Chemical Pathology Unit Map");
         conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-chemical-pathology-refset-1"));
         conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));
         ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap.buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());

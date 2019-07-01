@@ -51,7 +51,6 @@ public class ChemicalCombiningResultsMap {
         conceptMap.setPurpose(
                 "Resolving the combining results flags for members of the SPIA Chemical Pathology Reference Set.");
         SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
-        conceptMap.getText().getDiv().addText("RCPA - SPIA Chemical Combining Results Map");
         conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-chemical-pathology-refset-1"));
         conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-combining-results-flag"));
         ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap

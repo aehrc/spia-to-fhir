@@ -12,7 +12,7 @@
     ]
   },
   "text": {
-    "status": "empty",
+    "status": "generated",
     "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">RCPA - SPIA Designation Type</div>"
   },
   "url": "https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type",

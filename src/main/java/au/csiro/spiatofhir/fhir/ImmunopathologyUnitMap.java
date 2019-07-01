@@ -52,7 +52,6 @@ public class ImmunopathologyUnitMap {
         conceptMap.setPurpose("Resolving RCPA specified units for members of the SPIA Immunopathology Reference " +
                                       "Set.");
         SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
-        conceptMap.getText().getDiv().addText("RCPA - SPIA Immunopathology Unit Map");
         conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-immunopathology-refset-1"));
         conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));
         ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap.buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());

@@ -42,8 +42,9 @@ public interface SpiaFhirConceptMap {
         meta.setProfile(profile);
         conceptMap.setMeta(meta);
         Narrative text = new Narrative();
-        text.setStatus(Narrative.NarrativeStatus.EMPTY);
+        text.setStatus(Narrative.NarrativeStatus.GENERATED);
         XhtmlNode div = new XhtmlNode(NodeType.Element, "div");
+        div.addText(conceptMap.getTitle());
         text.setDiv(div);
         conceptMap.setText(text);
         conceptMap.setStatus(Enumerations.PublicationStatus.DRAFT);

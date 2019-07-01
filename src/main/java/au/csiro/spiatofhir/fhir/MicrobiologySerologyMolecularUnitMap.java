@@ -53,7 +53,6 @@ public class MicrobiologySerologyMolecularUnitMap {
                 "Resolving RCPA specified units for members of the SPIA Microbiology Serology Molecular Reference " +
                         "Set.");
         SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
-        conceptMap.getText().getDiv().addText("RCPA - SPIA Microbiology Serology Molecular Unit Map");
         conceptMap.setSource(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-refset-1"));
         conceptMap.setTarget(new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));
         ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap.buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());
