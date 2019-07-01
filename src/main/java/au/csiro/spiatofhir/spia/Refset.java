@@ -146,7 +146,13 @@ public abstract class Refset {
               "actual type: " + cell.getCellType().toString(),
           cell.getRowIndex(), cell.getColumnIndex());
     }
-    return cell.getStringCellValue().trim();
+    final String trimmedValue = cell.getStringCellValue().trim();
+    if (!cell.getStringCellValue().equals(trimmedValue)) {
+      logger.warn(
+          "Encountered cell with leading or trailing whitespace, \"" + cell.getStringCellValue()
+              + "\" (row: " + cell.getRowIndex() + ", column: " + cell.getColumnIndex() + ")");
+    }
+    return trimmedValue;
   }
 
   /**
