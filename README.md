@@ -28,7 +28,11 @@ You can execute the plugin with the following commands:
 ```
 mvn install
 
-mvn -DinputPath=[zip file] -DoutputPath=[bundle JSON file] -DterminologyServerUrl=[FHIR terminology server endpoint] -DpublicationDate=[publication date] au.csiro:spia-to-fhir-maven-plugin:transform
+mvn -DinputPath=[zip file] \
+    -DoutputPath=[bundle JSON file] \
+    -DterminologyServerUrl=[FHIR terminology server endpoint] \
+    -DpublicationDate=[publication date] \
+    au.csiro:spia-to-fhir-maven-plugin:transform
 ```
 
 Here is a description of the input parameters for the plugin:
