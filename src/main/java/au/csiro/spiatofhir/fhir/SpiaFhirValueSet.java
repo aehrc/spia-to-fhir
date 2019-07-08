@@ -48,9 +48,10 @@ public interface SpiaFhirValueSet {
     valueSet.setStatus(Enumerations.PublicationStatus.DRAFT);
     valueSet.setExperimental(true);
     valueSet.setPublisher("Australian Digital Health Agency");
-    valueSet.setCopyright( "Copyright © 2019 Australian Digital Health Agency - All rights "
-        + "reserved. This content is licensed under a Creative Commons Attribution 4.0 "
-        + "International License. See https://creativecommons.org/licenses/by/4.0/.");
+    valueSet.setCopyright(
+        "Copyright © The Royal College of Pathologists of Australasia - All rights reserved. "
+            + "This content is licensed under a Creative Commons Attribution 4.0 International "
+            + "License. See https://creativecommons.org/licenses/by/4.0/.");
     List<ContactDetail> contact = new ArrayList<>();
     ContactDetail contactDetail = new ContactDetail();
     ContactPoint contactPoint = new ContactPoint();
