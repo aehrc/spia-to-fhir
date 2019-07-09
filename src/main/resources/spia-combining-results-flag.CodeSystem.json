@@ -3,7 +3,7 @@
   "id": "spia-combining-results-flag",
   "identifier": {
     "system": "urn:ietf:rfc:3986",
-    "value": "urn:oid:TBD"
+    "value": "urn:oid:1.2.36.1.2001.1004.300.100.1013"
   },
   "meta": {
     "profile": [

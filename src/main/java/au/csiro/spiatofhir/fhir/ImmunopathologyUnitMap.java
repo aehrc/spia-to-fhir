@@ -44,8 +44,7 @@ public class ImmunopathologyUnitMap {
     conceptMap.setVersion("1.0.0");
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
-    // TODO: Add a real OID.
-    oid.setValue("urn:oid:TBD");
+    oid.setValue("urn:oid:1.2.36.1.2001.1004.300.100.1010");
     conceptMap.setIdentifier(oid);
     conceptMap.setTitle("RCPA - SPIA Immunopathology Unit Map");
     conceptMap.setName("spia-immunopathology-unit-map");

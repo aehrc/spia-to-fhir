@@ -46,8 +46,7 @@ public class ImmunopathologyValueSet implements SpiaFhirValueSet {
     List<Identifier> identifier = new ArrayList<>();
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
-    // TODO: Add a real OID.
-    oid.setValue("urn:oid:TBD");
+    oid.setValue("urn:oid:1.2.36.1.2001.1004.300.100.1009");
     identifier.add(oid);
     valueSet.setIdentifier(identifier);
     valueSet.setTitle("RCPA - SPIA Immunopathology Terminology Reference Set");
