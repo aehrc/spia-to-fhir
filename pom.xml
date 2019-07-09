@@ -127,6 +127,11 @@
       <version>${log4jVersion}</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>com.atlassian.commonmark</groupId>
+      <artifactId>commonmark</artifactId>
+      <version>0.12.1</version>
+    </dependency>
   </dependencies>
 
   <build>

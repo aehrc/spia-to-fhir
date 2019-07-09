@@ -16,7 +16,12 @@
 
 package au.csiro.spiatofhir.fhir;
 
+import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.EMAIL;
+import static org.hl7.fhir.dstu3.model.Enumerations.PublicationStatus.DRAFT;
+import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
+
 import au.csiro.spiatofhir.spia.RefsetEntry;
+import au.csiro.spiatofhir.utils.Markdown;
 import java.util.ArrayList;
 import java.util.List;
 import org.hl7.fhir.dstu3.model.*;
@@ -40,12 +45,14 @@ public interface SpiaFhirValueSet {
     meta.setProfile(profile);
     valueSet.setMeta(meta);
     Narrative text = new Narrative();
-    text.setStatus(Narrative.NarrativeStatus.GENERATED);
+    text.setStatus(GENERATED);
     XhtmlNode div = new XhtmlNode(NodeType.Element, "div");
-    div.addText(valueSet.getTitle());
+    div.setValueAsString(
+        "<div><h1>" + valueSet.getTitle() + "</h1>" + Markdown.toHtml(valueSet.getDescription())
+            + "</div>");
     text.setDiv(div);
     valueSet.setText(text);
-    valueSet.setStatus(Enumerations.PublicationStatus.DRAFT);
+    valueSet.setStatus(DRAFT);
     valueSet.setExperimental(true);
     valueSet.setPublisher("Australian Digital Health Agency");
     valueSet.setCopyright(
@@ -55,7 +62,7 @@ public interface SpiaFhirValueSet {
     List<ContactDetail> contact = new ArrayList<>();
     ContactDetail contactDetail = new ContactDetail();
     ContactPoint contactPoint = new ContactPoint();
-    contactPoint.setSystem(ContactPoint.ContactPointSystem.EMAIL);
+    contactPoint.setSystem(EMAIL);
     contactPoint.setValue("help@digitalhealth.gov.au");
     contactDetail.addTelecom(contactPoint);
     contact.add(contactDetail);
