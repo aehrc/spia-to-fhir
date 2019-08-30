@@ -104,13 +104,6 @@ public class SpiaFhirBundle {
     // Get supporting terminology resources from the resources directory.
     try (
         InputStream designationTypeStream = getClass().getResourceAsStream(
-            "/spia-designation-type.CodeSystem.json")) {
-      CodeSystem designationType = (CodeSystem) fhirContext.newJsonParser()
-          .parseResource(new InputStreamReader(designationTypeStream));
-      resources.add(designationType);
-    }
-    try (
-        InputStream designationTypeStream = getClass().getResourceAsStream(
             "/spia-combining-results-flag.CodeSystem.json")) {
       CodeSystem combiningResultsFlag = (CodeSystem) fhirContext.newJsonParser()
           .parseResource(new InputStreamReader(designationTypeStream));

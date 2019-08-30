@@ -16,6 +16,7 @@
 
 package au.csiro.spiatofhir.spia;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -27,7 +28,7 @@ import java.util.Set;
 public class RefsetEntry {
 
   private String rcpaPreferredTerm;
-  private Set<String> rcpaSynonyms;
+  private Set<String> rcpaSynonyms = new HashSet<>();
   private String unitCode;
   private String code;
   private CombiningResultsFlag combiningResultsFlag;
