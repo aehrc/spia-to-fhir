@@ -18,14 +18,18 @@ package au.csiro.spiatofhir.loinc;
 
 import au.csiro.spiatofhir.fhir.TerminologyClient;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.CodeType;
 import org.hl7.fhir.dstu3.model.Parameters;
+import org.hl7.fhir.dstu3.model.UriType;
 
 /**
+ * Used for validating LOINC codes using a terminology service.
+ *
  * @author John Grimes
  */
 public class LoincCodeValidator {
@@ -89,8 +93,10 @@ public class LoincCodeValidator {
 
 
   public boolean checkActive(String code) {
-    Parameters result = terminologyClient
-        .lookup("http://loinc.org", code, Collections.singletonList("inactive"));
+    UriType systemParam = new UriType(Loinc.SYSTEM_URI);
+    CodeType codeParam = new CodeType(code);
+    List<CodeType> propertyParam = Collections.singletonList(new CodeType("inactive"));
+    Parameters result = terminologyClient.lookup(systemParam, codeParam, propertyParam);
     if (result.getParameter() == null) {
       return true;
     }

@@ -14,35 +14,13 @@
  * limitations under the License.
  */
 
-package au.csiro.spiatofhir.spia;
+package au.csiro.spiatofhir.ucum;
 
 /**
  * @author John Grimes
  */
-public class ChemicalPathologyRefsetEntry extends LoincRefsetEntry {
+public abstract class Ucum {
 
-  private CombiningResultsFlag combiningResultsFlag;
-
-  public CombiningResultsFlag getCombiningResultsFlag() {
-    return combiningResultsFlag;
-  }
-
-  public void setCombiningResultsFlag(CombiningResultsFlag combiningResultsFlag) {
-    this.combiningResultsFlag = combiningResultsFlag;
-  }
-
-  public enum CombiningResultsFlag {
-    RED("red"), GREEN("green"), ORANGE("orange");
-
-    private final String code;
-
-    CombiningResultsFlag(String code) {
-      this.code = code;
-    }
-
-    public String getCode() {
-      return code;
-    }
-  }
+  public static final String SYSTEM_URI = "http://unitsofmeasure.org";
 
 }

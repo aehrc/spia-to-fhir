@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package au.csiro.spiatofhir.spia;
+package au.csiro.spiatofhir.fhir;
 
-import java.util.List;
+import au.csiro.spiatofhir.spia.Refset;
+import java.util.Date;
+import org.hl7.fhir.dstu3.model.Resource;
 
 /**
  * @author John Grimes
  */
-public interface HasRefsetEntries {
+public abstract class SpiaFhirResource {
 
-  List<RefsetEntry> getRefsetEntries();
+  public Resource transform(Refset refset, Date publicationDate) {
+    return null;
+  }
 
 }

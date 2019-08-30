@@ -65,8 +65,8 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
   public void execute() throws MojoExecutionException {
     try {
       FhirContext fhirContext = FhirContext.forDstu3();
-      TerminologyClient terminologyClient = new TerminologyClient(fhirContext,
-          terminologyServerUrl);
+      TerminologyClient terminologyClient = fhirContext
+          .newRestfulClient(TerminologyClient.class, terminologyServerUrl);
       UcumService ucumService = new UcumEssenceService(Thread.currentThread()
           .getContextClassLoader()
           .getResourceAsStream("ucum-essence.xml"));

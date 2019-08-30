@@ -29,9 +29,11 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
 /**
+ * Common functionality relating to the creation of FHIR ValueSets from the SPIA reference sets.
+ *
  * @author John Grimes
  */
-public interface SpiaFhirValueSet {
+public abstract class SpiaFhirValueSet extends SpiaFhirResource {
 
   /**
    * Populates the elements that are common to all ValueSets.
@@ -94,8 +96,8 @@ public interface SpiaFhirValueSet {
         ValueSet.ConceptReferenceComponent conceptEntry = new ValueSet.ConceptReferenceComponent();
         conceptEntry.setCode(entry.getCode());
 
-        // RCPA preferred terms and synonyms are represented using designations, which are identified using
-        // codes from the CodeSystem included in the Bundle.
+        // RCPA preferred terms and synonyms are represented using designations, which are
+        // identified using codes from the CodeSystem included in the Bundle.
         if (entry.getRcpaPreferredTerm() != null || !entry.getRcpaSynonyms().isEmpty()) {
           List<ValueSet.ConceptReferenceDesignationComponent> designation = new ArrayList<>();
           if (entry.getRcpaPreferredTerm() != null) {
@@ -151,7 +153,5 @@ public interface SpiaFhirValueSet {
     }
     return designationEntries;
   }
-
-  ValueSet getValueSet();
 
 }

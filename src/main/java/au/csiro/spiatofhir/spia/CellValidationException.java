@@ -24,7 +24,7 @@ package au.csiro.spiatofhir.spia;
 public class CellValidationException extends ValidationException {
 
   public CellValidationException(String message, int rowIndex, int columnIndex) {
-    super(message + " (row: " + rowIndex + ", column: " + columnIndex + ")");
+    super(messageWithCoords(message, rowIndex, columnIndex));
   }
 
 }

@@ -20,20 +20,24 @@ import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.EMAIL;
 import static org.hl7.fhir.dstu3.model.Enumerations.PublicationStatus.DRAFT;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
-import au.csiro.spiatofhir.spia.ChemicalPathologyRefsetEntry;
-import au.csiro.spiatofhir.spia.LoincRefsetEntry;
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import au.csiro.spiatofhir.utils.Markdown;
 import java.util.ArrayList;
 import java.util.List;
 import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.ConceptMap.ConceptMapGroupComponent;
+import org.hl7.fhir.dstu3.model.ConceptMap.SourceElementComponent;
+import org.hl7.fhir.dstu3.model.ConceptMap.TargetElementComponent;
+import org.hl7.fhir.dstu3.model.Enumerations.ConceptMapEquivalence;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
 /**
+ * Common functionality relating to the creation of FHIR ConceptMaps from the SPIA reference sets.
+ *
  * @author John Grimes
  */
-public interface SpiaFhirConceptMap {
+public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
 
   /**
    * Populates the elements that are common to all ConceptMaps.
@@ -87,17 +91,14 @@ public interface SpiaFhirConceptMap {
       List<RefsetEntry> refsetEntries) {
     ConceptMap.ConceptMapGroupComponent group = new ConceptMap.ConceptMapGroupComponent();
     for (RefsetEntry entry : refsetEntries) {
-      LoincRefsetEntry loincEntry = (LoincRefsetEntry) entry;
-      if (loincEntry.getCode() == null || loincEntry.getUcumCode() == null) {
+      assert entry.getCode() != null;
+      if (entry.getUnitCode() == null) {
         continue;
       }
       ConceptMap.SourceElementComponent element = new ConceptMap.SourceElementComponent();
-      element.setCode(loincEntry.getCode());
+      element.setCode(entry.getCode());
       ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
-      if (loincEntry.getUcumCode().isEmpty()) {
-        continue;
-      }
-      target.setCode(loincEntry.getUcumCode());
+      target.setCode(entry.getUnitCode());
       target.setEquivalence(Enumerations.ConceptMapEquivalence.RELATEDTO);
       element.getTarget().add(target);
       group.getElement().add(element);
@@ -109,19 +110,19 @@ public interface SpiaFhirConceptMap {
    * Builds the group element of a ConceptMap, using a list of reference set entries and their
    * combining results flags.
    */
-  static ConceptMap.ConceptMapGroupComponent buildCombiningResultsFlagsGroupFromEntries(
+  static ConceptMapGroupComponent buildCombiningResultsFlagsGroupFromEntries(
       List<RefsetEntry> refsetEntries) {
-    ConceptMap.ConceptMapGroupComponent group = new ConceptMap.ConceptMapGroupComponent();
+    ConceptMapGroupComponent group = new ConceptMapGroupComponent();
     for (RefsetEntry entry : refsetEntries) {
-      ChemicalPathologyRefsetEntry chemicalEntry = (ChemicalPathologyRefsetEntry) entry;
-      if (chemicalEntry.getCode() == null || chemicalEntry.getCombiningResultsFlag() == null) {
+      assert entry.getCode() != null;
+      if (entry.getCombiningResultsFlag() == null) {
         continue;
       }
-      ConceptMap.SourceElementComponent element = new ConceptMap.SourceElementComponent();
-      element.setCode(chemicalEntry.getCode());
-      ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
-      target.setCode(chemicalEntry.getCombiningResultsFlag().getCode());
-      target.setEquivalence(Enumerations.ConceptMapEquivalence.RELATEDTO);
+      SourceElementComponent element = new SourceElementComponent();
+      element.setCode(entry.getCode());
+      TargetElementComponent target = new TargetElementComponent();
+      target.setCode(entry.getCombiningResultsFlag().getCode());
+      target.setEquivalence(ConceptMapEquivalence.RELATEDTO);
       element.getTarget().add(target);
       group.getElement().add(element);
     }

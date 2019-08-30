@@ -16,11 +16,15 @@
 
 package au.csiro.spiatofhir.spia;
 
+import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.*;
+
 import au.csiro.spiatofhir.fhir.TerminologyClient;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,28 +37,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Represents the distribution ZIP file used to house the SPIA distribution. Parses each reference
+ * set and provides them back as objects, which can then be used by the classes responsible for the
+ * FHIR transform.
+ *
  * @author John Grimes
  */
 public class SpiaDistribution {
 
   // Map to the files within the distribution that contain each reference set.
-  private static final Map<DistributionEntry, String> expectedEntries = new HashMap<DistributionEntry, String>() {{
-    put(DistributionEntry.REQUESTING,
-        "RCPA - SPIA Requesting Pathology Terminology Reference Set v3.0.xlsx");
-    put(DistributionEntry.CHEMICAL,
-        "RCPA - SPIA Chemical Pathology Terminology Reference Set v3.0.xlsx");
-    put(DistributionEntry.HAEMATOLOGY,
-        "RCPA - SPIA Haematology Terminology Reference Set v3.0.xlsx");
-    put(DistributionEntry.IMMUNOPATHOLOGY,
-        "RCPA - SPIA Immunopathology Terminology Reference Set v3.0.xlsx");
-    put(DistributionEntry.MICROBIOLOGY_SEROLOGY_MOLECULAR,
-        "RCPA - SPIA Microbiology Serology Molecular Pathology Terminology Reference Set v3.0.xlsx");
-    put(DistributionEntry.MICROBIOLOGY_ORGANISMS,
-        "RCPA - SPIA Microbiology Subset of Organisms mapped to SNOMED CT v3.0.xlsx");
-    put(DistributionEntry.PREFERRED_UNITS, "RCPA - SPIA Preferred units v1.0.xlsx");
+  private static final Map<DistributionEntry, String> expectedEntries = new EnumMap<DistributionEntry, String>(
+      DistributionEntry.class) {{
+    put(REQUESTING,
+        "RCPA-SPIA Requesting Pathology Terminology Reference Set v3.1 for publishing.xlsx");
+    put(CHEMICAL,
+        "RCPA-SPIA-Chemical-Pathology-Terminology-Reference-Set-3.1 for publishing.xlsx");
+    put(HAEMATOLOGY,
+        "RCPA-SPIA Haematology Terminology Reference Set v3.1 for publishing.xlsx");
+    put(IMMUNOPATHOLOGY,
+        "RCPA-SPIA Immunopathology Terminology Reference Set v3.1 for publishing.xlsx");
+    put(MICROBIOLOGY_SEROLOGY_MOLECULAR,
+        "RCPA-SPIA Microbiology Serology Molecular Path Terminology Reference Set v3.1 for publishing.xlsx");
+    put(MICROBIOLOGY_ORGANISMS,
+        "RCPA-SPIA Microbiology Subset of Organisms v3.1 for publishing.xlsx");
+    put(DistributionEntry.PREFERRED_UNITS,
+        "RCPA-SPIA Preferred Units table v1.1 for publishing.xlsx");
   }};
   private static final Logger logger = LoggerFactory.getLogger(SpiaDistribution.class);
   private ZipFile zipFile;
+  private final Map<DistributionEntry, Refset> refsets = new EnumMap<>(DistributionEntry.class);
   private TerminologyClient terminologyClient;
   private UcumService ucumService;
 
@@ -64,6 +75,7 @@ public class SpiaDistribution {
     this.terminologyClient = terminologyClient;
     this.ucumService = ucumService;
     validate();
+    parseRefsets();
   }
 
   private InputStream getNamedEntryAsStream(DistributionEntry distributionEntry)
@@ -83,46 +95,54 @@ public class SpiaDistribution {
     }
   }
 
-  /**
-   * Returns the specified reference set from within the distribution.
-   */
-  public Refset getRefset(DistributionEntry distributionEntry)
-      throws ValidationException, IOException {
-    InputStream inputStream = getNamedEntryAsStream(distributionEntry);
-    Workbook workbook;
-    try {
-      workbook = WorkbookFactory.create(inputStream);
-    } catch (IOException e) {
-      throw new ValidationException("Invalid Excel workbook format - must be OOXML (2007-) format");
-    }
-    switch (distributionEntry) {
-      case REQUESTING:
-        return new RequestingRefset(workbook, terminologyClient);
-      case CHEMICAL:
-        return new ChemicalPathologyRefset(workbook, terminologyClient, ucumService);
-      case MICROBIOLOGY_SEROLOGY_MOLECULAR:
-        return new MicrobiologySerologyMolecularRefset(workbook, terminologyClient, ucumService);
-      case MICROBIOLOGY_ORGANISMS:
-        return new MicrobiologySubsetOfOrganismsRefset(workbook, terminologyClient);
-      case HAEMATOLOGY:
-        return new HaematologyRefset(workbook, terminologyClient, ucumService);
-      case IMMUNOPATHOLOGY:
-        return new ImmunopathologyRefset(workbook, terminologyClient, ucumService);
-      case PREFERRED_UNITS:
-        return new PreferredUnitsRefset(workbook, terminologyClient, ucumService);
-      default:
-        throw new RuntimeException("Entry not supported yet: " + distributionEntry.toString());
+  private void parseRefsets() throws ValidationException, IOException {
+    for (DistributionEntry entry : expectedEntries.keySet()) {
+      InputStream inputStream = getNamedEntryAsStream(entry);
+      Workbook workbook;
+      try {
+        workbook = WorkbookFactory.create(inputStream);
+      } catch (IOException e) {
+        throw new ValidationException(
+            "Invalid Excel workbook format - must be OOXML (2007-) format");
+      }
+      Refset parsedRefset;
+      try {
+        //noinspection unchecked
+        Constructor constructor = entry.getParsingClass()
+            .getConstructor(Workbook.class, TerminologyClient.class, UcumService.class);
+        parsedRefset = (Refset) constructor
+            .newInstance(workbook, terminologyClient, ucumService);
+      } catch (InvocationTargetException e) {
+        throw new RuntimeException("Error instantiating reference set parser", e.getCause());
+      } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+        throw new RuntimeException("Error instantiating reference set parser", e);
+      }
+      refsets.put(entry, parsedRefset);
     }
   }
 
+  public Map<DistributionEntry, Refset> getRefsets() {
+    return refsets;
+  }
+
   public enum DistributionEntry {
-    REQUESTING,
-    CHEMICAL,
-    HAEMATOLOGY,
-    IMMUNOPATHOLOGY,
-    MICROBIOLOGY_SEROLOGY_MOLECULAR,
-    MICROBIOLOGY_ORGANISMS,
-    PREFERRED_UNITS
+    REQUESTING(RequestingRefset.class),
+    CHEMICAL(ChemicalPathologyRefset.class),
+    HAEMATOLOGY(HaematologyRefset.class),
+    IMMUNOPATHOLOGY(ImmunopathologyRefset.class),
+    MICROBIOLOGY_SEROLOGY_MOLECULAR(MicrobiologySerologyMolecularRefset.class),
+    MICROBIOLOGY_ORGANISMS(MicrobiologySubsetOfOrganismsRefset.class),
+    PREFERRED_UNITS(PreferredUnitsRefset.class);
+
+    private final Class parsingClass;
+
+    DistributionEntry(Class parsingClass) {
+      this.parsingClass = parsingClass;
+    }
+
+    public Class getParsingClass() {
+      return parsingClass;
+    }
   }
 
 }

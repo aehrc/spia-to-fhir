@@ -16,6 +16,8 @@
 
 package au.csiro.spiatofhir.spia;
 
+import static au.csiro.spiatofhir.spia.ValidationException.messageWithCoords;
+
 /**
  * Thrown when encountering invalid codes within the source data.
  *
@@ -24,7 +26,7 @@ package au.csiro.spiatofhir.spia;
 public class InvalidCodeException extends Exception {
 
   public InvalidCodeException(String message, int rowIndex, int columnIndex) {
-    super(message + " (row: " + rowIndex + ", column: " + columnIndex + ")");
+    super(messageWithCoords(message, rowIndex, columnIndex));
   }
 
 }

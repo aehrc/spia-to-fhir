@@ -20,16 +20,17 @@ import au.csiro.spiatofhir.fhir.TerminologyClient;
 import au.csiro.spiatofhir.utils.Verhoeff;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.CodeType;
 import org.hl7.fhir.dstu3.model.Parameters;
+import org.hl7.fhir.dstu3.model.UriType;
 
 /**
- * Adapted from https://github.com/AuDigitalHealth/polecat/blob/7d9eaeeb102842795582e322e7b14d9a12925f70/src/snomed
- * /sctid.js
+ * Used for validating SNOMED codes using a terminology service.
  *
  * @author John Grimes
  */
@@ -47,6 +48,9 @@ public class SnomedCodeValidator {
   /**
    * Validates whether an input string is a valid SNOMED CT identifier, based on its structure and
    * the validity of its check digit.
+   * <p>
+   * Adapted from https://github.com/AuDigitalHealth/polecat/blob/7d9eaeeb102842795582e322e7b14d9a12925f70/src/snomed
+   * /sctid.js
    */
   public boolean validate(String code) {
     Pattern pattern = Pattern.compile("\\d+");
@@ -72,8 +76,10 @@ public class SnomedCodeValidator {
   }
 
   public boolean checkActive(String code) {
-    Parameters result = terminologyClient
-        .lookup("http://snomed.info/sct", code, Collections.singletonList("inactive"));
+    UriType systemParam = new UriType(SnomedCt.SYSTEM_URI);
+    CodeType codeParam = new CodeType(code);
+    List<CodeType> propertyParam = Collections.singletonList(new CodeType("inactive"));
+    Parameters result = terminologyClient.lookup(systemParam, codeParam, propertyParam);
     if (result.getParameter() == null) {
       return true;
     }

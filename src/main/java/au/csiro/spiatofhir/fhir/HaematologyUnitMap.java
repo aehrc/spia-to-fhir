@@ -16,32 +16,26 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import au.csiro.spiatofhir.spia.HasRefsetEntries;
+import au.csiro.spiatofhir.loinc.Loinc;
+import au.csiro.spiatofhir.spia.Refset;
+import au.csiro.spiatofhir.ucum.Ucum;
 import java.util.Date;
 import org.hl7.fhir.dstu3.model.ConceptMap;
 import org.hl7.fhir.dstu3.model.Identifier;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.UriType;
 
 /**
  * @author John Grimes
  */
-public class HaematologyUnitMap {
+public class HaematologyUnitMap extends SpiaFhirConceptMap {
 
-  private final HasRefsetEntries refset;
-  private final Date publicationDate;
-  private ConceptMap conceptMap;
-
-  public HaematologyUnitMap(HasRefsetEntries refset, Date publicationDate) {
-    this.refset = refset;
-    this.publicationDate = publicationDate;
-    buildConceptMap();
-  }
-
-  private void buildConceptMap() {
-    conceptMap = new ConceptMap();
+  @Override
+  public Resource transform(Refset refset, Date publicationDate) {
+    ConceptMap conceptMap = new ConceptMap();
     conceptMap.setId("spia-haematology-unit-map-1");
     conceptMap.setUrl("https://www.rcpa.edu.au/fhir/ConceptMap/spia-haematology-unit-map-1");
-    conceptMap.setVersion("1.0.0");
+    conceptMap.setVersion("1.1.0");
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
     oid.setValue("urn:oid:1.2.36.1.2001.1004.300.100.1008");
@@ -49,8 +43,8 @@ public class HaematologyUnitMap {
     conceptMap.setTitle("RCPA - SPIA Haematology Unit Map");
     conceptMap.setName("spia-haematology-unit-map");
     conceptMap.setDescription(
-        "Map between the SPIA Haematology Reference Set (v3.0) and the corresponding RCPA "
-            + "preferred units (v1.0) for each code.");
+        "Map between the SPIA Haematology Reference Set (v3.1) and the corresponding RCPA "
+            + "preferred units (v1.1) for each code.");
     conceptMap.setPurpose(
         "Resolving RCPA specified units for members of the SPIA Haematology Reference " +
             "Set.");
@@ -62,12 +56,10 @@ public class HaematologyUnitMap {
         new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));
     ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap
         .buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());
-    group.setSource("http://loinc.org");
-    group.setTarget("http://unitsofmeasure.org");
+    group.setSource(Loinc.SYSTEM_URI);
+    group.setTarget(Ucum.SYSTEM_URI);
     conceptMap.getGroup().add(group);
-  }
 
-  public ConceptMap getConceptMap() {
     return conceptMap;
   }
 

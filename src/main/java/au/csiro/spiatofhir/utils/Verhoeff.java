@@ -54,25 +54,6 @@ public class Verhoeff {
           {7, 0, 4, 6, 9, 1, 3, 2, 5, 8}
       };
 
-  // The inverse table
-  static final int[] inv = {0, 4, 3, 2, 1, 5, 6, 7, 8, 9};
-
-  /*
-   * For a given number generates a Verhoeff digit
-   *
-   */
-  public static String generateVerhoeff(String num) {
-
-    int c = 0;
-    int[] myArray = stringToReversedIntArray(num);
-
-    for (int i = 0; i < myArray.length; i++) {
-      c = d[c][p[((i + 1) % 8)][myArray[i]]];
-    }
-
-    return Integer.toString(inv[c]);
-  }
-
   /*
    * Validates that an entered number is Verhoeff compliant.
    * NB: Make sure the check digit is the last one.

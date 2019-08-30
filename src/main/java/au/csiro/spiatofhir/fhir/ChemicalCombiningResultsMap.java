@@ -16,33 +16,26 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import au.csiro.spiatofhir.spia.HasRefsetEntries;
+import au.csiro.spiatofhir.loinc.Loinc;
+import au.csiro.spiatofhir.spia.Refset;
 import java.util.Date;
 import org.hl7.fhir.dstu3.model.ConceptMap;
 import org.hl7.fhir.dstu3.model.Identifier;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.UriType;
 
 /**
  * @author John Grimes
  */
-public class ChemicalCombiningResultsMap {
+public class ChemicalCombiningResultsMap extends SpiaFhirConceptMap {
 
-  private final HasRefsetEntries refset;
-  private final Date publicationDate;
-  private ConceptMap conceptMap;
-
-  public ChemicalCombiningResultsMap(HasRefsetEntries refset, Date publicationDate) {
-    this.refset = refset;
-    this.publicationDate = publicationDate;
-    buildConceptMap();
-  }
-
-  private void buildConceptMap() {
-    conceptMap = new ConceptMap();
+  @Override
+  public Resource transform(Refset refset, Date publicationDate) {
+    ConceptMap conceptMap = new ConceptMap();
     conceptMap.setId("spia-chemical-combining-results-map-1");
     conceptMap
         .setUrl("https://www.rcpa.edu.au/fhir/ConceptMap/spia-chemical-combining-results-map-1");
-    conceptMap.setVersion("1.0.0");
+    conceptMap.setVersion("1.1.0");
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
     oid.setValue("urn:oid:1.2.36.1.2001.1004.300.100.1003");
@@ -50,7 +43,7 @@ public class ChemicalCombiningResultsMap {
     conceptMap.setTitle("RCPA - SPIA Chemical Combining Results Map");
     conceptMap.setName("spia-chemical-combining-results-map");
     conceptMap
-        .setDescription("Map between the SPIA Chemical Pathology Reference Set (v3.0) and the " +
+        .setDescription("Map between the SPIA Chemical Pathology Reference Set (v3.1) and the " +
             "corresponding combining results flag for each code.");
     conceptMap.setPurpose(
         "Resolving the combining results flags for members of the SPIA Chemical Pathology "
@@ -63,12 +56,10 @@ public class ChemicalCombiningResultsMap {
         new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-combining-results-flag"));
     ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap
         .buildCombiningResultsFlagsGroupFromEntries(refset.getRefsetEntries());
-    group.setSource("http://loinc.org");
+    group.setSource(Loinc.SYSTEM_URI);
     group.setTarget("https://www.rcpa.edu.au/fhir/CodeSystem/spia-combining-results-flag");
     conceptMap.getGroup().add(group);
-  }
 
-  public ConceptMap getConceptMap() {
     return conceptMap;
   }
 

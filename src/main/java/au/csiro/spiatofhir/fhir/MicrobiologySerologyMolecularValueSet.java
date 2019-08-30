@@ -16,34 +16,27 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import au.csiro.spiatofhir.spia.HasRefsetEntries;
+import au.csiro.spiatofhir.loinc.Loinc;
+import au.csiro.spiatofhir.spia.Refset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.hl7.fhir.dstu3.model.Identifier;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ValueSet;
 
 /**
  * @author John Grimes
  */
-public class MicrobiologySerologyMolecularValueSet implements SpiaFhirValueSet {
+public class MicrobiologySerologyMolecularValueSet extends SpiaFhirValueSet {
 
-  private final HasRefsetEntries refset;
-  private final Date publicationDate;
-  private ValueSet valueSet;
-
-  public MicrobiologySerologyMolecularValueSet(HasRefsetEntries refset, Date publicationDate) {
-    this.refset = refset;
-    this.publicationDate = publicationDate;
-    buildValueSet();
-  }
-
-  private void buildValueSet() {
-    valueSet = new ValueSet();
+  @Override
+  public Resource transform(Refset refset, Date publicationDate) {
+    ValueSet valueSet = new ValueSet();
     valueSet.setId("spia-microbiology-serology-molecular-refset-1");
     valueSet.setUrl(
         "https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-serology-molecular-refset-1");
-    valueSet.setVersion("1.0.0");
+    valueSet.setVersion("1.1.0");
     List<Identifier> identifier = new ArrayList<>();
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
@@ -55,17 +48,13 @@ public class MicrobiologySerologyMolecularValueSet implements SpiaFhirValueSet {
     valueSet.setName("spia-microbiology-serology-molecular-refset");
     valueSet.setDescription("Standard codes for use in reporting microbiology pathology results "
         + "in Australia, based on the SPIA Microbiology Serology Molecular Pathology Reference "
-        + "Set (v3.0).");
+        + "Set (v3.1).");
     valueSet.setDate(publicationDate);
     SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
     ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet
-        .buildComposeFromEntries(refset.getRefsetEntries(),
-            "http://loinc.org");
+        .buildComposeFromEntries(refset.getRefsetEntries(), Loinc.SYSTEM_URI);
     valueSet.setCompose(compose);
-  }
 
-  @Override
-  public ValueSet getValueSet() {
     return valueSet;
   }
 

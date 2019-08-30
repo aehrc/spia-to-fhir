@@ -16,33 +16,26 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import au.csiro.spiatofhir.spia.HasRefsetEntries;
+import au.csiro.spiatofhir.loinc.Loinc;
+import au.csiro.spiatofhir.spia.Refset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.hl7.fhir.dstu3.model.Identifier;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ValueSet;
 
 /**
  * @author John Grimes
  */
-public class HaematologyValueSet implements SpiaFhirValueSet {
+public class HaematologyValueSet extends SpiaFhirValueSet {
 
-  private final HasRefsetEntries refset;
-  private final Date publicationDate;
-  private ValueSet valueSet;
-
-  public HaematologyValueSet(HasRefsetEntries refset, Date publicationDate) {
-    this.refset = refset;
-    this.publicationDate = publicationDate;
-    buildValueSet();
-  }
-
-  private void buildValueSet() {
-    valueSet = new ValueSet();
+  @Override
+  public Resource transform(Refset refset, Date publicationDate) {
+    ValueSet valueSet = new ValueSet();
     valueSet.setId("spia-haematology-refset-1");
     valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-haematology-refset-1");
-    valueSet.setVersion("1.0.0");
+    valueSet.setVersion("1.1.0");
     List<Identifier> identifier = new ArrayList<>();
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
@@ -53,17 +46,13 @@ public class HaematologyValueSet implements SpiaFhirValueSet {
     valueSet.setName("spia-haematology-refset");
     valueSet.setDescription(
         "Standard codes for use in reporting haematology pathology results in Australia, based on "
-            + "the SPIA Haematology Terminology Reference Set (v3.0).");
+            + "the SPIA Haematology Terminology Reference Set (v3.1).");
     valueSet.setDate(publicationDate);
     SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
     ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet
-        .buildComposeFromEntries(refset.getRefsetEntries(),
-            "http://loinc.org");
+        .buildComposeFromEntries(refset.getRefsetEntries(), Loinc.SYSTEM_URI);
     valueSet.setCompose(compose);
-  }
 
-  @Override
-  public ValueSet getValueSet() {
     return valueSet;
   }
 

@@ -18,7 +18,6 @@ package au.csiro.spiatofhir.spia;
 
 import au.csiro.spiatofhir.fhir.TerminologyClient;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -30,42 +29,26 @@ import org.slf4j.LoggerFactory;
 /**
  * @author John Grimes
  */
-public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
+public class ImmunopathologyRefset extends Refset {
 
   protected static final Logger logger = LoggerFactory.getLogger(ImmunopathologyRefset.class);
-  protected static final String[] expectedHeaders =
-      {"RCPA Preferred term", "RCPA Synonyms", "Usage guidance", "Length", "Specimen", "Unit",
-          "UCUM", "LOINC",
-          "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version",
-          "History"};
-  private static final String SHEET_NAME = "Terminology for Immunopathology";
-  private final Workbook workbook;
-  private final TerminologyClient terminologyClient;
-  private final UcumService ucumService;
-  private List<RefsetEntry> refsetEntries;
+  protected static final String[] expectedHeaders = {"RCPA Preferred term", "RCPA Synonyms",
+      "Usage guidance", "Subgroup_1", "Subgroup_2", "Length", "Specimen", "Unit", "UCUM", "LOINC",
+      "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version",
+      "History"};
+  private static final String SHEET_NAME = "Immunopathology Terms v3.1";
 
-  /**
-   * Creates a new reference set, based on the contents of the supplied workbook.
-   */
-  public ImmunopathologyRefset(Workbook workbook, TerminologyClient terminologyClient,
-      UcumService ucumService)
-      throws ValidationException {
-    this.workbook = workbook;
-    this.terminologyClient = terminologyClient;
-    this.ucumService = ucumService;
-    parse();
+  public ImmunopathologyRefset(Workbook workbook,
+      TerminologyClient terminologyClient, UcumService ucumService) throws ValidationException {
+    super(workbook, terminologyClient, ucumService);
   }
 
-  /**
-   * Gets a list of all entries within this reference set.
-   */
   @Override
-  public List<RefsetEntry> getRefsetEntries() {
-    return refsetEntries;
-  }
-
-  private void parse() throws ValidationException {
+  protected void parse() throws ValidationException {
     Sheet sheet = workbook.getSheet(SHEET_NAME);
+    if (sheet == null) {
+      throw new ValidationException("Sheet not found: " + SHEET_NAME);
+    }
     refsetEntries = new ArrayList<>();
     for (Row row : sheet) {
       // Check that header row matches expectations.
@@ -73,71 +56,43 @@ public class ImmunopathologyRefset extends Refset implements HasRefsetEntries {
         validateHeaderRow(row, expectedHeaders);
         continue;
       }
+      // Skip header rows.
+      if (row.getRowNum() == 1 || row.getRowNum() == 133 || row.getRowNum() == 170
+          || row.getRowNum() == 171 || row.getRowNum() == 180 || row.getRowNum() == 190
+          || row.getRowNum() == 202 || row.getRowNum() == 213 || row.getRowNum() == 224) {
+        continue;
+      }
 
+      RefsetEntry refsetEntry = new RefsetEntry();
+
+      String rcpaPreferredTerm = getStringValueFromCell(row, 0);
+      Set<String> rcpaSynonyms = getDelimitedStringsFromCell(row, 1);
+      String ucumCode = null, loincCode;
+
+      // Skip entire row if code is missing or invalid.
       try {
-        LoincRefsetEntry refsetEntry = new LoincRefsetEntry();
+        loincCode = getLoincCodeFromCell(row, 9, terminologyClient);
+      } catch (BlankCodeException | InvalidCodeException e) {
+        logger.warn(e.getMessage());
+        continue;
+      }
 
-        // Extract information from row.
-        String rcpaPreferredTerm = getStringValueFromCell(row, 0);
-        Set<String> rcpaSynonyms = getDelimitedStringsFromCell(row, 1);
-        String usageGuidance = getStringValueFromCell(row, 2);
-        // Length has been omitted, as formulas are being used within the spreadsheet.
-        String specimen = getStringValueFromCell(row, 4);
-        String rcpaUnit = getStringValueFromCell(row, 5);
-        String ucumCode = null;
-        try {
-          ucumCode = getUcumCodeFromCell(ucumService, row, 6);
-        } catch (BlankCodeException e) {
-        } catch (InvalidCodeException e) {
-          logger.warn(e.getMessage());
-        }
-        String loincCode = getLoincCodeFromCell(row, 7, terminologyClient);
-        String loincComponent = getStringValueFromCell(row, 8);
-        String loincProperty = getStringValueFromCell(row, 9);
-        String loincTiming = getStringValueFromCell(row, 10);
-        String loincSystem = getStringValueFromCell(row, 11);
-        String loincScale = getStringValueFromCell(row, 12);
-        String loincMethod = getStringValueFromCell(row, 13);
-        String loincLongName = getStringValueFromCell(row, 14);
-        Double version = getNumericValueFromCell(row, 15);
-        String history = getStringValueFromCell(row, 16);
-
-        // Populate information into LoincRefsetEntry object.
-        refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
-        refsetEntry.setRcpaSynonyms(rcpaSynonyms);
-        refsetEntry.setUsageGuidance(usageGuidance);
-        refsetEntry.setSpecimen(specimen);
-        refsetEntry.setRcpaUnit(rcpaUnit);
-        refsetEntry.setUcumCode(ucumCode);
-        refsetEntry.setLoincCode(loincCode);
-        refsetEntry.setLoincComponent(loincComponent);
-        refsetEntry.setLoincProperty(loincProperty);
-        refsetEntry.setLoincTiming(loincTiming);
-        refsetEntry.setLoincSystem(loincSystem);
-        refsetEntry.setLoincScale(loincScale);
-        refsetEntry.setLoincMethod(loincMethod);
-        refsetEntry.setLoincLongName(loincLongName);
-        refsetEntry.setVersion(version);
-        refsetEntry.setHistory(history);
-
-        // Add LoincRefsetEntry object to list.
-        refsetEntries.add(refsetEntry);
-      } catch (BlankCodeException e) {
-      } catch (InvalidCodeException e) {
-        // Skip any row which contains an invalid LOINC code. A warning log message will be emitted.
+      // Warn if unit is missing or invalid.
+      try {
+        ucumCode = getUcumCodeFromCell(ucumService, row, 8);
+      } catch (BlankCodeException | InvalidCodeException e) {
         logger.warn(e.getMessage());
       }
+
+      // Populate information into RefsetEntry object.
+      refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
+      refsetEntry.setRcpaSynonyms(rcpaSynonyms);
+      refsetEntry.setUnitCode(ucumCode);
+      refsetEntry.setCode(loincCode);
+
+      // Add RefsetEntry object to list.
+      refsetEntries.add(refsetEntry);
     }
-    // Lookup and add native display terms to reference set entries.
-    List<String> preferredTerms = lookupDisplayTerms(terminologyClient, "http://loinc.org",
-        refsetEntries);
-    for (int i = 0; i < refsetEntries.size(); i++) {
-      LoincRefsetEntry refsetEntry = (LoincRefsetEntry) refsetEntries.get(i);
-      if (preferredTerms.get(i) != null) {
-        refsetEntry.setLoincLongName(preferredTerms.get(i));
-      }
-    }
-    addUcumDisplays(terminologyClient, refsetEntries);
   }
 
 }

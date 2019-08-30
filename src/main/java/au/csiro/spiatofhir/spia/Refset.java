@@ -16,104 +16,55 @@
 
 package au.csiro.spiatofhir.spia;
 
+import static au.csiro.spiatofhir.spia.ValidationException.messageWithCoords;
+
 import au.csiro.spiatofhir.fhir.TerminologyClient;
 import au.csiro.spiatofhir.loinc.LoincCodeValidator;
 import au.csiro.spiatofhir.snomed.SnomedCodeValidator;
+import au.csiro.spiatofhir.spia.RefsetEntry.CombiningResultsFlag;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.fhir.ucum.UcumService;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.OperationOutcome;
-import org.hl7.fhir.dstu3.model.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Used for parsing a SPIA reference set from a specified workbook within the distribution.
+ * Validates terminology using a FHIR terminology service and a UCUM service.
+ *
  * @author John Grimes
  */
 public abstract class Refset {
 
   private static final Logger logger = LoggerFactory.getLogger(Refset.class);
   private static final String MULTI_VALUE_DELIMITER = ";";
+  private static final Map<String, CombiningResultsFlag> combiningResultsFlagMap =
+      new HashMap<String, CombiningResultsFlag>() {{
+        put("Red", CombiningResultsFlag.RED);
+        put("Green", CombiningResultsFlag.GREEN);
+        put("Orange", CombiningResultsFlag.ORANGE);
+      }};
+  protected final Workbook workbook;
+  protected final TerminologyClient terminologyClient;
+  protected final UcumService ucumService;
+  protected List<RefsetEntry> refsetEntries;
 
-  /**
-   * Returns a list of display terms corresponding to the supplied list of reference set entries,
-   * sourced using the supplied terminology server client.
-   * <p>
-   * If there are any problems looking up a particular code, a null will be added to the list that
-   * is returned.
-   */
-  protected static List<String> lookupDisplayTerms(TerminologyClient terminologyClient,
-      String system,
-      List<RefsetEntry> refsetEntries) {
-    // Get the codes from the reference set entries.
-    List<String> codes = refsetEntries.stream().map(RefsetEntry::getCode)
-        .collect(Collectors.toList());
-    // Perform a lookup on each code using the terminology server.
-    Bundle result = terminologyClient.batchLookup(system, codes, new ArrayList<>());
-    // Return a list of displays.
-    return result.getEntry()
-        .stream()
-        .map(Refset::entryToParameters)
-        .map(Refset::parametersToDisplayValue)
-        .collect(Collectors.toList());
+  public Refset(Workbook workbook, TerminologyClient terminologyClient,
+      UcumService ucumService) throws ValidationException {
+    this.workbook = workbook;
+    this.terminologyClient = terminologyClient;
+    this.ucumService = ucumService;
+    parse();
   }
 
-  /**
-   * Uses the supplied terminology server client to look up display terms for LOINC reference set
-   * entries that have UCUM codes.
-   */
-  protected static void addUcumDisplays(TerminologyClient terminologyClient,
-      List<RefsetEntry> refsetEntries) {
-    // Get the UCUM codes from the reference set entries.
-    List<String> codes = refsetEntries.stream()
-        .map(refsetEntry -> ((LoincRefsetEntry) refsetEntry).getUcumCode())
-        .collect(Collectors.toList());
-    // Perform a lookup on each code using the terminology server.
-    Bundle result = terminologyClient
-        .batchLookup("http://unitsofmeasure.org", codes, new ArrayList<>());
-    // Get the display term from each lookup result.
-    List<String> displays = result.getEntry()
-        .stream()
-        .map(Refset::entryToParameters)
-        .map(Refset::parametersToDisplayValue)
-        .collect(Collectors.toList());
-    // Set the UCUM display to the authoritative display from the terminology server.
-    for (int i = 0; i < refsetEntries.size(); i++) {
-      LoincRefsetEntry refsetEntry = (LoincRefsetEntry) refsetEntries.get(i);
-      if (displays.get(i) != null) {
-        refsetEntry.setUcumDisplay(displays.get(i));
-      }
-    }
+  protected void parse() throws ValidationException {
   }
 
-  private static Parameters entryToParameters(Bundle.BundleEntryComponent entry) {
-    if (entry.getResource().fhirType().equals("Parameters")) {
-      return (Parameters) entry.getResource();
-    } else if (entry.getResource().fhirType().equals("OperationOutcome")) {
-      OperationOutcome operationOutcome = (OperationOutcome) entry.getResource();
-      String opOutcomeMessage = operationOutcome.getIssueFirstRep().getDiagnostics();
-      // Filter out log warnings for outcomes relating to blank unit codes.
-      if (!opOutcomeMessage.matches("Invalid type for 'code' parameter\\.")) {
-        String message = operationOutcome.getIssueFirstRep()
-            .getDiagnostics()
-            .replaceFirst("\\[[a-f0-9\\-]*]: ", "");
-        logger.warn("Error looking up display for code: \"" + message + "\"");
-      }
-    }
-    return null;
-  }
-
-  private static String parametersToDisplayValue(Parameters parameters) {
-    return parameters != null ? parameters.getParameter()
-        .stream()
-        .filter(parameter -> parameter.getName().equals("display"))
-        .map(parameter -> parameter.getValue().toString())
-        .findFirst()
-        .orElse(null) : null;
+  public List<RefsetEntry> getRefsetEntries() {
+    return refsetEntries;
   }
 
   /**
@@ -123,7 +74,10 @@ public abstract class Refset {
   protected void validateHeaderRow(Row row, String[] expectedHeaders) throws ValidationException {
     ArrayList<String> headerValues = new ArrayList<>();
     for (Cell cell : row) {
-      headerValues.add(cell.getStringCellValue());
+      String stringCellValue = cell.getStringCellValue();
+      if (stringCellValue != null && !stringCellValue.equals("")) {
+        headerValues.add(stringCellValue);
+      }
     }
     if (!Arrays.equals(headerValues.toArray(), expectedHeaders)) {
       throw new ValidationException("Header values do not match expected values.");
@@ -147,9 +101,10 @@ public abstract class Refset {
     }
     final String trimmedValue = cell.getStringCellValue().trim();
     if (!cell.getStringCellValue().equals(trimmedValue)) {
-      logger.warn(
+      String message =
           "Encountered cell with leading or trailing whitespace, \"" + cell.getStringCellValue()
-              + "\" (row: " + cell.getRowIndex() + ", column: " + cell.getColumnIndex() + ")");
+              + "\"";
+      logger.warn(messageWithCoords(message, cell.getRowIndex(), cell.getColumnIndex()));
     }
     return trimmedValue;
   }
@@ -159,39 +114,17 @@ public abstract class Refset {
     String rawValue = getStringValueFromCell(row, cellNumber);
     Set<String> delimitedStrings = new HashSet<>();
     if (rawValue != null) {
-      Arrays.stream(rawValue.split(";")).forEach(s -> {
+      Arrays.stream(rawValue.split(MULTI_VALUE_DELIMITER)).forEach(s -> {
         String trimmedValue = s.trim();
         if (!s.equals(trimmedValue)) {
-          logger.warn(
-              "Encountered delimited value with leading or trailing whitespace, \"" + s
-                  + "\" (row: " + row.getRowNum() + ", column: " + cellNumber + ")");
+          String message =
+              "Encountered delimited value with leading or trailing whitespace, \"" + s + "\"";
+          logger.warn(messageWithCoords(message, row.getRowNum(), cellNumber));
         }
         delimitedStrings.add(trimmedValue);
       });
     }
     return delimitedStrings;
-  }
-
-  /**
-   * Returns a numeric value from the specified cell within a row, and asserts that it actually is
-   * numeric.
-   */
-  protected Double getNumericValueFromCell(Row row, int cellNumber) throws ValidationException {
-    Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
-    if (cell == null) {
-      return null;
-    }
-    if (cell.getCellType() != CellType.NUMERIC) {
-      throw new CellValidationException(
-          "Cell identified for extraction of numeric value is not of numeric type, actual type: "
-              + cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
-    }
-    double value = cell.getNumericCellValue();
-    if (value == 0) {
-      return null;
-    } else {
-      return value;
-    }
   }
 
   /**
@@ -284,6 +217,27 @@ public abstract class Refset {
           cell.getColumnIndex());
     }
     return cellValue;
+  }
+
+  protected CombiningResultsFlag getCombiningResultsFlagFromCell(Row row,
+      int cellNumber)
+      throws ValidationException {
+    Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+    if (cell == null) {
+      return null;
+    }
+    if (cell.getCellType() != CellType.STRING) {
+      throw new CellValidationException(
+          "Cell identified for extraction of Combining Results Flag is not of string type, "
+              + "actual type: " + cell.getCellType().toString(), cell.getRowIndex(),
+          cell.getColumnIndex());
+    }
+    if (!combiningResultsFlagMap.containsKey(cell.getStringCellValue())) {
+      throw new ValidationException(
+          "Unexpected value encountered in Combining Results Flag column: " + cell
+              .getStringCellValue());
+    }
+    return combiningResultsFlagMap.get(cell.getStringCellValue());
   }
 
 }
