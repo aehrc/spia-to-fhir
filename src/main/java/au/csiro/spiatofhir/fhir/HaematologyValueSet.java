@@ -34,7 +34,7 @@ public class HaematologyValueSet extends SpiaFhirValueSet {
   public Resource transform(Refset refset, Date publicationDate) {
     ValueSet valueSet = new ValueSet();
     valueSet.setId("spia-haematology-refset-1");
-    valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-haematology-refset-1");
+    valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-haematology-refset-2");
     valueSet.setVersion("2.0.0");
     List<Identifier> identifier = new ArrayList<>();
     Identifier oid = new Identifier();

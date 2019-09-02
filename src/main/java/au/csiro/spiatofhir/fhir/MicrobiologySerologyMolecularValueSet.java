@@ -35,7 +35,7 @@ public class MicrobiologySerologyMolecularValueSet extends SpiaFhirValueSet {
     ValueSet valueSet = new ValueSet();
     valueSet.setId("spia-microbiology-serology-molecular-refset-1");
     valueSet.setUrl(
-        "https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-serology-molecular-refset-1");
+        "https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-serology-molecular-refset-2");
     valueSet.setVersion("2.0.0");
     List<Identifier> identifier = new ArrayList<>();
     Identifier oid = new Identifier();
