@@ -200,6 +200,9 @@ public abstract class Refset {
               cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
     }
     String cellValue = getStringValueFromCell(row, cellNumber);
+    if (cellValue.equals("No unit")) {
+      return null;
+    }
     // Check for the validity of the UCUM code.
     String result = ucumService.validate(cellValue);
     if (result != null) {
