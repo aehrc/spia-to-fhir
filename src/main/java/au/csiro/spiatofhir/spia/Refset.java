@@ -188,7 +188,7 @@ public abstract class Refset {
    * Returns a string value from the specified cell within a row, asserting that it is a valid UCUM
    * expression.
    */
-  protected String getUcumCodeFromCell(UcumService ucumService, Row row, int cellNumber)
+  protected Set<String> getUcumCodesFromCell(UcumService ucumService, Row row, int cellNumber)
       throws BlankCodeException, ValidationException, InvalidCodeException {
     Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
     if (cell == null) {
@@ -199,18 +199,24 @@ public abstract class Refset {
           "Cell identified for extraction of UCUM code is not of string type, actual type: " +
               cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
     }
-    String cellValue = getStringValueFromCell(row, cellNumber);
-    if (cellValue.equals("No unit")) {
-      return null;
+    // Unit cells can contain multiple units.
+    Set<String> cellValues = getDelimitedStringsFromCell(row, cellNumber);
+    Set<String> results = new HashSet<>();
+    for (String cellValue : cellValues) {
+      if (cellValue.equals("No unit")) {
+        return new HashSet<>();
+      }
+      // Check for the validity of the UCUM code. One invalid code within the cell will forfeit all
+      // codes within the cell.
+      String result = ucumService.validate(cellValue);
+      if (result != null) {
+        throw new InvalidCodeException("UCUM code validation failed: \"" + result + "\"",
+            cell.getRowIndex(),
+            cell.getColumnIndex());
+      }
+      results.add(cellValue);
     }
-    // Check for the validity of the UCUM code.
-    String result = ucumService.validate(cellValue);
-    if (result != null) {
-      throw new InvalidCodeException("UCUM code validation failed: \"" + result + "\"",
-          cell.getRowIndex(),
-          cell.getColumnIndex());
-    }
-    return cellValue;
+    return results;
   }
 
   protected CombiningResultsFlag getCombiningResultsFlagFromCell(Row row,

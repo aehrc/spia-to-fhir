@@ -66,7 +66,8 @@ public class HaematologyRefset extends Refset {
 
       String rcpaPreferredTerm = getStringValueFromCell(row, 0);
       Set<String> rcpaSynonyms = getDelimitedStringsFromCell(row, 1);
-      String ucumCode = null, loincCode;
+      String loincCode;
+      Set<String> ucumCodes = null;
 
       // Skip entire row if code is missing or invalid.
       try {
@@ -78,16 +79,18 @@ public class HaematologyRefset extends Refset {
 
       // Warn if unit is missing or invalid.
       try {
-        ucumCode = getUcumCodeFromCell(ucumService, row, 8);
+        ucumCodes = getUcumCodesFromCell(ucumService, row, 8);
       } catch (BlankCodeException | InvalidCodeException e) {
         logger.warn(e.getMessage());
       }
 
       // Populate information into RefsetEntry object.
       refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
-      refsetEntry.setRcpaSynonyms(rcpaSynonyms);
-      refsetEntry.setUnitCode(ucumCode);
+      refsetEntry.getRcpaSynonyms().addAll(rcpaSynonyms);
       refsetEntry.setCode(loincCode);
+      if (ucumCodes != null) {
+        refsetEntry.getUnitCodes().addAll(ucumCodes);
+      }
 
       // Add RefsetEntry object to list.
       refsetEntries.add(refsetEntry);

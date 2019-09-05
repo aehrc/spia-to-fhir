@@ -74,7 +74,7 @@ public class MicrobiologySubsetOfOrganismsRefset extends Refset {
 
       // Populate information into RefsetEntry object.
       refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
-      refsetEntry.setRcpaSynonyms(rcpaSynonyms);
+      refsetEntry.getRcpaSynonyms().addAll(rcpaSynonyms);
       refsetEntry.setCode(snomedCode);
 
       // Add RefsetEntry object to list.

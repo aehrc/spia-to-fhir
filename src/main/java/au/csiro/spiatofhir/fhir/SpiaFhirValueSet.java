@@ -103,8 +103,8 @@ public abstract class SpiaFhirValueSet extends SpiaFhirResource {
         // RCPA synonyms are added as designations, coded with the SNOMED code 900000000000013009|Synonym.
         // See: https://www.hl7.org/fhir/STU3/valueset-definitions.html#ValueSet.compose.include.concept.designation
         if (!entry.getRcpaSynonyms().isEmpty()) {
-          List<ValueSet.ConceptReferenceDesignationComponent> designation = new ArrayList<>();
-          designation.addAll(buildSynonymDesignations(entry));
+          List<ValueSet.ConceptReferenceDesignationComponent> designation = new ArrayList<>(
+              buildSynonymDesignations(entry));
           conceptEntry.setDesignation(designation);
         }
         concept.add(conceptEntry);

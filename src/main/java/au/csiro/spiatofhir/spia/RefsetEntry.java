@@ -28,8 +28,8 @@ import java.util.Set;
 public class RefsetEntry {
 
   private String rcpaPreferredTerm;
-  private Set<String> rcpaSynonyms = new HashSet<>();
-  private String unitCode;
+  private final Set<String> rcpaSynonyms = new HashSet<>();
+  private final Set<String> unitCodes = new HashSet<>();
   private String code;
   private CombiningResultsFlag combiningResultsFlag;
 
@@ -45,16 +45,8 @@ public class RefsetEntry {
     return rcpaSynonyms;
   }
 
-  public void setRcpaSynonyms(Set<String> rcpaSynonyms) {
-    this.rcpaSynonyms = rcpaSynonyms;
-  }
-
-  public String getUnitCode() {
-    return unitCode;
-  }
-
-  public void setUnitCode(String unitCode) {
-    this.unitCode = unitCode;
+  public Set<String> getUnitCodes() {
+    return unitCodes;
   }
 
   public String getCode() {

@@ -16,8 +16,11 @@
 
 package au.csiro.spiatofhir.spia;
 
+import static au.csiro.spiatofhir.spia.ValidationException.messageWithCoords;
+
 import au.csiro.spiatofhir.fhir.TerminologyClient;
 import java.util.ArrayList;
+import java.util.Set;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -59,15 +62,22 @@ public class PreferredUnitsRefset extends Refset {
 
       // Extract information from row.
       String rcpaPreferredTerm = getStringValueFromCell(row, 1);
-      String ucumCode;
+      Set<String> ucumCodes = null;
 
       // Skip entire row if code is missing or invalid.
       try {
-        ucumCode = getUcumCodeFromCell(ucumService, row, 2);
+        ucumCodes = getUcumCodesFromCell(ucumService, row, 2);
       } catch (BlankCodeException | InvalidCodeException e) {
         logger.warn(e.getMessage());
         continue;
       }
+
+      // Check that there is only one unit specified.
+      if (ucumCodes.size() > 1) {
+        logger.warn(messageWithCoords("More than one code encountered in Preferred Units row",
+            row.getRowNum(), 2));
+      }
+      String ucumCode = (String) ucumCodes.toArray()[0];
 
       // Populate information into RefsetEntry object.
       refsetEntry.setRcpaPreferredTerm(rcpaPreferredTerm);
