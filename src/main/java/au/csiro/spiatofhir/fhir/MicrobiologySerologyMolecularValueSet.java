@@ -18,6 +18,7 @@ package au.csiro.spiatofhir.fhir;
 
 import au.csiro.spiatofhir.loinc.Loinc;
 import au.csiro.spiatofhir.spia.Refset;
+import au.csiro.spiatofhir.utils.Strings;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,10 +34,10 @@ public class MicrobiologySerologyMolecularValueSet extends SpiaFhirValueSet {
   @Override
   public Resource transform(Refset refset, Date publicationDate) {
     ValueSet valueSet = new ValueSet();
-    valueSet.setId("spia-microbiology-serology-molecular-refset-1");
-    valueSet.setUrl(
-        "https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-serology-molecular-refset-2");
     valueSet.setVersion("2.0.0");
+    valueSet.setId("spia-microbiology-serology-molecular-refset-" + Strings
+        .majorVersionFromSemVer(valueSet.getVersion()));
+    valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/" + valueSet.getId());
     List<Identifier> identifier = new ArrayList<>();
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");

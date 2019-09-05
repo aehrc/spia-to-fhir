@@ -17,6 +17,7 @@
 package au.csiro.spiatofhir.loinc;
 
 import au.csiro.spiatofhir.fhir.TerminologyClient;
+import au.csiro.spiatofhir.utils.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +72,7 @@ public class LoincCodeValidator {
    */
   private int computeCheckDigit(String idWithoutCheckDigit) throws Exception {
     String validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVYWXZ_";
-    idWithoutCheckDigit = idWithoutCheckDigit.trim().toUpperCase();
+    idWithoutCheckDigit = Strings.trim(idWithoutCheckDigit).toUpperCase();
     int sum = 0;
     for (int i = 0; i < idWithoutCheckDigit.length(); i++) {
       char ch = idWithoutCheckDigit.charAt(idWithoutCheckDigit.length() - i - 1);

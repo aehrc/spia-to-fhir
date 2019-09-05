@@ -49,19 +49,19 @@ public class SpiaDistribution {
   private static final Map<DistributionEntry, String> expectedEntries = new EnumMap<DistributionEntry, String>(
       DistributionEntry.class) {{
     put(REQUESTING,
-        "RCPA-SPIA Requesting Pathology Terminology Reference Set v3.1 for publishing.xlsx");
+        "RCPA-SPIA Requesting Pathology Terminology Reference Set v3.1.xlsx");
     put(CHEMICAL,
-        "RCPA-SPIA-Chemical-Pathology-Terminology-Reference-Set-3.1 for publishing.xlsx");
+        "RCPA-SPIA-Chemical-Pathology-Terminology-Reference-Set-3.1.xlsx");
     put(HAEMATOLOGY,
-        "RCPA-SPIA Haematology Terminology Reference Set v3.1 for publishing.xlsx");
+        "RCPA-SPIA Haematology Terminology Reference Set v3.1.xlsx");
     put(IMMUNOPATHOLOGY,
-        "RCPA-SPIA Immunopathology Terminology Reference Set v3.1 for publishing.xlsx");
+        "RCPA-SPIA Immunopathology Terminology Reference Set v3.1.xlsx");
     put(MICROBIOLOGY_SEROLOGY_MOLECULAR,
-        "RCPA-SPIA Microbiology Serology Molecular Path Terminology Reference Set v3.1 for publishing.xlsx");
+        "RCPA-SPIA Microbiology Serology Molecular Path Terminology Reference Set v3.1.xlsx");
     put(MICROBIOLOGY_ORGANISMS,
-        "RCPA-SPIA Microbiology Subset of Organisms v3.1 for publishing.xlsx");
+        "RCPA-SPIA Microbiology Subset of Organisms v3.1.xlsx");
     put(DistributionEntry.PREFERRED_UNITS,
-        "RCPA-SPIA Preferred Units table v1.1 for publishing.xlsx");
+        "RCPA-SPIA Preferred Units table v1.1.xlsx");
   }};
   private static final Logger logger = LoggerFactory.getLogger(SpiaDistribution.class);
   private ZipFile zipFile;

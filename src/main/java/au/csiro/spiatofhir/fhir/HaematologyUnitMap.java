@@ -19,6 +19,7 @@ package au.csiro.spiatofhir.fhir;
 import au.csiro.spiatofhir.loinc.Loinc;
 import au.csiro.spiatofhir.spia.Refset;
 import au.csiro.spiatofhir.ucum.Ucum;
+import au.csiro.spiatofhir.utils.Strings;
 import java.util.Date;
 import org.hl7.fhir.dstu3.model.ConceptMap;
 import org.hl7.fhir.dstu3.model.Identifier;
@@ -33,9 +34,10 @@ public class HaematologyUnitMap extends SpiaFhirConceptMap {
   @Override
   public Resource transform(Refset refset, Date publicationDate) {
     ConceptMap conceptMap = new ConceptMap();
-    conceptMap.setId("spia-haematology-unit-map-1");
-    conceptMap.setUrl("https://www.rcpa.edu.au/fhir/ConceptMap/spia-haematology-unit-map-1");
     conceptMap.setVersion("1.1.0");
+    conceptMap.setId(
+        "spia-haematology-unit-map-" + Strings.majorVersionFromSemVer(conceptMap.getVersion()));
+    conceptMap.setUrl("https://www.rcpa.edu.au/fhir/ConceptMap/" + conceptMap.getId());
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
     oid.setValue("urn:oid:1.2.36.1.2001.1004.300.100.1008");

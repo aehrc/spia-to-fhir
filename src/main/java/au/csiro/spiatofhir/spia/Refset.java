@@ -22,6 +22,7 @@ import au.csiro.spiatofhir.fhir.TerminologyClient;
 import au.csiro.spiatofhir.loinc.LoincCodeValidator;
 import au.csiro.spiatofhir.snomed.SnomedCodeValidator;
 import au.csiro.spiatofhir.spia.RefsetEntry.CombiningResultsFlag;
+import au.csiro.spiatofhir.utils.Strings;
 import java.util.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -99,7 +100,7 @@ public abstract class Refset {
               "actual type: " + cell.getCellType().toString(),
           cell.getRowIndex(), cell.getColumnIndex());
     }
-    final String trimmedValue = cell.getStringCellValue().trim();
+    final String trimmedValue = Strings.trim(cell.getStringCellValue());
     if (!cell.getStringCellValue().equals(trimmedValue)) {
       String message =
           "Encountered cell with leading or trailing whitespace, \"" + cell.getStringCellValue()
@@ -115,7 +116,7 @@ public abstract class Refset {
     Set<String> delimitedStrings = new HashSet<>();
     if (rawValue != null) {
       Arrays.stream(rawValue.split(MULTI_VALUE_DELIMITER)).forEach(s -> {
-        String trimmedValue = s.trim();
+        String trimmedValue = Strings.trim(s);
         if (!s.equals(trimmedValue)) {
           String message =
               "Encountered delimited value with leading or trailing whitespace, \"" + s + "\"";
@@ -134,18 +135,13 @@ public abstract class Refset {
    */
   protected String getSnomedCodeFromCell(Row row, int cellNumber,
       TerminologyClient terminologyClient)
-      throws CellValidationException, InvalidCodeException, BlankCodeException {
+      throws ValidationException, InvalidCodeException, BlankCodeException {
     Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
     if (cell == null) {
       throw new BlankCodeException("Blank SNOMED code encountered", row.getRowNum(), cellNumber);
     }
-    if (cell.getCellType() != CellType.STRING) {
-      throw new CellValidationException(
-          "Cell identified for extraction of SNOMED code is not of string type, actual type: " +
-              cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
-    }
-    String cellValue = cell.getStringCellValue()
-        .split("\\|")[0].trim();
+    String cellValue = getStringValueFromCell(row, cellNumber).split("\\|")[0];
+    cellValue = Strings.trim(cellValue);
     // Check for the validity of the SNOMED code.
     SnomedCodeValidator snomedCodeValidator = new SnomedCodeValidator(terminologyClient);
     if (!snomedCodeValidator.validate(cellValue)) {
@@ -167,17 +163,12 @@ public abstract class Refset {
    */
   protected String getLoincCodeFromCell(Row row, int cellNumber,
       TerminologyClient terminologyClient)
-      throws CellValidationException, InvalidCodeException, BlankCodeException {
+      throws ValidationException, InvalidCodeException, BlankCodeException {
     Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
     if (cell == null) {
       throw new BlankCodeException("Blank LOINC code encountered", row.getRowNum(), cellNumber);
     }
-    if (cell.getCellType() != CellType.STRING) {
-      throw new CellValidationException(
-          "Cell identified for extraction of LOINC code is not of string type, actual type: " +
-              cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
-    }
-    String cellValue = cell.getStringCellValue().trim();
+    String cellValue = getStringValueFromCell(row, cellNumber);
     // Check for the validity of the LOINC code.
     LoincCodeValidator loincCodeValidator = new LoincCodeValidator(terminologyClient);
     if (!loincCodeValidator.validate(cellValue)) {
@@ -198,7 +189,7 @@ public abstract class Refset {
    * expression.
    */
   protected String getUcumCodeFromCell(UcumService ucumService, Row row, int cellNumber)
-      throws BlankCodeException, CellValidationException, InvalidCodeException {
+      throws BlankCodeException, ValidationException, InvalidCodeException {
     Cell cell = row.getCell(cellNumber, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
     if (cell == null) {
       throw new BlankCodeException("Blank UCUM code encountered", row.getRowNum(), cellNumber);
@@ -208,7 +199,7 @@ public abstract class Refset {
           "Cell identified for extraction of UCUM code is not of string type, actual type: " +
               cell.getCellType().toString(), cell.getRowIndex(), cell.getColumnIndex());
     }
-    String cellValue = cell.getStringCellValue().trim();
+    String cellValue = getStringValueFromCell(row, cellNumber);
     // Check for the validity of the UCUM code.
     String result = ucumService.validate(cellValue);
     if (result != null) {

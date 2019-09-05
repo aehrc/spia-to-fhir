@@ -51,6 +51,7 @@
     <log4jVersion>2.11.2</log4jVersion>
     <slf4jVersion>1.7.26</slf4jVersion>
     <poiVersion>4.1.0</poiVersion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
