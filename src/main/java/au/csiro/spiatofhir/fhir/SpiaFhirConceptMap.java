@@ -92,7 +92,7 @@ public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
     ConceptMap.ConceptMapGroupComponent group = new ConceptMap.ConceptMapGroupComponent();
     for (RefsetEntry entry : refsetEntries) {
       assert entry.getCode() != null;
-      if (entry.getUnitCodes() == null) {
+      if (entry.getUnitCodes().isEmpty()) {
         continue;
       }
       ConceptMap.SourceElementComponent element = new ConceptMap.SourceElementComponent();
