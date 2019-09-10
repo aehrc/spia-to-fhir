@@ -25,6 +25,10 @@ public class ValidationException extends Exception {
     super(message);
   }
 
+  public ValidationException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
   public static String messageWithCoords(String message, int rowIndex, int colIndex) {
     int row = rowIndex + 1;
     char col = (char) (65 + colIndex);

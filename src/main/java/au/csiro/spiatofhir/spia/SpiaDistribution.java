@@ -49,19 +49,19 @@ public class SpiaDistribution {
   private static final Map<DistributionEntry, String> expectedEntries = new EnumMap<DistributionEntry, String>(
       DistributionEntry.class) {{
     put(REQUESTING,
-        "RCPA-SPIA Requesting Pathology Terminology Reference Set v3.1.xlsx");
+        "RCPA - SPIA Requesting Pathology Terminology Reference Set v3.1.xlsx");
     put(CHEMICAL,
-        "RCPA-SPIA-Chemical-Pathology-Terminology-Reference-Set-3.1.xlsx");
+        "RCPA - SPIA Chemical Pathology Terminology Reference Set v3.1.xlsx");
     put(HAEMATOLOGY,
-        "RCPA-SPIA Haematology Terminology Reference Set v3.1.xlsx");
+        "RCPA - SPIA Haematology Terminology Reference Set v3.1.xlsx");
     put(IMMUNOPATHOLOGY,
-        "RCPA-SPIA Immunopathology Terminology Reference Set v3.1.xlsx");
+        "RCPA - SPIA Immunopathology Terminology Reference Set v3.1.xlsx");
     put(MICROBIOLOGY_SEROLOGY_MOLECULAR,
-        "RCPA-SPIA Microbiology Serology Molecular Path Terminology Reference Set v3.1.xlsx");
+        "RCPA - SPIA Microbiology Serology Molecular Path Terminology Reference Set v3.1.xlsx");
     put(MICROBIOLOGY_ORGANISMS,
-        "RCPA-SPIA Microbiology Subset of Organisms v3.1.xlsx");
+        "RCPA - SPIA Microbiology Subset of Organisms v3.1.xlsx");
     put(DistributionEntry.PREFERRED_UNITS,
-        "RCPA-SPIA Preferred Units table v1.1.xlsx");
+        "RCPA - SPIA Preferred Units v1.1.xlsx");
   }};
   private static final Logger logger = LoggerFactory.getLogger(SpiaDistribution.class);
   private ZipFile zipFile;
@@ -103,7 +103,7 @@ public class SpiaDistribution {
         workbook = WorkbookFactory.create(inputStream);
       } catch (IOException e) {
         throw new ValidationException(
-            "Invalid Excel workbook format - must be OOXML (2007-) format");
+            "Error reading entry from ZIP file: " + expectedEntries.get(entry), e);
       }
       Refset parsedRefset;
       try {
