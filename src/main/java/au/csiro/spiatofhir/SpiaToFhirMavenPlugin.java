@@ -30,7 +30,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumService;
-import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.r4.model.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
   @Override
   public void execute() throws MojoExecutionException {
     try {
-      FhirContext fhirContext = FhirContext.forDstu3();
+      FhirContext fhirContext = FhirContext.forR4();
       TerminologyClient terminologyClient = fhirContext
           .newRestfulClient(TerminologyClient.class, terminologyServerUrl);
       UcumService ucumService = new UcumEssenceService(Thread.currentThread()

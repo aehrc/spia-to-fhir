@@ -1,14 +1,16 @@
 {
   "resourceType": "CodeSystem",
   "id": "spia-combining-results-flag",
-  "identifier": {
-    "system": "urn:ietf:rfc:3986",
-    "value": "urn:oid:1.2.36.1.2001.1004.300.100.1013"
-  },
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:1.2.36.1.2001.1004.300.100.1013"
+    }
+  ],
   "meta": {
     "profile": [
       "http://hl7.org/fhir/StructureDefinition/shareablecodesystem",
-      "https://healthterminologies.gov.au/fhir/StructureDefinition/complete-code-system-2"
+      "https://healthterminologies.gov.au/fhir/StructureDefinition/complete-code-system-3"
     ]
   },
   "text": {
@@ -17,7 +19,7 @@
   },
   "url": "https://www.rcpa.edu.au/fhir/CodeSystem/spia-combining-results-flag",
   "valueSet": "https://www.rcpa.edu.au/fhir/ValueSet/spia-combining-results-flag",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "RCPA - SPIA Combining Results Flag",
   "title": "spia-combining-results-flag",
   "description": "Codes describing the values for the combining results flag within the SPIA standard.",

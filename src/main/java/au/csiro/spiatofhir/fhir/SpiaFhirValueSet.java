@@ -16,16 +16,16 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.EMAIL;
-import static org.hl7.fhir.dstu3.model.Enumerations.PublicationStatus.DRAFT;
-import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
+import static org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.EMAIL;
+import static org.hl7.fhir.r4.model.Enumerations.PublicationStatus.DRAFT;
+import static org.hl7.fhir.r4.model.Narrative.NarrativeStatus.GENERATED;
 
 import au.csiro.spiatofhir.snomed.SnomedCt;
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import au.csiro.spiatofhir.utils.Markdown;
 import java.util.ArrayList;
 import java.util.List;
-import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
@@ -41,10 +41,10 @@ public abstract class SpiaFhirValueSet extends SpiaFhirResource {
    */
   static void addCommonElementsToValueSet(ValueSet valueSet) {
     Meta meta = new Meta();
-    List<UriType> profile = new ArrayList<>();
-    profile.add(new UriType("http://hl7.org/fhir/StructureDefinition/shareablevalueset"));
-    profile.add(new UriType(
-        "https://healthterminologies.gov.au/fhir/StructureDefinition/composed-value-set-2"));
+    List<CanonicalType> profile = new ArrayList<>();
+    profile.add(new CanonicalType("http://hl7.org/fhir/StructureDefinition/shareablevalueset"));
+    profile.add(new CanonicalType(
+        "https://healthterminologies.gov.au/fhir/StructureDefinition/composed-value-set-3"));
     meta.setProfile(profile);
     valueSet.setMeta(meta);
     Narrative text = new Narrative();

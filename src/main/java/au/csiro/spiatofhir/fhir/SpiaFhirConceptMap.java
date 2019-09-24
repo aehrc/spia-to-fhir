@@ -16,19 +16,19 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.EMAIL;
-import static org.hl7.fhir.dstu3.model.Enumerations.PublicationStatus.DRAFT;
-import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
+import static org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.EMAIL;
+import static org.hl7.fhir.r4.model.Enumerations.ConceptMapEquivalence.RELATEDTO;
+import static org.hl7.fhir.r4.model.Enumerations.PublicationStatus.DRAFT;
+import static org.hl7.fhir.r4.model.Narrative.NarrativeStatus.GENERATED;
 
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import au.csiro.spiatofhir.utils.Markdown;
 import java.util.ArrayList;
 import java.util.List;
-import org.hl7.fhir.dstu3.model.*;
-import org.hl7.fhir.dstu3.model.ConceptMap.ConceptMapGroupComponent;
-import org.hl7.fhir.dstu3.model.ConceptMap.SourceElementComponent;
-import org.hl7.fhir.dstu3.model.ConceptMap.TargetElementComponent;
-import org.hl7.fhir.dstu3.model.Enumerations.ConceptMapEquivalence;
+import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.ConceptMap.ConceptMapGroupComponent;
+import org.hl7.fhir.r4.model.ConceptMap.SourceElementComponent;
+import org.hl7.fhir.r4.model.ConceptMap.TargetElementComponent;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
@@ -44,9 +44,9 @@ public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
    */
   static void addCommonElementsToConceptMap(ConceptMap conceptMap) {
     Meta meta = new Meta();
-    List<UriType> profile = new ArrayList<>();
-    profile.add(new UriType(
-        "https://healthterminologies.gov.au/fhir/StructureDefinition/general-concept-map-2"));
+    List<CanonicalType> profile = new ArrayList<>();
+    profile.add(new CanonicalType(
+        "https://healthterminologies.gov.au/fhir/StructureDefinition/general-concept-map-3"));
     meta.setProfile(profile);
     conceptMap.setMeta(meta);
     Narrative text = new Narrative();
@@ -100,7 +100,7 @@ public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
       for (String unitCode : entry.getUnitCodes()) {
         ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
         target.setCode(unitCode);
-        target.setEquivalence(Enumerations.ConceptMapEquivalence.RELATEDTO);
+        target.setEquivalence(RELATEDTO);
         element.getTarget().add(target);
       }
       group.getElement().add(element);
@@ -124,7 +124,7 @@ public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
       element.setCode(entry.getCode());
       TargetElementComponent target = new TargetElementComponent();
       target.setCode(entry.getCombiningResultsFlag().getCode());
-      target.setEquivalence(ConceptMapEquivalence.RELATEDTO);
+      target.setEquivalence(RELATEDTO);
       element.getTarget().add(target);
       group.getElement().add(element);
     }

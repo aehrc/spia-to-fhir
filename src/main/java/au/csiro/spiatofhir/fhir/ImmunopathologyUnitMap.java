@@ -21,29 +21,34 @@ import au.csiro.spiatofhir.spia.Refset;
 import au.csiro.spiatofhir.ucum.Ucum;
 import au.csiro.spiatofhir.utils.Strings;
 import java.util.Date;
-import org.hl7.fhir.dstu3.model.ConceptMap;
-import org.hl7.fhir.dstu3.model.Identifier;
-import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.dstu3.model.UriType;
+import org.hl7.fhir.r4.model.ConceptMap;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.UriType;
 
 /**
  * @author John Grimes
  */
 public class ImmunopathologyUnitMap extends SpiaFhirConceptMap {
 
+  private static final String NAME = "spia-immunopathology-unit-map";
+  private static final String VERSION = "2.0.0";
+  public static final String URL = "https://www.rcpa.edu.au/fhir/ConceptMap/" + NAME + "-" + Strings
+      .majorVersionFromSemVer(VERSION);
+  private static final String OID = "1.2.36.1.2001.1004.300.100.1010";
+
   @Override
   public Resource transform(Refset refset, Date publicationDate) {
     ConceptMap conceptMap = new ConceptMap();
-    conceptMap.setVersion("1.1.0");
-    conceptMap.setId(
-        "spia-immunopathology-unit-map-" + Strings.majorVersionFromSemVer(conceptMap.getVersion()));
-    conceptMap.setUrl("https://www.rcpa.edu.au/fhir/ConceptMap/" + conceptMap.getId());
+    conceptMap.setVersion(VERSION);
+    conceptMap.setId(NAME + "-" + Strings.majorVersionFromSemVer(VERSION));
+    conceptMap.setUrl(URL);
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
-    oid.setValue("urn:oid:1.2.36.1.2001.1004.300.100.1010");
+    oid.setValue("urn:oid:" + OID);
     conceptMap.setIdentifier(oid);
     conceptMap.setTitle("RCPA - SPIA Immunopathology Unit Map");
-    conceptMap.setName("spia-immunopathology-unit-map");
+    conceptMap.setName(NAME);
     conceptMap.setDescription(
         "Map between the SPIA Immunopathology Reference Set (v3.1) and the corresponding RCPA "
             + "preferred units (v1.1) for each code.");
@@ -52,10 +57,8 @@ public class ImmunopathologyUnitMap extends SpiaFhirConceptMap {
             "Set.");
     conceptMap.setDate(publicationDate);
     SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
-    conceptMap.setSource(
-        new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-immunopathology-refset-1"));
-    conceptMap.setTarget(
-        new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));
+    conceptMap.setSource(new UriType(ImmunopathologyValueSet.URL));
+    conceptMap.setTarget(new UriType(PreferredUnitsValueSet.URL));
     ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap
         .buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());
     group.setSource(Loinc.SYSTEM_URI);

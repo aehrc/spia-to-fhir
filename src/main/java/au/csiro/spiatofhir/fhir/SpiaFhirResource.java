@@ -18,7 +18,7 @@ package au.csiro.spiatofhir.fhir;
 
 import au.csiro.spiatofhir.spia.Refset;
 import java.util.Date;
-import org.hl7.fhir.dstu3.model.Resource;
+import org.hl7.fhir.r4.model.Resource;
 
 /**
  * @author John Grimes

@@ -22,30 +22,35 @@ import au.csiro.spiatofhir.utils.Strings;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.hl7.fhir.dstu3.model.Identifier;
-import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.dstu3.model.ValueSet;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.ValueSet;
 
 /**
  * @author John Grimes
  */
 public class PreferredUnitsValueSet extends SpiaFhirValueSet {
 
+  private static final String NAME = "spia-preferred-units-refset";
+  private static final String VERSION = "3.0.0";
+  public static final String URL = "https://www.rcpa.edu.au/fhir/ValueSet/" + NAME + "-" + Strings
+      .majorVersionFromSemVer(VERSION);
+  private static final String OID = "1.2.36.1.2001.1004.300.100.1011";
+
   @Override
   public Resource transform(Refset refset, Date publicationDate) {
     ValueSet valueSet = new ValueSet();
-    valueSet.setVersion("2.0.0");
-    valueSet.setId(
-        "spia-preferred-units-refset-" + Strings.majorVersionFromSemVer(valueSet.getVersion()));
-    valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/" + valueSet.getId());
+    valueSet.setVersion(VERSION);
+    valueSet.setId(NAME + "-" + Strings.majorVersionFromSemVer(VERSION));
+    valueSet.setUrl(URL);
     List<Identifier> identifier = new ArrayList<>();
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
-    oid.setValue("urn:oid:1.2.36.1.2001.1004.300.100.1011");
+    oid.setValue("urn:oid:" + OID);
     identifier.add(oid);
     valueSet.setIdentifier(identifier);
     valueSet.setTitle("RCPA - SPIA Preferred Units Reference Set");
-    valueSet.setName("spia-preferred-units-refset");
+    valueSet.setName(NAME);
     valueSet.setDescription("A set of preferred units of measure for use within pathology "
         + "reporting in Australia, based on the SPIA Preferred Units Reference Set (v1.1).");
     valueSet.setDate(publicationDate);
