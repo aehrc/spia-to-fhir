@@ -18,7 +18,7 @@ The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing 
 10. Immunopathology reporting reference set (LOINC ValueSet)
 11. Immunopathology unit map (ConceptMap)
 12. Preferred unit reference set (UCUM ValueSet)
-13. SPIA designation type (CodeSystem)
+13. SPIA combining result flag (CodeSystem)
 
 ![Overview of outputs](./overview.png)
 
