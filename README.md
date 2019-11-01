@@ -19,7 +19,8 @@ The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing 
 11. Immunopathology unit map (ConceptMap)
 12. Preferred unit reference set (UCUM ValueSet)
 13. SPIA designation type (CodeSystem)
-14. SPIA combining result flag (CodeSystem)
+
+![Overview of outputs](./overview.png)
 
 A FHIR terminology server that contains SNOMED CT and LOINC is required for the build process, as it is used to validate the content within the source files.
 
