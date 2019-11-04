@@ -14,35 +14,25 @@
  * limitations under the License.
  */
 
-package au.csiro.spiatofhir.spia;
+package au.csiro.spiatofhir.utils;
 
 /**
  * @author John Grimes
  */
-public class ChemicalPathologyRefsetEntry extends LoincRefsetEntry {
+public abstract class Strings {
 
-  private CombiningResultsFlag combiningResultsFlag;
-
-  public CombiningResultsFlag getCombiningResultsFlag() {
-    return combiningResultsFlag;
+  /**
+   * This trims whitespace from strings, including non-breaking spaces.
+   */
+  public static String trim(String subject) {
+    return subject.replace('\u00A0', ' ').trim();
   }
 
-  public void setCombiningResultsFlag(CombiningResultsFlag combiningResultsFlag) {
-    this.combiningResultsFlag = combiningResultsFlag;
-  }
-
-  public enum CombiningResultsFlag {
-    RED("red"), GREEN("green"), ORANGE("orange");
-
-    private final String code;
-
-    CombiningResultsFlag(String code) {
-      this.code = code;
-    }
-
-    public String getCode() {
-      return code;
-    }
+  /**
+   * This retrieves the major component from a semantic version number string.
+   */
+  public static String majorVersionFromSemVer(String semVer) {
+    return semVer.split("\\.")[0];
   }
 
 }

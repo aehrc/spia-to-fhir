@@ -1,6 +1,6 @@
 # SPIA to FHIR
 
-A [Maven](https://maven.apache.org/) plugin for converting terminology from version 3 of the [Standards for Pathology Informatics in Australia (SPIA)](https://test.rcpa.edu.au/Library/Practising-Pathology/PTIS/APUTS-Downloads) into a set of [FHIR STU3](https://hl7.org/fhir/STU3/) terminology resources.
+A [Maven](https://maven.apache.org/) plugin for converting terminology from version 3.1 of the [Standards for Pathology Informatics in Australia (SPIA)](https://test.rcpa.edu.au/Library/Practising-Pathology/PTIS/APUTS-Downloads) into a set of [FHIR STU3](https://hl7.org/fhir/STU3/) terminology resources.
 
 The input is the [ZIP archive](https://www.healthterminologies.gov.au/access?content=rcpadownload) distributed on the National Clinical Terminology Service web site.
 
@@ -18,8 +18,9 @@ The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing 
 10. Immunopathology reporting reference set (LOINC ValueSet)
 11. Immunopathology unit map (ConceptMap)
 12. Preferred unit reference set (UCUM ValueSet)
-13. SPIA designation type (CodeSystem)
-14. SPIA combining result flag (CodeSystem)
+13. SPIA combining result flag (CodeSystem)
+
+![Overview of outputs](./overview.png)
 
 ![Overview of outputs](./overview.png)
 

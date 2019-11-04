@@ -20,6 +20,7 @@ import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.EMAIL;
 import static org.hl7.fhir.dstu3.model.Enumerations.PublicationStatus.DRAFT;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
+import au.csiro.spiatofhir.snomed.SnomedCt;
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import au.csiro.spiatofhir.utils.Markdown;
 import java.util.ArrayList;
@@ -29,9 +30,11 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
 /**
+ * Common functionality relating to the creation of FHIR ValueSets from the SPIA reference sets.
+ *
  * @author John Grimes
  */
-public interface SpiaFhirValueSet {
+public abstract class SpiaFhirValueSet extends SpiaFhirResource {
 
   /**
    * Populates the elements that are common to all ValueSets.
@@ -93,17 +96,15 @@ public interface SpiaFhirValueSet {
         includeEntry.setSystem(system);
         ValueSet.ConceptReferenceComponent conceptEntry = new ValueSet.ConceptReferenceComponent();
         conceptEntry.setCode(entry.getCode());
+        // RCPA preferred term is used as the display term within the ValueSet definition.
+        // See: https://www.hl7.org/fhir/STU3/valueset-definitions.html#ValueSet.compose.include.concept.display
+        conceptEntry.setDisplay(entry.getRcpaPreferredTerm());
 
-        // RCPA preferred terms and synonyms are represented using designations, which are identified using
-        // codes from the CodeSystem included in the Bundle.
-        if (entry.getRcpaPreferredTerm() != null || !entry.getRcpaSynonyms().isEmpty()) {
-          List<ValueSet.ConceptReferenceDesignationComponent> designation = new ArrayList<>();
-          if (entry.getRcpaPreferredTerm() != null) {
-            designation.add(buildPreferredTermDesignation(entry));
-          }
-          if (entry.getRcpaSynonyms() != null && !entry.getRcpaSynonyms().isEmpty()) {
-            designation.addAll(buildSynonymDesignations(entry));
-          }
+        // RCPA synonyms are added as designations, coded with the SNOMED code 900000000000013009|Synonym.
+        // See: https://www.hl7.org/fhir/STU3/valueset-definitions.html#ValueSet.compose.include.concept.designation
+        if (!entry.getRcpaSynonyms().isEmpty()) {
+          List<ValueSet.ConceptReferenceDesignationComponent> designation = new ArrayList<>(
+              buildSynonymDesignations(entry));
           conceptEntry.setDesignation(designation);
         }
         concept.add(conceptEntry);
@@ -117,23 +118,7 @@ public interface SpiaFhirValueSet {
   }
 
   /**
-   * Builds a designation element for an RCPA preferred term.
-   */
-  static ValueSet.ConceptReferenceDesignationComponent buildPreferredTermDesignation(
-      RefsetEntry entry) {
-    ValueSet.ConceptReferenceDesignationComponent designationEntry =
-        new ValueSet.ConceptReferenceDesignationComponent();
-    designationEntry.setValue(entry.getRcpaPreferredTerm());
-    Coding designationUse =
-        new Coding("https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type",
-            "preferred-term",
-            "RCPA Preferred Term");
-    designationEntry.setUse(designationUse);
-    return designationEntry;
-  }
-
-  /**
-   * Builds a designation element for an RCPA synonym.
+   * Builds a designation element for a synonym.
    */
   static List<ValueSet.ConceptReferenceDesignationComponent> buildSynonymDesignations(
       RefsetEntry entry) {
@@ -143,15 +128,13 @@ public interface SpiaFhirValueSet {
           new ValueSet.ConceptReferenceDesignationComponent();
       designationEntry.setValue(rcpaSynonym);
       Coding designationUse = new Coding(
-          "https://www.rcpa.edu.au/fhir/CodeSystem/spia-designation-type",
-          "synonym",
-          "RCPA Synonym");
+          SnomedCt.SYSTEM_URI,
+          "900000000000013009",
+          "Synonym");
       designationEntry.setUse(designationUse);
       designationEntries.add(designationEntry);
     }
     return designationEntries;
   }
-
-  ValueSet getValueSet();
 
 }

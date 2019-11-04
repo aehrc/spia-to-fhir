@@ -16,19 +16,68 @@
 
 package au.csiro.spiatofhir.spia;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Represents the data captured from each entry of a SPIA reference set. Not all fields are
+ * applicable to the entries of all reference sets.
+ *
  * @author John Grimes
  */
-public interface RefsetEntry {
+public class RefsetEntry {
 
-  String getNativeDisplay();
+  private String rcpaPreferredTerm;
+  private final Set<String> rcpaSynonyms = new HashSet<>();
+  private final Set<String> unitCodes = new HashSet<>();
+  private String code;
+  private CombiningResultsFlag combiningResultsFlag;
 
-  String getRcpaPreferredTerm();
+  public String getRcpaPreferredTerm() {
+    return rcpaPreferredTerm;
+  }
 
-  Set<String> getRcpaSynonyms();
+  public void setRcpaPreferredTerm(String rcpaPreferredTerm) {
+    this.rcpaPreferredTerm = rcpaPreferredTerm;
+  }
 
-  String getCode();
+  public Set<String> getRcpaSynonyms() {
+    return rcpaSynonyms;
+  }
+
+  public Set<String> getUnitCodes() {
+    return unitCodes;
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
+
+  public CombiningResultsFlag getCombiningResultsFlag() {
+    return combiningResultsFlag;
+  }
+
+  public void setCombiningResultsFlag(
+      CombiningResultsFlag combiningResultsFlag) {
+    this.combiningResultsFlag = combiningResultsFlag;
+  }
+
+  public enum CombiningResultsFlag {
+    RED("red"), GREEN("green"), ORANGE("orange");
+
+    private final String code;
+
+    CombiningResultsFlag(String code) {
+      this.code = code;
+    }
+
+    public String getCode() {
+      return code;
+    }
+  }
 
 }

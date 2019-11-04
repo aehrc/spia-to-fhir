@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package au.csiro.spiatofhir.spia;
-
-import static au.csiro.spiatofhir.spia.ValidationException.messageWithCoords;
+package au.csiro.spiatofhir.snomed;
 
 /**
- * Thrown when encountering blank cells where codes were expected within the source data.
- *
  * @author John Grimes
  */
-public class BlankCodeException extends Exception {
+public abstract class SnomedCt {
 
-  public BlankCodeException(String message, int rowIndex, int columnIndex) {
-    super(messageWithCoords(message, rowIndex, columnIndex));
-  }
+  public static final String SYSTEM_URI = "http://snomed.info/sct";
 
 }

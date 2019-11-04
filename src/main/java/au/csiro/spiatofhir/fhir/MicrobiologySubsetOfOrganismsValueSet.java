@@ -16,33 +16,28 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import au.csiro.spiatofhir.spia.HasRefsetEntries;
+import au.csiro.spiatofhir.snomed.SnomedCt;
+import au.csiro.spiatofhir.spia.Refset;
+import au.csiro.spiatofhir.utils.Strings;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.hl7.fhir.dstu3.model.Identifier;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ValueSet;
 
 /**
  * @author John Grimes
  */
-public class MicrobiologySubsetOfOrganismsValueSet implements SpiaFhirValueSet {
+public class MicrobiologySubsetOfOrganismsValueSet extends SpiaFhirValueSet {
 
-  private final HasRefsetEntries refset;
-  private final Date publicationDate;
-  private ValueSet valueSet;
-
-  public MicrobiologySubsetOfOrganismsValueSet(HasRefsetEntries refset, Date publicationDate) {
-    this.refset = refset;
-    this.publicationDate = publicationDate;
-    buildValueSet();
-  }
-
-  private void buildValueSet() {
-    valueSet = new ValueSet();
-    valueSet.setId("spia-microbiology-organisms-refset-1");
-    valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/spia-microbiology-organisms-refset-1");
-    valueSet.setVersion("1.0.0");
+  @Override
+  public Resource transform(Refset refset, Date publicationDate) {
+    ValueSet valueSet = new ValueSet();
+    valueSet.setVersion("2.0.0");
+    valueSet.setId("spia-microbiology-organisms-refset-" + Strings
+        .majorVersionFromSemVer(valueSet.getVersion()));
+    valueSet.setUrl("https://www.rcpa.edu.au/fhir/ValueSet/" + valueSet.getId());
     List<Identifier> identifier = new ArrayList<>();
     Identifier oid = new Identifier();
     oid.setSystem("urn:ietf:rfc:3986");
@@ -53,17 +48,13 @@ public class MicrobiologySubsetOfOrganismsValueSet implements SpiaFhirValueSet {
     valueSet.setName("spia-microbiology-organisms-refset");
     valueSet.setDescription("Standard set of organism codes for use in reporting pathology "
         + "results in Australia, based on the SPIA Microbiology Subset of Organisms Reference "
-        + "Set (v3.0).");
+        + "Set (v3.1).");
     valueSet.setDate(publicationDate);
     SpiaFhirValueSet.addCommonElementsToValueSet(valueSet);
     ValueSet.ValueSetComposeComponent compose = SpiaFhirValueSet
-        .buildComposeFromEntries(refset.getRefsetEntries(),
-            "http://snomed.info/sct");
+        .buildComposeFromEntries(refset.getRefsetEntries(), SnomedCt.SYSTEM_URI);
     valueSet.setCompose(compose);
-  }
 
-  @Override
-  public ValueSet getValueSet() {
     return valueSet;
   }
 
