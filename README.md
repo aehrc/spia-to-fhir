@@ -1,10 +1,10 @@
 # SPIA to FHIR
 
-A [Maven](https://maven.apache.org/) plugin for converting terminology from version 3.1 of the [Standards for Pathology Informatics in Australia (SPIA)](https://test.rcpa.edu.au/Library/Practising-Pathology/PTIS/APUTS-Downloads) into a set of [FHIR STU3](https://hl7.org/fhir/STU3/) terminology resources.
+A [Maven](https://maven.apache.org/) plugin for converting terminology from version 3.1 of the [Standards for Pathology Informatics in Australia (SPIA)](https://test.rcpa.edu.au/Library/Practising-Pathology/PTIS/APUTS-Downloads) into a set of [FHIR R4](https://hl7.org/fhir/R4/) terminology resources.
 
 The input is the [ZIP archive](https://www.healthterminologies.gov.au/access?content=rcpadownload) distributed on the National Clinical Terminology Service web site.
 
-The output is a FHIR [Bundle](https://hl7.org/fhir/STU3/bundle.html) containing the following resources:
+The output is a FHIR [Bundle](https://hl7.org/fhir/R4/bundle.html) containing the following resources:
 
 1. Requesting reference set (SNOMED CT ValueSet)
 2. Chemical pathology reporting reference set (LOINC ValueSet)
