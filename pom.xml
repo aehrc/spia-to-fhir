@@ -47,7 +47,7 @@
   </developers>
 
   <properties>
-    <hapiFhirVersion>4.0.0</hapiFhirVersion>
+    <hapiFhirVersion>5.0.2</hapiFhirVersion>
     <log4jVersion>2.11.2</log4jVersion>
     <slf4jVersion>1.7.26</slf4jVersion>
     <poiVersion>4.1.0</poiVersion>
