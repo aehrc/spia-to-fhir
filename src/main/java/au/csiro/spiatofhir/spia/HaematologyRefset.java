@@ -37,7 +37,7 @@ public class HaematologyRefset extends Refset {
       "Component", "Property", "Timing", "System", "Scale", "Method", "LongName", "Version",
       "History"};
 
-  private static final String SHEET_NAME = "Haematology Terms v3.1";
+  private static final String SHEET_NAME = "Haem Term Ref Set v3.1";
 
   public HaematologyRefset(Workbook workbook,
       TerminologyClient terminologyClient, UcumService ucumService) throws ValidationException {
