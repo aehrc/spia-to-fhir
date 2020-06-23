@@ -172,7 +172,9 @@
           </execution>
         </executions>
         <configuration>
-          <additionalOptions>-quiet</additionalOptions>
+          <additionalOptions>
+            <additionalJOption>-quiet</additionalJOption>
+          </additionalOptions>
         </configuration>
       </plugin>
       <plugin>
@@ -184,13 +186,15 @@
         </configuration>
         <executions>
           <execution>
-            <id>mojo-descriptor</id>
+            <id>default-descriptor</id>
+            <phase>process-classes</phase>
             <goals>
               <goal>descriptor</goal>
             </goals>
           </execution>
           <execution>
-            <id>help-goal</id>
+            <id>help-descriptor</id>
+            <phase>process-classes</phase>
             <goals>
               <goal>helpmojo</goal>
             </goals>
