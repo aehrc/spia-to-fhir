@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Australian e-Health Research Centre, CSIRO
+ * Copyright 2020 Australian e-Health Research Centre, CSIRO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,54 +16,22 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import au.csiro.spiatofhir.loinc.Loinc;
-import au.csiro.spiatofhir.spia.Refset;
-import au.csiro.spiatofhir.ucum.Ucum;
 import au.csiro.spiatofhir.utils.Strings;
-import java.util.Date;
-import org.hl7.fhir.r4.model.ConceptMap;
-import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r4.model.UriType;
 
 /**
  * @author John Grimes
  */
-public class MicrobiologySerologyMolecularUnitMap extends SpiaFhirConceptMap {
+public abstract class MicrobiologySerologyMolecularUnitMap {
 
-  private static final String NAME = "spia-microbiology-unit-map";
-  private static final String VERSION = "2.0.0";
-  public static final String URL = "https://www.rcpa.edu.au/fhir/ConceptMap/" + NAME + "-" + Strings
-      .majorVersionFromSemVer(VERSION);
-  private static final String OID = "1.2.36.1.2001.1004.300.100.1005";
-
-  @Override
-  public Resource transform(Refset refset, Date publicationDate) {
-    ConceptMap conceptMap = new ConceptMap();
-    conceptMap.setVersion(VERSION);
-    conceptMap.setId(NAME + "-" + Strings.majorVersionFromSemVer(VERSION));
-    conceptMap.setUrl(URL);
-    Identifier oid = new Identifier();
-    oid.setSystem("urn:ietf:rfc:3986");
-    oid.setValue("urn:oid:" + OID);
-    conceptMap.setIdentifier(oid);
-    conceptMap.setTitle("RCPA - SPIA Microbiology Serology Molecular Unit Map");
-    conceptMap.setName(NAME);
-    conceptMap.setDescription("Map between the SPIA Microbiology Reference Set (v3.1) and the "
-        + "corresponding RCPA preferred units (v1.1) for each code.");
-    conceptMap.setPurpose("Resolving RCPA specified units for members of the SPIA Microbiology "
-        + "Serology Molecular Reference Set.");
-    conceptMap.setDate(publicationDate);
-    SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
-    conceptMap.setSource(new UriType(MicrobiologySerologyMolecularValueSet.URL));
-    conceptMap.setTarget(new UriType(PreferredUnitsValueSet.URL));
-    ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap
-        .buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());
-    group.setSource(Loinc.SYSTEM_URI);
-    group.setTarget(Ucum.SYSTEM_URI);
-    conceptMap.getGroup().add(group);
-
-    return conceptMap;
-  }
-
+  public static final String NAME = "spia-microbiology-unit-map";
+  public static final String ID = NAME + "-" + Strings.majorVersionFromSemVer(FhirResource.VERSION);
+  public static final String URL = "https://www.rcpa.edu.au/fhir/ConceptMap/" + ID;
+  public static final String OID = "1.2.36.1.2001.1004.300.100.1005";
+  public static final String TITLE = "RCPA - SPIA Microbiology Serology Molecular Unit Map";
+  public static final String DESCRIPTION =
+      "Map between the SPIA Microbiology Reference Set (v3.1) and the "
+          + "corresponding RCPA preferred units (v1.1) for each code.";
+  public static final String PURPOSE =
+      "Resolving RCPA specified units for members of the SPIA Microbiology "
+          + "Serology Molecular Reference Set.";
 }

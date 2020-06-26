@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Australian e-Health Research Centre, CSIRO
+ * Copyright 2020 Australian e-Health Research Centre, CSIRO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-package au.csiro.spiatofhir.fhir;
+package au.csiro.spiatofhir.fhir.r4;
 
-import static org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.EMAIL;
 import static org.hl7.fhir.r4.model.Enumerations.PublicationStatus.DRAFT;
 import static org.hl7.fhir.r4.model.Narrative.NarrativeStatus.GENERATED;
 
+import au.csiro.spiatofhir.fhir.FhirResource;
+import au.csiro.spiatofhir.fhir.SpiaValueSet;
 import au.csiro.spiatofhir.snomed.SnomedCt;
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import au.csiro.spiatofhir.utils.Markdown;
 import java.util.ArrayList;
 import java.util.List;
-import org.hl7.fhir.r4.model.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import org.hl7.fhir.r4.model.CanonicalType;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.ContactDetail;
+import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.r4.model.Meta;
+import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.ValueSet;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
@@ -34,7 +45,8 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
  *
  * @author John Grimes
  */
-public abstract class SpiaFhirValueSet extends SpiaFhirResource {
+@Getter(AccessLevel.PROTECTED)
+public abstract class R4ValueSet {
 
   /**
    * Populates the elements that are common to all ValueSets.
@@ -42,9 +54,8 @@ public abstract class SpiaFhirValueSet extends SpiaFhirResource {
   static void addCommonElementsToValueSet(ValueSet valueSet) {
     Meta meta = new Meta();
     List<CanonicalType> profile = new ArrayList<>();
-    profile.add(new CanonicalType("http://hl7.org/fhir/StructureDefinition/shareablevalueset"));
-    profile.add(new CanonicalType(
-        "https://healthterminologies.gov.au/fhir/StructureDefinition/composed-value-set-3"));
+    profile.add(new CanonicalType(SpiaValueSet.SHAREABLE_PROFILE_URL));
+    profile.add(new CanonicalType(SpiaValueSet.NCTS_PROFILE_URL));
     meta.setProfile(profile);
     valueSet.setMeta(meta);
     Narrative text = new Narrative();
@@ -57,25 +68,22 @@ public abstract class SpiaFhirValueSet extends SpiaFhirResource {
     valueSet.setText(text);
     valueSet.setStatus(DRAFT);
     valueSet.setExperimental(true);
-    valueSet.setPublisher("Australian Digital Health Agency");
-    valueSet.setCopyright(
-        "Copyright © The Royal College of Pathologists of Australasia - All rights reserved. "
-            + "This content is licensed under a Creative Commons Attribution 4.0 International "
-            + "License. See https://creativecommons.org/licenses/by/4.0/.");
+    valueSet.setPublisher(FhirResource.PUBLISHER);
+    valueSet.setCopyright(FhirResource.COPYRIGHT);
     List<ContactDetail> contact = new ArrayList<>();
     ContactDetail contactDetail = new ContactDetail();
     ContactPoint contactPoint = new ContactPoint();
-    contactPoint.setSystem(EMAIL);
-    contactPoint.setValue("help@digitalhealth.gov.au");
+    contactPoint.setSystem(ContactPointSystem.EMAIL);
+    contactPoint.setValue(FhirResource.EMAIL);
     contactDetail.addTelecom(contactPoint);
     contact.add(contactDetail);
     valueSet.setContact(contact);
     List<CodeableConcept> jurisdiction = new ArrayList<>();
     CodeableConcept jurisdictionCodeableConcept = new CodeableConcept();
     Coding jurisdictionCoding = new Coding();
-    jurisdictionCoding.setSystem("urn:iso:std:iso:3166");
-    jurisdictionCoding.setCode("AU");
-    jurisdictionCoding.setDisplay("Australia");
+    jurisdictionCoding.setSystem(FhirResource.JURISDICTION_SYSTEM);
+    jurisdictionCoding.setCode(FhirResource.JURISDICTION_CODE);
+    jurisdictionCoding.setDisplay(FhirResource.JURISDICTION_DISPLAY);
     jurisdictionCodeableConcept.addCoding(jurisdictionCoding);
     jurisdiction.add(jurisdictionCodeableConcept);
     valueSet.setJurisdiction(jurisdiction);
@@ -127,10 +135,8 @@ public abstract class SpiaFhirValueSet extends SpiaFhirResource {
       ValueSet.ConceptReferenceDesignationComponent designationEntry =
           new ValueSet.ConceptReferenceDesignationComponent();
       designationEntry.setValue(rcpaSynonym);
-      Coding designationUse = new Coding(
-          SnomedCt.SYSTEM_URI,
-          "900000000000013009",
-          "Synonym");
+      Coding designationUse = new Coding(SnomedCt.SYSTEM_URI, SpiaValueSet.SYNONYM_CODE,
+          SpiaValueSet.SYNONYM_DISPLAY);
       designationEntry.setUse(designationUse);
       designationEntries.add(designationEntry);
     }

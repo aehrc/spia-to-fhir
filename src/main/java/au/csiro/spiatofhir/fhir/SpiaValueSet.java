@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Australian e-Health Research Centre, CSIRO
+ * Copyright 2020 Australian e-Health Research Centre, CSIRO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,14 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import au.csiro.spiatofhir.spia.Refset;
-import java.util.Date;
-import org.hl7.fhir.r4.model.Resource;
-
 /**
  * @author John Grimes
  */
-public abstract class SpiaFhirResource {
+public abstract class SpiaValueSet {
 
-  public Resource transform(Refset refset, Date publicationDate) {
-    return null;
-  }
+  public static final String NCTS_PROFILE_URL = "https://healthterminologies.gov.au/fhir/StructureDefinition/composed-value-set-3";
+  public static final String SHAREABLE_PROFILE_URL = "http://hl7.org/fhir/StructureDefinition/shareablevalueset";
+  public static final String SYNONYM_CODE = "900000000000013009";
+  public static final String SYNONYM_DISPLAY = "Synonym";
 
 }

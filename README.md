@@ -30,7 +30,7 @@ You can execute the plugin with the following commands:
 mvn install
 
 mvn -DinputPath=[zip file] \
-    -DoutputPath=[bundle JSON file] \
+    -DoutputDirectory=[bundle JSON file] \
     -DterminologyServerUrl=[FHIR terminology server endpoint] \
     -DpublicationDate=[publication date] \
     au.csiro:spia-to-fhir-maven-plugin:transform
@@ -39,6 +39,6 @@ mvn -DinputPath=[zip file] \
 Here is a description of the input parameters for the plugin:
 
 * `inputPath`: Path to the ZIP archive used to distribute the SPIA spreadsheets.
-* `outputPath`: Path where a FHIR Bundle will be created containing the transformed resources.
+* `outputDirectory`: Path where a FHIR Bundle will be created containing the transformed resources.
 * `terminologyServerUrl`: Endpoint of a FHIR terminology server which contains SNOMED CT and LOINC.
 * `publicationDate`: Date (in the format `yyyy-MM-dd`) used to populate the `ValueSet.date` and `ConceptMap.date` elements.

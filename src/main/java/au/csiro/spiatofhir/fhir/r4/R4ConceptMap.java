@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Australian e-Health Research Centre, CSIRO
+ * Copyright 2020 Australian e-Health Research Centre, CSIRO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package au.csiro.spiatofhir.fhir;
+package au.csiro.spiatofhir.fhir.r4;
 
-import static org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.EMAIL;
-import static org.hl7.fhir.r4.model.Enumerations.ConceptMapEquivalence.RELATEDTO;
-import static org.hl7.fhir.r4.model.Enumerations.PublicationStatus.DRAFT;
-import static org.hl7.fhir.r4.model.Narrative.NarrativeStatus.GENERATED;
-
+import au.csiro.spiatofhir.fhir.FhirResource;
+import au.csiro.spiatofhir.fhir.SpiaConceptMap;
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import au.csiro.spiatofhir.utils.Markdown;
 import java.util.ArrayList;
 import java.util.List;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.CanonicalType;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.ConceptMap;
 import org.hl7.fhir.r4.model.ConceptMap.ConceptMapGroupComponent;
 import org.hl7.fhir.r4.model.ConceptMap.SourceElementComponent;
 import org.hl7.fhir.r4.model.ConceptMap.TargetElementComponent;
+import org.hl7.fhir.r4.model.ContactDetail;
+import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.r4.model.Enumerations.ConceptMapEquivalence;
+import org.hl7.fhir.r4.model.Enumerations.PublicationStatus;
+import org.hl7.fhir.r4.model.Meta;
+import org.hl7.fhir.r4.model.Narrative;
+import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
@@ -37,7 +45,7 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
  *
  * @author John Grimes
  */
-public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
+public abstract class R4ConceptMap {
 
   /**
    * Populates the elements that are common to all ConceptMaps.
@@ -45,39 +53,35 @@ public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
   static void addCommonElementsToConceptMap(ConceptMap conceptMap) {
     Meta meta = new Meta();
     List<CanonicalType> profile = new ArrayList<>();
-    profile.add(new CanonicalType(
-        "https://healthterminologies.gov.au/fhir/StructureDefinition/general-concept-map-3"));
+    profile.add(new CanonicalType(SpiaConceptMap.NCTS_PROFILE_URL));
     meta.setProfile(profile);
     conceptMap.setMeta(meta);
     Narrative text = new Narrative();
-    text.setStatus(GENERATED);
+    text.setStatus(NarrativeStatus.GENERATED);
     XhtmlNode div = new XhtmlNode(NodeType.Element, "div");
     div.setValueAsString(
         "<div><h1>" + conceptMap.getTitle() + "</h1>" + Markdown.toHtml(conceptMap.getDescription())
             + "</div>");
     text.setDiv(div);
     conceptMap.setText(text);
-    conceptMap.setStatus(DRAFT);
+    conceptMap.setStatus(PublicationStatus.DRAFT);
     conceptMap.setExperimental(true);
-    conceptMap.setPublisher("Australian Digital Health Agency");
-    conceptMap.setCopyright(
-        "Copyright © The Royal College of Pathologists of Australasia - All rights reserved. "
-            + "This content is licensed under a Creative Commons Attribution 4.0 International "
-            + "License. See https://creativecommons.org/licenses/by/4.0/.");
+    conceptMap.setPublisher(FhirResource.PUBLISHER);
+    conceptMap.setCopyright(FhirResource.COPYRIGHT);
     List<ContactDetail> contact = new ArrayList<>();
     ContactDetail contactDetail = new ContactDetail();
     ContactPoint contactPoint = new ContactPoint();
-    contactPoint.setSystem(EMAIL);
-    contactPoint.setValue("help@digitalhealth.gov.au");
+    contactPoint.setSystem(ContactPointSystem.EMAIL);
+    contactPoint.setValue(FhirResource.EMAIL);
     contactDetail.addTelecom(contactPoint);
     contact.add(contactDetail);
     conceptMap.setContact(contact);
     List<CodeableConcept> jurisdiction = new ArrayList<>();
     CodeableConcept jurisdictionCodeableConcept = new CodeableConcept();
     Coding jurisdictionCoding = new Coding();
-    jurisdictionCoding.setSystem("urn:iso:std:iso:3166");
-    jurisdictionCoding.setCode("AU");
-    jurisdictionCoding.setDisplay("Australia");
+    jurisdictionCoding.setSystem(FhirResource.JURISDICTION_SYSTEM);
+    jurisdictionCoding.setCode(FhirResource.JURISDICTION_CODE);
+    jurisdictionCoding.setDisplay(FhirResource.JURISDICTION_DISPLAY);
     jurisdictionCodeableConcept.addCoding(jurisdictionCoding);
     jurisdiction.add(jurisdictionCodeableConcept);
     conceptMap.setJurisdiction(jurisdiction);
@@ -100,7 +104,7 @@ public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
       for (String unitCode : entry.getUnitCodes()) {
         ConceptMap.TargetElementComponent target = new ConceptMap.TargetElementComponent();
         target.setCode(unitCode);
-        target.setEquivalence(RELATEDTO);
+        target.setEquivalence(ConceptMapEquivalence.RELATEDTO);
         element.getTarget().add(target);
       }
       group.getElement().add(element);
@@ -124,7 +128,7 @@ public abstract class SpiaFhirConceptMap extends SpiaFhirResource {
       element.setCode(entry.getCode());
       TargetElementComponent target = new TargetElementComponent();
       target.setCode(entry.getCombiningResultsFlag().getCode());
-      target.setEquivalence(RELATEDTO);
+      target.setEquivalence(ConceptMapEquivalence.RELATEDTO);
       element.getTarget().add(target);
       group.getElement().add(element);
     }
