@@ -1,6 +1,6 @@
 # SPIA to FHIR
 
-A [Maven](https://maven.apache.org/) plugin for converting terminology from version 3.1 of the [Standards for Pathology Informatics in Australia (SPIA)](https://test.rcpa.edu.au/Library/Practising-Pathology/PTIS/APUTS-Downloads) into a set of [FHIR R4](https://hl7.org/fhir/R4/) terminology resources.
+A [Maven](https://maven.apache.org/) plugin for converting terminology from version 3.1 of the [Standards for Pathology Informatics in Australia (SPIA)](https://test.rcpa.edu.au/Library/Practising-Pathology/PTIS/APUTS-Downloads) into a set of [FHIR STU3](https://hl7.org/fhir/STU3/) and [FHIR R4](https://hl7.org/fhir/R4/) terminology resources.
 
 The input is the [ZIP archive](https://www.healthterminologies.gov.au/access?content=rcpadownload) distributed on the National Clinical Terminology Service web site.
 
@@ -39,6 +39,6 @@ mvn -DinputPath=[zip file] \
 Here is a description of the input parameters for the plugin:
 
 * `inputPath`: Path to the ZIP archive used to distribute the SPIA spreadsheets.
-* `outputDirectory`: Path where a FHIR Bundle will be created containing the transformed resources.
+* `outputDirectory`: Path where the output FHIR Bundles will be created containing the transformed resources (`spia-stu3.Bundle.json` and `spia-r4.Bundle.json`).
 * `terminologyServerUrl`: Endpoint of a FHIR terminology server which contains SNOMED CT and LOINC.
 * `publicationDate`: Date (in the format `yyyy-MM-dd`) used to populate the `ValueSet.date` and `ConceptMap.date` elements.
