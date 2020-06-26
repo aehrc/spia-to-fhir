@@ -17,7 +17,6 @@
 package au.csiro.spiatofhir.fhir.stu3;
 
 import au.csiro.spiatofhir.fhir.FhirResource;
-import au.csiro.spiatofhir.fhir.SpiaConceptMap;
 import au.csiro.spiatofhir.spia.RefsetEntry;
 import au.csiro.spiatofhir.utils.Markdown;
 import java.util.ArrayList;
@@ -48,13 +47,15 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
  */
 public abstract class Stu3ConceptMap {
 
+  public static final String NCTS_PROFILE_URL = "https://healthterminologies.gov.au/fhir/StructureDefinition/general-concept-map-2";
+
   /**
    * Populates the elements that are common to all ConceptMaps.
    */
   static void addCommonElementsToConceptMap(ConceptMap conceptMap) {
     Meta meta = new Meta();
     List<UriType> profile = new ArrayList<>();
-    profile.add(new UriType(SpiaConceptMap.NCTS_PROFILE_URL));
+    profile.add(new UriType(NCTS_PROFILE_URL));
     meta.setProfile(profile);
     conceptMap.setMeta(meta);
     Narrative text = new Narrative();

@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-package au.csiro.spiatofhir.fhir;
+package au.csiro.spiatofhir.fhir.r4;
+
+import au.csiro.spiatofhir.fhir.ResourceValidator;
+import ca.uhn.fhir.context.FhirContext;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author John Grimes
  */
-public abstract class SpiaValueSet {
+public class R4ResourceValidator extends ResourceValidator {
 
-  public static final String SHAREABLE_PROFILE_URL = "http://hl7.org/fhir/StructureDefinition/shareablevalueset";
-  public static final String SYNONYM_CODE = "900000000000013009";
-  public static final String SYNONYM_DISPLAY = "Synonym";
+  private static final List<String> PROFILE_PATHS = Arrays.asList(
+      "/fhir/NCTS-Complete-Code-System-4.0.0.json",
+      "/fhir/NCTS-Composed-Value-Set-4.0.0.json",
+      "/fhir/NCTS-General-Concept-Map-4.0.0.json"
+  );
+
+  public R4ResourceValidator(FhirContext fhirContext) throws IOException {
+    super(fhirContext, PROFILE_PATHS);
+  }
 
 }

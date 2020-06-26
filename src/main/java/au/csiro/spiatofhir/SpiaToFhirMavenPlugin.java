@@ -18,7 +18,9 @@ package au.csiro.spiatofhir;
 
 import au.csiro.spiatofhir.fhir.TerminologyClient;
 import au.csiro.spiatofhir.fhir.r4.R4Bundle;
+import au.csiro.spiatofhir.fhir.r4.R4ResourceValidator;
 import au.csiro.spiatofhir.fhir.stu3.Stu3Bundle;
+import au.csiro.spiatofhir.fhir.stu3.Stu3ResourceValidator;
 import au.csiro.spiatofhir.spia.SpiaDistribution;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
@@ -85,6 +87,7 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
       );
       org.hl7.fhir.dstu3.model.Bundle stu3Bundle = stu3BundleBuilder.getBundle();
       FhirContext stu3Context = FhirContext.forDstu3();
+      new Stu3ResourceValidator(stu3Context).validate(stu3Bundle);
       IParser stu3Parser = stu3Context.newJsonParser();
       String stu3Json = stu3Parser.encodeResourceToString(stu3Bundle);
       String stu3OutputPath = Paths.get(outputDirectory, "/spia-stu3.Bundle.json").toAbsolutePath()
@@ -99,6 +102,7 @@ public class SpiaToFhirMavenPlugin extends AbstractMojo {
           publicationDateFormat.parse(publicationDate)
       );
       org.hl7.fhir.r4.model.Bundle r4Bundle = r4BundleBuilder.getBundle();
+      new R4ResourceValidator(r4Context).validate(r4Bundle);
       IParser r4JsonParser = r4Context.newJsonParser();
       String r4Json = r4JsonParser.encodeResourceToString(r4Bundle);
       String r4OutputPath = Paths.get(outputDirectory, "/spia-r4.Bundle.json").toAbsolutePath()

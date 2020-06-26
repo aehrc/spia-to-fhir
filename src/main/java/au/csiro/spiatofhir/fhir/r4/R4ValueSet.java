@@ -48,6 +48,8 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 @Getter(AccessLevel.PROTECTED)
 public abstract class R4ValueSet {
 
+  public static final String NCTS_PROFILE_URL = "https://healthterminologies.gov.au/fhir/StructureDefinition/composed-value-set-4";
+
   /**
    * Populates the elements that are common to all ValueSets.
    */
@@ -55,7 +57,7 @@ public abstract class R4ValueSet {
     Meta meta = new Meta();
     List<CanonicalType> profile = new ArrayList<>();
     profile.add(new CanonicalType(SpiaValueSet.SHAREABLE_PROFILE_URL));
-    profile.add(new CanonicalType(SpiaValueSet.NCTS_PROFILE_URL));
+    profile.add(new CanonicalType(NCTS_PROFILE_URL));
     meta.setProfile(profile);
     valueSet.setMeta(meta);
     Narrative text = new Narrative();

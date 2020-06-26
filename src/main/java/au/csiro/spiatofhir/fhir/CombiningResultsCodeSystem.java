@@ -31,6 +31,5 @@ public abstract class CombiningResultsCodeSystem {
   public static final String TITLE = "RCPA - SPIA Combining Results Flag";
   public static final String DESCRIPTION = "Codes describing the values for the combining results flag within the SPIA standard.";
   public static final String SHAREABLE_PROFILE_URL = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem";
-  public static final String NCTS_PROFILE_URL = "https://healthterminologies.gov.au/fhir/StructureDefinition/complete-code-system-3";
 
 }

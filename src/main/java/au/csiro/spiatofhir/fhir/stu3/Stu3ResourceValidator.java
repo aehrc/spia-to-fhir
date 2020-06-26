@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-package au.csiro.spiatofhir.fhir;
+package au.csiro.spiatofhir.fhir.stu3;
+
+import au.csiro.spiatofhir.fhir.ResourceValidator;
+import ca.uhn.fhir.context.FhirContext;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author John Grimes
  */
-public abstract class SpiaConceptMap {
+public class Stu3ResourceValidator extends ResourceValidator {
 
-  public static final String NCTS_PROFILE_URL = "https://healthterminologies.gov.au/fhir/StructureDefinition/general-concept-map-3";
+  private static final List<String> PROFILE_PATHS = Arrays.asList(
+      "/fhir/NCTS-Complete-Code-System-2.1.0.json",
+      "/fhir/NCTS-Composed-Value-Set-2.1.0.json",
+      "/fhir/NCTS-General-Concept-Map-2.1.0.json"
+  );
+
+  public Stu3ResourceValidator(FhirContext fhirContext) throws IOException {
+    super(fhirContext, PROFILE_PATHS);
+  }
 
 }

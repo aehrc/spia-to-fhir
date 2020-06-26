@@ -46,6 +46,8 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
  */
 public class Stu3CombiningResultsCodeSystem {
 
+  public static final String NCTS_PROFILE_URL = "https://healthterminologies.gov.au/fhir/StructureDefinition/complete-code-system-2";
+
   private final Date publicationDate;
 
   public Stu3CombiningResultsCodeSystem(Date publicationDate) {
@@ -78,7 +80,7 @@ public class Stu3CombiningResultsCodeSystem {
     Meta meta = new Meta();
     List<UriType> profile = new ArrayList<>();
     profile.add(new UriType(CombiningResultsCodeSystem.SHAREABLE_PROFILE_URL));
-    profile.add(new UriType(CombiningResultsCodeSystem.NCTS_PROFILE_URL));
+    profile.add(new UriType(NCTS_PROFILE_URL));
     meta.setProfile(profile);
     codeSystem.setMeta(meta);
     Narrative text = new Narrative();
