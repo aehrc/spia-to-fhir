@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Australian e-Health Research Centre, CSIRO
+ * Copyright 2020 Australian e-Health Research Centre, CSIRO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,53 +16,23 @@
 
 package au.csiro.spiatofhir.fhir;
 
-import au.csiro.spiatofhir.loinc.Loinc;
-import au.csiro.spiatofhir.spia.Refset;
-import au.csiro.spiatofhir.ucum.Ucum;
 import au.csiro.spiatofhir.utils.Strings;
-import java.util.Date;
-import org.hl7.fhir.dstu3.model.ConceptMap;
-import org.hl7.fhir.dstu3.model.Identifier;
-import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.dstu3.model.UriType;
 
 /**
  * @author John Grimes
  */
-public class ChemicalPathologyUnitMap extends SpiaFhirConceptMap {
+public abstract class ChemicalPathologyUnitMap {
 
-  @Override
-  public Resource transform(Refset refset, Date publicationDate) {
-    ConceptMap conceptMap = new ConceptMap();
-    conceptMap.setVersion("1.1.0");
-    conceptMap.setId("spia-chemical-pathology-unit-map-" + Strings
-        .majorVersionFromSemVer(conceptMap.getVersion()));
-    conceptMap.setUrl("https://www.rcpa.edu.au/fhir/ConceptMap/" + conceptMap.getId());
-    Identifier oid = new Identifier();
-    oid.setSystem("urn:ietf:rfc:3986");
-    oid.setValue("urn:oid:1.2.36.1.2001.1004.300.100.1002");
-    conceptMap.setIdentifier(oid);
-    conceptMap.setTitle("RCPA - SPIA Chemical Pathology Unit Map");
-    conceptMap.setName("spia-chemical-pathology-unit-map");
-    conceptMap.setDescription(
-        "Map between the SPIA Chemical Pathology Reference Set (v3.1) and the corresponding RCPA "
-            + "preferred units (v1.1) for each code.");
-    conceptMap.setPurpose(
-        "Resolving RCPA specified units for members of the SPIA Chemical Pathology Reference " +
-            "Set.");
-    conceptMap.setDate(publicationDate);
-    SpiaFhirConceptMap.addCommonElementsToConceptMap(conceptMap);
-    conceptMap.setSource(
-        new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-chemical-pathology-refset-1"));
-    conceptMap.setTarget(
-        new UriType("https://www.rcpa.edu.au/fhir/ValueSet/spia-preferred-units-refset-1"));
-    ConceptMap.ConceptMapGroupComponent group = SpiaFhirConceptMap
-        .buildPreferredUnitGroupFromEntries(refset.getRefsetEntries());
-    group.setSource(Loinc.SYSTEM_URI);
-    group.setTarget(Ucum.SYSTEM_URI);
-    conceptMap.getGroup().add(group);
-
-    return conceptMap;
-  }
+  public static final String NAME = "spia-chemical-pathology-unit-map";
+  public static final String TITLE = "RCPA - SPIA Chemical Pathology Unit Map";
+  public static final String ID = NAME + "-" + Strings.majorVersionFromSemVer(FhirResource.VERSION);
+  public static final String URL = "https://www.rcpa.edu.au/fhir/ConceptMap/" + ID;
+  public static final String OID = "1.2.36.1.2001.1004.300.100.1002";
+  public static final String DESCRIPTION =
+      "Map between the SPIA Chemical Pathology Reference Set (v3.1) and the corresponding RCPA "
+          + "preferred units (v1.1) for each code.";
+  public static final String PURPOSE =
+      "Resolving RCPA specified units for members of the SPIA Chemical Pathology Reference " +
+          "Set.";
 
 }

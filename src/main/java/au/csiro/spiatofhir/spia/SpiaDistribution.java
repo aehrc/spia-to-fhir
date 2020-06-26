@@ -16,13 +16,6 @@
 
 package au.csiro.spiatofhir.spia;
 
-import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.CHEMICAL;
-import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.HAEMATOLOGY;
-import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.IMMUNOPATHOLOGY;
-import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.MICROBIOLOGY_ORGANISMS;
-import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.MICROBIOLOGY_SEROLOGY_MOLECULAR;
-import static au.csiro.spiatofhir.spia.SpiaDistribution.DistributionEntry.REQUESTING;
-
 import au.csiro.spiatofhir.fhir.TerminologyClient;
 import java.io.File;
 import java.io.IOException;
@@ -53,17 +46,17 @@ public class SpiaDistribution {
   // Map to the files within the distribution that contain each reference set.
   private static final Map<DistributionEntry, String> expectedEntries = new EnumMap<DistributionEntry, String>(
       DistributionEntry.class) {{
-    put(REQUESTING,
+    put(DistributionEntry.REQUESTING,
         "RCPA-SPIA Requesting Pathology Terminology Reference Set v3.1.xlsx");
-    put(CHEMICAL,
+    put(DistributionEntry.CHEMICAL,
         "RCPA-SPIA Chemical Pathology Terminology Reference Set v3.1.xlsx");
-    put(HAEMATOLOGY,
+    put(DistributionEntry.HAEMATOLOGY,
         "RCPA-SPIA Haematology Terminology Reference Set v3.1.xlsx");
-    put(IMMUNOPATHOLOGY,
+    put(DistributionEntry.IMMUNOPATHOLOGY,
         "RCPA-SPIA Immunopathology Terminology Reference Set v3.1.xlsx");
-    put(MICROBIOLOGY_SEROLOGY_MOLECULAR,
+    put(DistributionEntry.MICROBIOLOGY_SEROLOGY_MOLECULAR,
         "RCPA-SPIA Microbiology Serology Molecular Path Terminology Reference Set v3.1.xlsx");
-    put(MICROBIOLOGY_ORGANISMS,
+    put(DistributionEntry.MICROBIOLOGY_ORGANISMS,
         "RCPA-SPIA Microbiology Subset of Organisms v3.1.xlsx");
     put(DistributionEntry.PREFERRED_UNITS,
         "RCPA-SPIA Preferred Units table v1.1.xlsx");

@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.hl7.fhir.dstu3.model.BooleanType;
-import org.hl7.fhir.dstu3.model.CodeType;
-import org.hl7.fhir.dstu3.model.Parameters;
-import org.hl7.fhir.dstu3.model.UriType;
+import org.hl7.fhir.r4.model.BooleanType;
+import org.hl7.fhir.r4.model.CodeType;
+import org.hl7.fhir.r4.model.Parameters;
+import org.hl7.fhir.r4.model.UriType;
 
 /**
  * Used for validating SNOMED codes using a terminology service.

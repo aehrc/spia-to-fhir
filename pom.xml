@@ -22,7 +22,7 @@
 
   <groupId>au.csiro</groupId>
   <artifactId>spia-to-fhir-maven-plugin</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>3.0.0</version>
   <packaging>maven-plugin</packaging>
   <description>
     A Maven plugin for converting terminology from version 3.1 of the Standards for Pathology
@@ -47,28 +47,58 @@
   </developers>
 
   <properties>
-    <hapiFhirVersion>5.0.2</hapiFhirVersion>
-    <log4jVersion>2.11.2</log4jVersion>
-    <slf4jVersion>1.7.26</slf4jVersion>
-    <poiVersion>4.1.0</poiVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spia-to-fhir.hapi.version>5.0.2</spia-to-fhir.hapi.version>
+    <spia-to-fhir.log4j.version>2.11.2</spia-to-fhir.log4j.version>
+    <spia-to-fhir.slf4j.version>1.7.26</spia-to-fhir.slf4j.version>
+    <spia-to-fhir.poi.version>4.1.0</spia-to-fhir.poi.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
       <artifactId>hapi-fhir-base</artifactId>
-      <version>${hapiFhirVersion}</version>
+      <version>${spia-to-fhir.hapi.version}</version>
     </dependency>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
       <artifactId>hapi-fhir-structures-dstu3</artifactId>
-      <version>${hapiFhirVersion}</version>
+      <version>${spia-to-fhir.hapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-structures-r4</artifactId>
+      <version>${spia-to-fhir.hapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-structures-r5</artifactId>
+      <version>${spia-to-fhir.hapi.version}</version>
     </dependency>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
       <artifactId>hapi-fhir-client</artifactId>
-      <version>${hapiFhirVersion}</version>
+      <version>${spia-to-fhir.hapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-validation</artifactId>
+      <version>${spia-to-fhir.hapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-validation-resources-dstu3</artifactId>
+      <version>${spia-to-fhir.hapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.uhn.hapi.fhir</groupId>
+      <artifactId>hapi-fhir-validation-resources-r4</artifactId>
+      <version>${spia-to-fhir.hapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-schematron</artifactId>
+      <version>5.6.0</version>
     </dependency>
     <dependency>
       <groupId>org.fhir</groupId>
@@ -78,12 +108,12 @@
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>
-      <version>${poiVersion}</version>
+      <version>${spia-to-fhir.poi.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi-ooxml</artifactId>
-      <version>${poiVersion}</version>
+      <version>${spia-to-fhir.poi.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -99,39 +129,51 @@
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-plugin-plugin</artifactId>
       <version>3.6.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${slf4jVersion}</version>
+      <version>${spia-to-fhir.slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-ext</artifactId>
-      <version>${slf4jVersion}</version>
+      <version>${spia-to-fhir.slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
-      <version>${log4jVersion}</version>
+      <version>${spia-to-fhir.log4j.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>${log4jVersion}</version>
+      <version>${spia-to-fhir.log4j.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>${log4jVersion}</version>
+      <version>${spia-to-fhir.log4j.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.atlassian.commonmark</groupId>
       <artifactId>commonmark</artifactId>
       <version>0.12.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.12</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 

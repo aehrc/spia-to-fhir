@@ -21,15 +21,15 @@ import au.csiro.spiatofhir.utils.Strings;
 /**
  * @author John Grimes
  */
-public abstract class ChemicalPathologyValueSet {
+public abstract class CombiningResultsCodeSystem {
 
-  public static final String NAME = "spia-chemical-pathology-refset";
-  public static final String TITLE = "RCPA - SPIA Chemical Pathology Terminology Reference Set";
+  public static final String NAME = "spia-combining-results-flag";
   public static final String ID = NAME + "-" + Strings.majorVersionFromSemVer(FhirResource.VERSION);
-  public static final String URL = "https://www.rcpa.edu.au/fhir/ValueSet/" + ID;
-  public static final String OID = "1.2.36.1.2001.1004.300.100.1001";
-  public static final String DESCRIPTION =
-      "Standard codes for use in reporting chemical pathology results in Australia, based on "
-          + "the SPIA Chemical Pathology Terminology Reference Set (v3.1).";
+  public static final String URL = "https://www.rcpa.edu.au/fhir/CodeSystem/" + ID;
+  public static final String VALUESET_URL = "https://www.rcpa.edu.au/fhir/ValueSet/" + ID;
+  public static final String OID = "1.2.36.1.2001.1004.300.100.1013";
+  public static final String TITLE = "RCPA - SPIA Combining Results Flag";
+  public static final String DESCRIPTION = "Codes describing the values for the combining results flag within the SPIA standard.";
+  public static final String SHAREABLE_PROFILE_URL = "http://hl7.org/fhir/StructureDefinition/shareablecodesystem";
 
 }
