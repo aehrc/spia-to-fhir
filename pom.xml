@@ -246,4 +246,12 @@
     </plugins>
   </build>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/aehrc/spia-to-fhir</url>
+    </repository>
+  </distributionManagement>
+
 </project>
