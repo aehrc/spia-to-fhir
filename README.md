@@ -4,7 +4,7 @@ A [Maven](https://maven.apache.org/) plugin for converting terminology from vers
 
 The input is the [ZIP archive](https://www.healthterminologies.gov.au/access?content=rcpadownload) distributed on the National Clinical Terminology Service web site.
 
-The output is two FHIR [Bundles](https://hl7.org/fhir/R4/bundle.html) (one for each FHIR version) containing the following resources:
+The output is two FHIR [Bundles](https://hl7.org/fhir/R4/bundle.html) (one for each FHIR version), each containing the following resources:
 
 1. Requesting reference set (SNOMED CT ValueSet)
 2. Chemical pathology reporting reference set (LOINC ValueSet)
@@ -30,7 +30,7 @@ You can execute the plugin with the following commands:
 mvn install
 
 mvn -DinputPath=[zip file] \
-    -DoutputDirectory=[bundle JSON file] \
+    -DoutputDirectory=[path to output directory] \
     -DterminologyServerUrl=[FHIR terminology server endpoint] \
     -DpublicationDate=[publication date] \
     au.csiro:spia-to-fhir-maven-plugin:transform
@@ -39,6 +39,6 @@ mvn -DinputPath=[zip file] \
 Here is a description of the input parameters for the plugin:
 
 * `inputPath`: Path to the ZIP archive used to distribute the SPIA spreadsheets.
-* `outputDirectory`: Path where the output FHIR Bundles will be created containing the transformed resources (`spia-stu3.Bundle.json` and `spia-r4.Bundle.json`).
+* `outputDirectory`: Path where the output FHIR Bundles will be created (`spia-stu3.Bundle.json` and `spia-r4.Bundle.json`).
 * `terminologyServerUrl`: Endpoint of a FHIR terminology server which contains SNOMED CT and LOINC.
 * `publicationDate`: Date (in the format `yyyy-MM-dd`) used to populate the `ValueSet.date` and `ConceptMap.date` elements.
