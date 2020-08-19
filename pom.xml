@@ -49,7 +49,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spia-to-fhir.hapi.version>5.0.2</spia-to-fhir.hapi.version>
-        <spia-to-fhir.log4j.version>2.11.2</spia-to-fhir.log4j.version>
+        <spia-to-fhir.log4j.version>2.13.3</spia-to-fhir.log4j.version>
         <spia-to-fhir.slf4j.version>1.7.26</spia-to-fhir.slf4j.version>
         <spia-to-fhir.poi.version>4.1.0</spia-to-fhir.poi.version>
     </properties>
